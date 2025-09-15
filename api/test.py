@@ -1,7 +1,8 @@
-from flask import Flask, Response
+from http.server import BaseHTTPRequestHandler
 
-app = Flask(__name__)
-
-@app.route("/", methods=["GET"])
-def hello():
-    return Response("API is working!", mimetype="text/plain")
+class handler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain")
+        self.end_headers()
+        self.wfile.write(b"API is working!")
