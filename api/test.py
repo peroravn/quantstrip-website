@@ -1,9 +1,5 @@
-from http.server import BaseHTTPRequestHandler
-
-class handler(BaseHTTPRequestHandler):
-    def do_GET(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/plain')
-        self.end_headers()
-        self.wfile.write(b'API is working!')
-        return
+def handler(request, response):
+    response.status_code = 200
+    response.headers["Content-Type"] = "text/plain"
+    response.body = "API is working!"
+    return response
