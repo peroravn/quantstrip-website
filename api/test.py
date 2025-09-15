@@ -1,3 +1,4 @@
+print(">>> hello.py loaded")
 from http.server import BaseHTTPRequestHandler
 
 class handler(BaseHTTPRequestHandler):
