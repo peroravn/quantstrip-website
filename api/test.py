@@ -1,6 +1,7 @@
-def handler(request):
-    return {
-        "statusCode": 200,
-        "headers": {"Content-Type": "text/plain"},
-        "body": "API is working!"
-    }
+from flask import Flask, Response
+
+app = Flask(__name__)
+
+@app.route("/", methods=["GET"])
+def hello():
+    return Response("API is working!", mimetype="text/plain")
