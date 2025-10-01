@@ -22,6 +22,10 @@ supabase: Client = create_client(supabase_url, supabase_key)
 def send_test_email(to_email, name):
     """Send a simple test email"""
     try:
+        print(f"Attempting to send email to {to_email}")
+        print(f"SMTP Settings: {SMTP_HOST}:{SMTP_PORT}")
+        print(f"From: {FROM_EMAIL}")
+        
         # Create message
         msg = MIMEMultipart('alternative')
         msg['Subject'] = 'Welcome to Quantstrip - Test Email'
@@ -57,15 +61,31 @@ def send_test_email(to_email, name):
         msg.attach(part1)
         msg.attach(part2)
         
-        # Send email
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT) as server:
-            server.starttls()
-            server.login(SMTP_USER, SMTP_PASSWORD)
-            server.send_message(msg)
+        print("Connecting to SMTP server...")
+        # Send email with detailed error handling
+        server = smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10)
+        print("Connected. Starting TLS...")
+        server.starttls()
+        print("TLS started. Attempting login...")
+        server.login(SMTP_USER, SMTP_PASSWORD)
+        print("Login successful. Sending message...")
+        server.send_message(msg)
+        print("Message sent!")
+        server.quit()
         
         return True, "Email sent successfully"
+    except smtplib.SMTPAuthenticationError as e:
+        error_msg = f"Authentication failed: {str(e)}"
+        print(error_msg)
+        return False, error_msg
+    except smtplib.SMTPException as e:
+        error_msg = f"SMTP error: {str(e)}"
+        print(error_msg)
+        return False, error_msg
     except Exception as e:
-        return False, str(e)
+        error_msg = f"Unexpected error: {type(e).__name__} - {str(e)}"
+        print(error_msg)
+        return False, error_msg
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
