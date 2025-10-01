@@ -13,9 +13,9 @@ supabase: Client = create_client(supabase_url, supabase_key)
 # Gmail configuration
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USER = "youraccount@gmail.com"  # Your Gmail address
+SMTP_USER = "quantstrip@gmail.com"  # Your Gmail address
 SMTP_PASSWORD = "svvpsmnmfcwccrsy"   # Your Gmail app password
-FROM_EMAIL = SMTP_USER                 # Emails will come from your Gmail account
+FROM_EMAIL = SMTP_USER               # Emails will come from your Gmail account
 
 def send_test_email(to_email, name):
     """Send a simple test email using Gmail"""
