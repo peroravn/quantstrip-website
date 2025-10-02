@@ -38,12 +38,13 @@ class handler(BaseHTTPRequestHandler):
                 return
             
             user = result.data[0]
+            full_name = f"{user['first_name']} {user['last_name']}"
             
             # Check if already activated
             if user['status'] == 'active':
                 self.send_html_response(200,
                     "Already Activated",
-                    f"Welcome back, {user['name']}! Your account is already active.")
+                    f"Welcome back, {full_name}! Your account is already active.")
                 return
             
             # Update user status to active and clear the token
@@ -58,7 +59,7 @@ class handler(BaseHTTPRequestHandler):
             # Send success response
             self.send_html_response(200,
                 "Account Activated!",
-                f"Congratulations, {user['name']}! Your Quantstrip account has been successfully activated.",
+                f"Congratulations, {full_name}! Your Quantstrip account has been successfully activated. You can now sign in.",
                 success=True)
             
         except Exception as e:
@@ -75,6 +76,8 @@ class handler(BaseHTTPRequestHandler):
         
         color = "#4CAF50" if success else "#f44336"
         icon = "✓" if success else "✗"
+        button_text = "Sign In" if success else "Go to Home"
+        button_link = "https://quantstrip.com/login.html" if success else "https://quantstrip.com"
         
         html = f"""
         <!DOCTYPE html>
@@ -134,7 +137,7 @@ class handler(BaseHTTPRequestHandler):
                 <div class="icon">{icon}</div>
                 <h1>{title}</h1>
                 <p>{message}</p>
-                <a href="https://quantstrip.com" class="btn">Go to Quantstrip</a>
+                <a href="{button_link}" class="btn">{button_text}</a>
             </div>
         </body>
         </html>
