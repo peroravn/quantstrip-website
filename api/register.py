@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import smtplib
+import uuid
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from supabase import create_client, Client
@@ -13,20 +14,23 @@ supabase: Client = create_client(supabase_url, supabase_key)
 # Gmail configuration
 SMTP_HOST = "smtp.gmail.com"
 SMTP_PORT = 587
-SMTP_USER = "quantstrip@gmail.com"  # Your Gmail address
-SMTP_PASSWORD = "svvpsmnmfcwccrsy"   # Your Gmail app password
-FROM_EMAIL = SMTP_USER               # Emails will come from your Gmail account
+SMTP_USER = "quantstrip@gmail.com"
+SMTP_PASSWORD = "svvpsmnmfcwccrsy"
+FROM_EMAIL = SMTP_USER
 
-def send_test_email(to_email, name):
-    """Send a simple test email using Gmail"""
+def send_activation_email(to_email, name, activation_token):
+    """Send activation email with token link"""
     try:
-        print(f"Attempting to send email to {to_email}")
+        print(f"Attempting to send activation email to {to_email}")
         print(f"SMTP Settings: {SMTP_HOST}:{SMTP_PORT}")
         print(f"From: {FROM_EMAIL}")
         
+        # Create the activation link
+        activation_link = f"https://quantstrip.com/api/activate?token={activation_token}"
+        
         # Create message
         msg = MIMEMultipart('alternative')
-        msg['Subject'] = 'Welcome to Quantstrip - Test Email'
+        msg['Subject'] = 'Activate Your Quantstrip Account'
         msg['From'] = FROM_EMAIL
         msg['To'] = to_email
         
@@ -36,19 +40,40 @@ def send_test_email(to_email, name):
         
         Thank you for registering at Quantstrip!
         
-        This is a test email to confirm our email system is working.
+        Please activate your account by clicking the following link:
+        {activation_link}
+        
+        If you didn't register for this account, please ignore this email.
         
         Best regards,
         The Quantstrip Team
         """
         
-        # HTML content
+        # HTML content with styled button
         html = f"""
         <html>
-        <body>
+        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
             <h2>Hello {name},</h2>
             <p>Thank you for registering at Quantstrip!</p>
-            <p>This is a test email to confirm our email system is working.</p>
+            <p>Please activate your account by clicking the button below:</p>
+            <p style="margin: 30px 0;">
+                <a href="{activation_link}" 
+                   style="background-color: #4CAF50; 
+                          color: white; 
+                          padding: 12px 24px; 
+                          text-decoration: none; 
+                          border-radius: 4px;
+                          display: inline-block;">
+                    Activate my account
+                </a>
+            </p>
+            <p style="color: #666; font-size: 14px;">
+                Or copy and paste this link into your browser:<br>
+                <a href="{activation_link}">{activation_link}</a>
+            </p>
+            <p style="color: #666; font-size: 12px; margin-top: 30px;">
+                If you didn't register for this account, please ignore this email.
+            </p>
             <p>Best regards,<br>The Quantstrip Team</p>
         </body>
         </html>
@@ -66,7 +91,7 @@ def send_test_email(to_email, name):
             server.send_message(msg)
             print("Message sent!")
         
-        return True, "Email sent successfully"
+        return True, "Activation email sent successfully"
     except smtplib.SMTPAuthenticationError as e:
         error_msg = f"Authentication failed: {str(e)}"
         print(error_msg)
@@ -103,17 +128,24 @@ class handler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps(response).encode())
                 return
             
+            # Generate unique activation token
+            activation_token = str(uuid.uuid4())
+            
+            # Insert user with activation token and pending status
             result = supabase.table('users').insert({
                 'name': name,
-                'email': email
+                'email': email,
+                'activation_token': activation_token,
+                'status': 'pending_activation'
             }).execute()
             
-            email_success, email_message = send_test_email(email, name)
+            # Send activation email
+            email_success, email_message = send_activation_email(email, name, activation_token)
             
             if email_success:
                 response = {
                     'success': True,
-                    'message': f'Registration successful! A test email has been sent to {email}',
+                    'message': f'Registration successful! Please check {email} for activation instructions.',
                     'email_sent': True
                 }
             else:
