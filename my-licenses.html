@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Licenses - Quantstrip</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-name {
+            color: #666;
+            font-size: 14px;
+        }
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .page-header {
+            margin-bottom: 30px;
+        }
+        .page-header h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            color: #666;
+        }
+        .no-licenses {
+            background: white;
+            padding: 60px 40px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .no-licenses h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .no-licenses p {
+            color: #666;
+            margin-bottom: 25px;
+        }
+        .no-licenses a {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .no-licenses a:hover {
+            background-color: #45a049;
+        }
+        .licenses-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        .license-card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .license-card.active {
+            border-left: 4px solid #4CAF50;
+        }
+        .license-card.expired {
+            border-left: 4px solid #f44336;
+            opacity: 0.8;
+        }
+        .license-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+        .product-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #333;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .status-badge.active {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        .status-badge.expired {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        .license-key-section {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .license-key-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .license-key {
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            color: #333;
+            letter-spacing: 1px;
+            word-break: break-all;
+        }
+        .copy-btn {
+            margin-top: 10px;
+            padding: 6px 12px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .copy-btn:hover {
+            background-color: #007399;
+        }
+        .license-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .info-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        .expiry-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-top: 10px;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>My Licenses</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName"></strong></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Your Licenses</h2>
+            <p>View and manage your active software licenses</p>
+        </div>
+
+        <div id="loadingDiv" class="loading">
+            Loading your licenses...
+        </div>
+
+        <div id="noLicensesDiv" class="no-licenses" style="display: none;">
+            <h3>No Licenses Yet</h3>
+            <p>You haven't purchased any products yet. Browse our products to get started!</p>
+            <a href="products.html">Browse Products</a>
+        </div>
+
+        <div id="licensesGrid" class="licenses-grid" style="display: none;">
+            <!-- Licenses will be populated here by JavaScript -->
+        </div>
+
+        <div class="back-link">
+            <a href="dashboard.html">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        function checkAuth() {
+            const userStr = sessionStorage.getItem('user');
+            if (!userStr) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return JSON.parse(userStr);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        function copyLicenseKey(key) {
+            navigator.clipboard.writeText(key).then(() => {
+                alert('License key copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        function calculateDaysRemaining(expiryDate) {
+            const now = new Date();
+            const expiry = new Date(expiryDate);
+            const diffTime = expiry - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+
+        async function loadLicenses() {
+            const user = checkAuth();
+            if (!user) return;
+
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+
+            try {
+                const response = await fetch(`https://www.quantstrip.com/api/get-licenses?email=${encodeURIComponent(user.email)}`);
+                const data = await response.json();
+
+                document.getElementById('loadingDiv').style.display = 'none';
+
+                if (data.success && data.licenses && data.licenses.length > 0) {
+                    document.getElementById('licensesGrid').style.display = 'grid';
+                    renderLicenses(data.licenses);
+                } else {
+                    document.getElementById('noLicensesDiv').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('loadingDiv').innerHTML = 
+                    '<p style="color: #f44336;">Error loading licenses. Please try again later.</p>';
+                console.error('Error loading licenses:', error);
+            }
+        }
+
+        function renderLicenses(licenses) {
+            const grid = document.getElementById('licensesGrid');
+            grid.innerHTML = '';
+
+            licenses.forEach(license => {
+                const daysRemaining = calculateDaysRemaining(license.expires_at);
+                const isActive = license.status === 'active' && daysRemaining > 0;
+                const isExpiringSoon = isActive && daysRemaining <= 7;
+
+                const card = document.createElement('div');
+                card.className = `license-card ${isActive ? 'active' : 'expired'}`;
+                
+                card.innerHTML = `
+                    <div class="license-header">
+                        <div class="product-name">${license.product_name}</div>
+                        <div class="status-badge ${isActive ? 'active' : 'expired'}">
+                            ${isActive ? 'Active' : 'Expired'}
+                        </div>
+                    </div>
+
+                    <div class="license-key-section">
+                        <div class="license-key-label">License Key</div>
+                        <div class="license-key">${license.license_key}</div>
+                        <button class="copy-btn" onclick="copyLicenseKey('${license.license_key}')">
+                            📋 Copy Key
+                        </button>
+                    </div>
+
+                    <div class="license-info">
+                        <div class="info-item">
+                            <div class="info-label">Purchase Date</div>
+                            <div class="info-value">${formatDate(license.created_at)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Expires On</div>
+                            <div class="info-value">${formatDate(license.expires_at)}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Days Remaining</div>
+                            <div class="info-value">${isActive ? daysRemaining : 0} days</div>
+                        </div>
+                        ${license.coupon_used ? `
+                        <div class="info-item">
+                            <div class="info-label">Coupon Used</div>
+                            <div class="info-value">${license.coupon_used}</div>
+                        </div>
+                        ` : ''}
+                    </div>
+
+                    ${isExpiringSoon ? `
+                    <div class="expiry-warning">
+                        ⚠️ Your license expires in ${daysRemaining} days. Consider renewing soon!
+                    </div>
+                    ` : ''}
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Initialize
+        loadLicenses();
+    </script>
+</body>
+</html>
