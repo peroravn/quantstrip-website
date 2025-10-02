@@ -2,6 +2,7 @@ from http.server import BaseHTTPRequestHandler
 import json
 import smtplib
 import uuid
+import hashlib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from supabase import create_client, Client
@@ -18,12 +19,21 @@ SMTP_USER = "quantstrip@gmail.com"
 SMTP_PASSWORD = "svvpsmnmfcwccrsy"
 FROM_EMAIL = SMTP_USER
 
-def send_activation_email(to_email, name, activation_token):
+def hash_password(password):
+    """Hash password using SHA-256 with salt"""
+    # Using a simple approach for now - in production, use bcrypt or argon2
+    salt = "quantstrip_salt_2024"  # In production, use a random salt per user
+    salted_password = password + salt
+    return hashlib.sha256(salted_password.encode()).hexdigest()
+
+def send_activation_email(to_email, first_name, last_name, activation_token):
     """Send activation email with token link"""
     try:
         print(f"Attempting to send activation email to {to_email}")
         print(f"SMTP Settings: {SMTP_HOST}:{SMTP_PORT}")
         print(f"From: {FROM_EMAIL}")
+        
+        full_name = f"{first_name} {last_name}"
         
         # Create the activation link
         activation_link = f"https://quantstrip.com/api/activate?token={activation_token}"
@@ -36,7 +46,7 @@ def send_activation_email(to_email, name, activation_token):
         
         # Text content
         text = f"""
-        Hello {name},
+        Hello {first_name},
         
         Thank you for registering at Quantstrip!
         
@@ -53,7 +63,7 @@ def send_activation_email(to_email, name, activation_token):
         html = f"""
         <html>
         <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <h2>Hello {name},</h2>
+            <h2>Hello {first_name},</h2>
             <p>Thank you for registering at Quantstrip!</p>
             <p>Please activate your account by clicking the button below:</p>
             <p style="margin: 30px 0;">
@@ -120,27 +130,51 @@ class handler(BaseHTTPRequestHandler):
             post_data = self.rfile.read(content_length)
             data = json.loads(post_data.decode('utf-8'))
             
-            name = data.get('name', '').strip()
+            first_name = data.get('firstName', '').strip()
+            last_name = data.get('lastName', '').strip()
             email = data.get('email', '').strip()
+            password = data.get('password', '')
             
-            if not name or not email:
-                response = {'success': False, 'error': 'Name and email are required'}
+            # Validation
+            if not first_name or not last_name or not email or not password:
+                response = {'success': False, 'error': 'All fields are required'}
+                self.wfile.write(json.dumps(response).encode())
+                return
+            
+            if len(password) < 8:
+                response = {'success': False, 'error': 'Password must be at least 8 characters'}
+                self.wfile.write(json.dumps(response).encode())
+                return
+            
+            # Check if email already exists
+            existing_user = supabase.table('users')\
+                .select('email')\
+                .eq('email', email)\
+                .execute()
+            
+            if existing_user.data and len(existing_user.data) > 0:
+                response = {'success': False, 'error': 'Email already registered'}
                 self.wfile.write(json.dumps(response).encode())
                 return
             
             # Generate unique activation token
             activation_token = str(uuid.uuid4())
             
+            # Hash the password
+            password_hash = hash_password(password)
+            
             # Insert user with activation token and pending status
             result = supabase.table('users').insert({
-                'name': name,
+                'first_name': first_name,
+                'last_name': last_name,
                 'email': email,
+                'password_hash': password_hash,
                 'activation_token': activation_token,
                 'status': 'pending_activation'
             }).execute()
             
             # Send activation email
-            email_success, email_message = send_activation_email(email, name, activation_token)
+            email_success, email_message = send_activation_email(email, first_name, last_name, activation_token)
             
             if email_success:
                 response = {
