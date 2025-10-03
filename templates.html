@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Templates & Utilities - Quantstrip</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-name {
+            color: #666;
+            font-size: 14px;
+        }
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .page-header {
+            margin-bottom: 30px;
+        }
+        .page-header h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .filter-tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        .filter-tab:hover {
+            color: #333;
+        }
+        .filter-tab.active {
+            color: #4CAF50;
+            border-bottom-color: #4CAF50;
+        }
+        .templates-list {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .template-item {
+            padding: 20px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        .template-item:last-child {
+            border-bottom: none;
+        }
+        .template-item:hover {
+            background-color: #f9f9f9;
+        }
+        .template-item.locked {
+            opacity: 0.6;
+        }
+        .template-info {
+            flex: 1;
+        }
+        .template-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .template-name {
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .pro-badge {
+            background-color: #ff9800;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .template-description {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .template-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .download-btn {
+            padding: 8px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+        .download-btn.locked {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .no-license-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .no-license-warning h3 {
+            margin-bottom: 10px;
+        }
+        .no-license-warning a {
+            color: #856404;
+            text-decoration: underline;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+            background: white;
+            border-radius: 8px;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px;
+            color: #999;
+            background: white;
+            border-radius: 8px;
+        }
+        .file-icon {
+            color: #4CAF50;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Templates & Utilities</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName"></strong></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Client Templates & Utilities</h2>
+            <p>Example trading clients and utility modules to help you get started with plugin development.</p>
+        </div>
+
+        <div id="noLicenseWarning" class="no-license-warning" style="display: none;">
+            <h3>⚠️ No Active License Found</h3>
+            <p>You need an active license to access templates. <a href="products.html">Purchase a license here</a></p>
+        </div>
+
+        <div id="contentArea" style="display: none;">
+            <div class="filter-tabs">
+                <button class="filter-tab active" onclick="filterTemplates('all')">All Templates</button>
+                <button class="filter-tab" onclick="filterTemplates('free')">Free</button>
+                <button class="filter-tab" onclick="filterTemplates('pro')">Pro</button>
+            </div>
+
+            <div id="loadingDiv" class="loading">
+                Loading templates...
+            </div>
+
+            <div id="templatesList" class="templates-list" style="display: none;">
+                <!-- Templates will be populated here by JavaScript -->
+            </div>
+
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <p>No templates found.</p>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="dashboard.html">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        let allTemplates = [];
+        let currentFilter = 'all';
+        let hasProLicense = false;
+
+        function checkAuth() {
+            const userStr = sessionStorage.getItem('user');
+            if (!userStr) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return JSON.parse(userStr);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        async function loadUserLicenses() {
+            const user = checkAuth();
+            if (!user) return;
+
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+
+            try {
+                const response = await fetch(`https://www.quantstrip.com/api/get-licenses?email=${encodeURIComponent(user.email)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}`);
+                }
+                
+                const data = await response.json();
+
+                if (data.success && data.licenses && data.licenses.length > 0) {
+                    const userLicenses = data.licenses;
+                    
+                    // Check if user has any active licenses
+                    const hasActiveLicense = userLicenses.some(license => {
+                        const daysRemaining = calculateDaysRemaining(license.expires_at);
+                        return license.status === 'active' && daysRemaining > 0;
+                    });
+
+                    if (!hasActiveLicense) {
+                        document.getElementById('noLicenseWarning').style.display = 'block';
+                        return;
+                    }
+
+                    // Check if user has Pro license
+                    hasProLicense = userLicenses.some(license => {
+                        const daysRemaining = calculateDaysRemaining(license.expires_at);
+                        return license.product_name === 'Pro' && 
+                               license.status === 'active' && 
+                               daysRemaining > 0;
+                    });
+
+                    // Show content and load templates
+                    document.getElementById('contentArea').style.display = 'block';
+                    await loadTemplates();
+
+                } else {
+                    document.getElementById('noLicenseWarning').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('noLicenseWarning').style.display = 'block';
+                console.error('Error loading licenses:', error);
+            }
+        }
+
+        function calculateDaysRemaining(expiryDate) {
+            const now = new Date();
+            const expiry = new Date(expiryDate);
+            const diffTime = expiry - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        async function loadTemplates() {
+            try {
+                const response = await fetch('https://www.quantstrip.com/api/list-templates');
+                
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}`);
+                }
+                
+                const data = await response.json();
+
+                document.getElementById('loadingDiv').style.display = 'none';
+
+                if (data.success && data.templates && data.templates.length > 0) {
+                    allTemplates = data.templates;
+                    renderTemplates();
+                } else {
+                    document.getElementById('emptyState').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('loadingDiv').innerHTML = 
+                    '<p style="color: #f44336;">Error loading templates. Please try again later.</p>';
+                console.error('Error loading templates:', error);
+            }
+        }
+
+        function filterTemplates(filter) {
+            currentFilter = filter;
+            
+            // Update active tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderTemplates();
+        }
+
+        function renderTemplates() {
+            const templatesList = document.getElementById('templatesList');
+            templatesList.innerHTML = '';
+            templatesList.style.display = 'block';
+
+            let filteredTemplates = allTemplates;
+            if (currentFilter !== 'all') {
+                filteredTemplates = allTemplates.filter(t => t.tier === currentFilter);
+            }
+
+            if (filteredTemplates.length === 0) {
+                document.getElementById('emptyState').style.display = 'block';
+                templatesList.style.display = 'none';
+                return;
+            }
+
+            filteredTemplates.forEach(template => {
+                const isPro = template.tier === 'pro';
+                const isLocked = isPro && !hasProLicense;
+
+                const item = document.createElement('div');
+                item.className = `template-item ${isLocked ? 'locked' : ''}`;
+                
+                item.innerHTML = `
+                    <div class="template-info">
+                        <div class="template-header">
+                            <span class="file-icon">📄</span>
+                            <span class="template-name">${template.filename}</span>
+                            ${isPro ? '<span class="pro-badge">PRO</span>' : ''}
+                        </div>
+                        <div class="template-description">${template.description || 'No description available'}</div>
+                    </div>
+                    <div class="template-actions">
+                        <button class="download-btn ${isLocked ? 'locked' : ''}" 
+                                onclick="downloadTemplate('${template.tier}', '${template.filename}')"
+                                ${isLocked ? 'disabled' : ''}>
+                            ${isLocked ? '🔒 Pro Only' : '⬇️ Download'}
+                        </button>
+                    </div>
+                `;
+
+                templatesList.appendChild(item);
+            });
+        }
+
+        async function downloadTemplate(tier, filename) {
+            if (tier === 'pro' && !hasProLicense) {
+                alert('This template requires an active Pro license. Please upgrade to access Pro templates.');
+                return;
+            }
+
+            const user = checkAuth();
+            if (!user) return;
+
+            try {
+                const response = await fetch('https://www.quantstrip.com/api/download-template', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: user.email,
+                        tier: tier,
+                        filename: filename
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    window.location.href = data.downloadUrl;
+                } else {
+                    alert('Download failed: ' + data.error);
+                }
+            } catch (error) {
+                alert('Download error: ' + error.message);
+                console.error('Download error:', error);
+            }
+        }
+
+        // Initialize
+        loadUserLicenses();
+    </script>
+</body>
+</html>

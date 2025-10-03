@@ -292,38 +292,7 @@
                 </div>
             </div>
 
-            <!-- Plugin Templates Section -->
-            <div class="section">
-                <div class="section-title">
-                    <span>🔌</span>
-                    <div>Plugin Templates</div>
-                </div>
-                <div class="section-description">
-                    Example trading algorithms to help you get started with plugin development.
-                </div>
-                <div class="downloads-grid">
-                    <div class="download-card">
-                        <div class="platform-icon">📦</div>
-                        <div class="download-title">Free Templates</div>
-                        <div class="download-description">3 basic example algorithms</div>
-                        <button class="download-btn" onclick="downloadFile('plugins', 'free')">
-                            Download
-                        </button>
-                        <div class="file-size">~2 MB</div>
-                    </div>
 
-                    <div class="download-card" id="proPluginsCard">
-                        <div class="pro-badge">PRO</div>
-                        <div class="platform-icon">🚀</div>
-                        <div class="download-title">Pro Templates</div>
-                        <div class="download-description">10 advanced example algorithms</div>
-                        <button class="download-btn" id="proPluginsBtn" onclick="downloadFile('plugins', 'pro')">
-                            Download
-                        </button>
-                        <div class="file-size">~8 MB</div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="back-link">
@@ -357,6 +326,11 @@
 
             try {
                 const response = await fetch(`https://www.quantstrip.com/api/get-licenses?email=${encodeURIComponent(user.email)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`Server returned ${response.status}`);
+                }
+                
                 const data = await response.json();
 
                 document.getElementById('loadingDiv').style.display = 'none';
@@ -393,8 +367,12 @@
                     document.getElementById('noLicenseWarning').style.display = 'block';
                 }
             } catch (error) {
-                document.getElementById('loadingDiv').innerHTML = 
-                    '<p style="color: #f44336;">Error loading downloads. Please try again later.</p>';
+                document.getElementById('loadingDiv').style.display = 'none';
+                document.getElementById('noLicenseWarning').style.display = 'block';
+                document.getElementById('noLicenseWarning').innerHTML = `
+                    <h3>⚠️ Unable to Load Licenses</h3>
+                    <p>There was an error connecting to the server. Please try refreshing the page or contact support if the problem persists.</p>
+                `;
                 console.error('Error loading licenses:', error);
             }
         }
