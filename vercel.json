@@ -1,3 +1,11 @@
 {
-
+  "routes": [
+    {
+      "src": "/downloads/.*",
+      "dest": "/downloads/$1",
+      "headers": {
+        "Cache-Control": "public, max-age=3600"
+      }
+    }
+  ]
 }

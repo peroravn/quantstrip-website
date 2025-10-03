@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads - Quantstrip</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-name {
+            color: #666;
+            font-size: 14px;
+        }
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .page-header {
+            margin-bottom: 40px;
+        }
+        .page-header h2 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .doc-note {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 4px;
+            color: #1565c0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .section-title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .section-title span {
+            font-size: 28px;
+        }
+        .section-description {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .downloads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .download-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .download-card:hover {
+            border-color: #4CAF50;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .download-card.locked {
+            opacity: 0.6;
+            background-color: #fafafa;
+        }
+        .download-card.locked:hover {
+            transform: none;
+            border-color: #e0e0e0;
+        }
+        .platform-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .download-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        .download-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .download-btn {
+            display: inline-block;
+            padding: 10px 24px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s;
+        }
+        .download-btn:hover {
+            background-color: #45a049;
+        }
+        .download-btn.locked {
+            background-color: #ccc;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .pro-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff9800;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .lock-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+        .upgrade-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #4CAF50;
+            font-size: 13px;
+            text-decoration: none;
+        }
+        .upgrade-link:hover {
+            text-decoration: underline;
+        }
+        .no-license-warning {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .no-license-warning h3 {
+            margin-bottom: 10px;
+        }
+        .no-license-warning a {
+            color: #856404;
+            text-decoration: underline;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+        }
+        .file-size {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Downloads</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName"></strong></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Download Center</h2>
+            <p>Access your platform installers and plugin templates</p>
+            <div class="doc-note" style="margin-top: 15px;">
+                ℹ️ <strong>Documentation:</strong> Full documentation is available directly within the platform. After installing, access it from the Help menu or via the built-in documentation viewer.
+            </div>
+        </div>
+
+        <div id="loadingDiv" class="loading">
+            Loading your downloads...
+        </div>
+
+        <div id="noLicenseWarning" class="no-license-warning" style="display: none;">
+            <h3>⚠️ No Active License Found</h3>
+            <p>You need an active license to download the platform. <a href="products.html">Purchase a license here</a></p>
+        </div>
+
+        <div id="downloadsContent" style="display: none;">
+            <!-- Platform Installers Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span>💻</span>
+                    <div>Platform Installers</div>
+                </div>
+                <div class="section-description">
+                    Download the Quantstrip algorithmic trading platform installer for your operating system.
+                </div>
+                <div class="downloads-grid">
+                    <div class="download-card">
+                        <div class="platform-icon">🪟</div>
+                        <div class="download-title">Windows</div>
+                        <div class="download-description">Windows 10/11 (64-bit)</div>
+                        <button class="download-btn" onclick="downloadFile('platform', 'windows')">
+                            Download
+                        </button>
+                        <div class="file-size">~50 MB</div>
+                    </div>
+
+                    <div class="download-card">
+                        <div class="platform-icon">🍎</div>
+                        <div class="download-title">macOS</div>
+                        <div class="download-description">macOS 11+ (Intel & Apple Silicon)</div>
+                        <button class="download-btn" onclick="downloadFile('platform', 'macos')">
+                            Download
+                        </button>
+                        <div class="file-size">~45 MB</div>
+                    </div>
+
+                    <div class="download-card">
+                        <div class="platform-icon">🐧</div>
+                        <div class="download-title">Linux</div>
+                        <div class="download-description">Ubuntu 20.04+ / Debian-based</div>
+                        <button class="download-btn" onclick="downloadFile('platform', 'linux')">
+                            Download
+                        </button>
+                        <div class="file-size">~48 MB</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plugin Templates Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span>🔌</span>
+                    <div>Plugin Templates</div>
+                </div>
+                <div class="section-description">
+                    Example trading algorithms to help you get started with plugin development.
+                </div>
+                <div class="downloads-grid">
+                    <div class="download-card">
+                        <div class="platform-icon">📦</div>
+                        <div class="download-title">Free Templates</div>
+                        <div class="download-description">3 basic example algorithms</div>
+                        <button class="download-btn" onclick="downloadFile('plugins', 'free')">
+                            Download
+                        </button>
+                        <div class="file-size">~2 MB</div>
+                    </div>
+
+                    <div class="download-card" id="proPluginsCard">
+                        <div class="pro-badge">PRO</div>
+                        <div class="platform-icon">🚀</div>
+                        <div class="download-title">Pro Templates</div>
+                        <div class="download-description">10 advanced example algorithms</div>
+                        <button class="download-btn" id="proPluginsBtn" onclick="downloadFile('plugins', 'pro')">
+                            Download
+                        </button>
+                        <div class="file-size">~8 MB</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="dashboard.html">← Back to Dashboard</a>
+        </div>
+    </div>
+
+    <script>
+        let userLicenses = [];
+        let hasProLicense = false;
+
+        function checkAuth() {
+            const userStr = sessionStorage.getItem('user');
+            if (!userStr) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return JSON.parse(userStr);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        async function loadUserLicenses() {
+            const user = checkAuth();
+            if (!user) return;
+
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+
+            try {
+                const response = await fetch(`https://www.quantstrip.com/api/get-licenses?email=${encodeURIComponent(user.email)}`);
+                const data = await response.json();
+
+                document.getElementById('loadingDiv').style.display = 'none';
+
+                if (data.success && data.licenses && data.licenses.length > 0) {
+                    userLicenses = data.licenses;
+                    
+                    // Check if user has any active licenses
+                    const hasActiveLicense = userLicenses.some(license => {
+                        const daysRemaining = calculateDaysRemaining(license.expires_at);
+                        return license.status === 'active' && daysRemaining > 0;
+                    });
+
+                    if (!hasActiveLicense) {
+                        document.getElementById('noLicenseWarning').style.display = 'block';
+                        return;
+                    }
+
+                    // Check if user has Pro license
+                    hasProLicense = userLicenses.some(license => {
+                        const daysRemaining = calculateDaysRemaining(license.expires_at);
+                        return license.product_name === 'Pro' && 
+                               license.status === 'active' && 
+                               daysRemaining > 0;
+                    });
+
+                    // Show downloads content
+                    document.getElementById('downloadsContent').style.display = 'block';
+
+                    // Update Pro plugins card
+                    updateProPluginsAccess();
+
+                } else {
+                    document.getElementById('noLicenseWarning').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('loadingDiv').innerHTML = 
+                    '<p style="color: #f44336;">Error loading downloads. Please try again later.</p>';
+                console.error('Error loading licenses:', error);
+            }
+        }
+
+        function calculateDaysRemaining(expiryDate) {
+            const now = new Date();
+            const expiry = new Date(expiryDate);
+            const diffTime = expiry - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            return diffDays;
+        }
+
+        function updateProPluginsAccess() {
+            const proCard = document.getElementById('proPluginsCard');
+            const proBtn = document.getElementById('proPluginsBtn');
+
+            if (!hasProLicense) {
+                proCard.classList.add('locked');
+                proBtn.classList.add('locked');
+                proBtn.textContent = '🔒 Locked';
+                
+                // Add upgrade link
+                const upgradeLink = document.createElement('a');
+                upgradeLink.href = 'products.html';
+                upgradeLink.className = 'upgrade-link';
+                upgradeLink.textContent = '⬆️ Upgrade to Pro';
+                proCard.appendChild(upgradeLink);
+            }
+        }
+
+        async function downloadFile(type, platform) {
+            const user = checkAuth();
+            if (!user) return;
+
+            // Check if trying to download Pro plugins without Pro license
+            if (type === 'plugins' && platform === 'pro' && !hasProLicense) {
+                alert('Pro templates require an active Pro license. Please upgrade to access these templates.');
+                return;
+            }
+
+            try {
+                // Call download API
+                const response = await fetch('https://www.quantstrip.com/api/download-file', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: user.email,
+                        fileType: type,
+                        platform: platform
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Trigger download by redirecting to the file URL
+                    window.location.href = data.downloadUrl;
+                } else {
+                    alert('Download failed: ' + data.error);
+                }
+            } catch (error) {
+                alert('Download error: ' + error.message);
+                console.error('Download error:', error);
+            }
+        }
+
+        // Initialize
+        loadUserLicenses();
+    </script>
+</body>
+</html>
