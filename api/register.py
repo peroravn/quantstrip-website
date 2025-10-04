@@ -1,119 +1,16 @@
 from http.server import BaseHTTPRequestHandler
 import json
-import smtplib
 import uuid
-import hashlib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from supabase import create_client, Client
+import sys
+import os
 
-# Initialize Supabase client
-supabase_url = "https://ozamqnegrjquvwfzxocf.supabase.co"
-supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96YW1xbmVncmpxdXZ3Znp4b2NmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Nzk0NzQ5OCwiZXhwIjoyMDczNTIzNDk4fQ.pxyJuiPZ9NZdspKVOlgSlLk1_Dgm5QNTuypSMy4gI_o"
-supabase: Client = create_client(supabase_url, supabase_key)
+# Add parent directory to path for imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-# Gmail configuration
-SMTP_HOST = "smtp.gmail.com"
-SMTP_PORT = 587
-SMTP_USER = "quantstrip@gmail.com"
-SMTP_PASSWORD = "svvpsmnmfcwccrsy"
-FROM_EMAIL = SMTP_USER
-
-def hash_password(password):
-    """Hash password using SHA-256 with salt"""
-    # Using a simple approach for now - in production, use bcrypt or argon2
-    salt = "quantstrip_salt_2024"  # In production, use a random salt per user
-    salted_password = password + salt
-    return hashlib.sha256(salted_password.encode()).hexdigest()
-
-def send_activation_email(to_email, first_name, last_name, activation_token):
-    """Send activation email with token link"""
-    try:
-        print(f"Attempting to send activation email to {to_email}")
-        print(f"SMTP Settings: {SMTP_HOST}:{SMTP_PORT}")
-        print(f"From: {FROM_EMAIL}")
-        
-        full_name = f"{first_name} {last_name}"
-        
-        # Create the activation link
-        activation_link = f"https://quantstrip.com/api/activate?token={activation_token}"
-        
-        # Create message
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = 'Activate Your Quantstrip Account'
-        msg['From'] = FROM_EMAIL
-        msg['To'] = to_email
-        
-        # Text content
-        text = f"""
-        Hello {first_name},
-        
-        Thank you for registering at Quantstrip!
-        
-        Please activate your account by clicking the following link:
-        {activation_link}
-        
-        If you didn't register for this account, please ignore this email.
-        
-        Best regards,
-        The Quantstrip Team
-        """
-        
-        # HTML content with styled button
-        html = f"""
-        <html>
-        <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-            <h2>Hello {first_name},</h2>
-            <p>Thank you for registering at Quantstrip!</p>
-            <p>Please activate your account by clicking the button below:</p>
-            <p style="margin: 30px 0;">
-                <a href="{activation_link}" 
-                   style="background-color: #4CAF50; 
-                          color: white; 
-                          padding: 12px 24px; 
-                          text-decoration: none; 
-                          border-radius: 4px;
-                          display: inline-block;">
-                    Activate my account
-                </a>
-            </p>
-            <p style="color: #666; font-size: 14px;">
-                Or copy and paste this link into your browser:<br>
-                <a href="{activation_link}">{activation_link}</a>
-            </p>
-            <p style="color: #666; font-size: 12px; margin-top: 30px;">
-                If you didn't register for this account, please ignore this email.
-            </p>
-            <p>Best regards,<br>The Quantstrip Team</p>
-        </body>
-        </html>
-        """
-        
-        msg.attach(MIMEText(text, 'plain'))
-        msg.attach(MIMEText(html, 'html'))
-        
-        print("Connecting to Gmail SMTP server...")
-        with smtplib.SMTP(SMTP_HOST, SMTP_PORT, timeout=10) as server:
-            server.starttls()
-            print("TLS started. Logging in...")
-            server.login(SMTP_USER, SMTP_PASSWORD)
-            print("Login successful. Sending message...")
-            server.send_message(msg)
-            print("Message sent!")
-        
-        return True, "Activation email sent successfully"
-    except smtplib.SMTPAuthenticationError as e:
-        error_msg = f"Authentication failed: {str(e)}"
-        print(error_msg)
-        return False, error_msg
-    except smtplib.SMTPException as e:
-        error_msg = f"SMTP error: {str(e)}"
-        print(error_msg)
-        return False, error_msg
-    except Exception as e:
-        error_msg = f"Unexpected error: {type(e).__name__} - {str(e)}"
-        print(error_msg)
-        return False, error_msg
+from utils.db import create_user
+from utils.email import send_activation_email
+from utils.password import hash_password
+from utils.auth import check_email_exists
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -147,34 +44,24 @@ class handler(BaseHTTPRequestHandler):
                 return
             
             # Check if email already exists
-            existing_user = supabase.table('users')\
-                .select('email')\
-                .eq('email', email)\
-                .execute()
-            
-            if existing_user.data and len(existing_user.data) > 0:
+            if check_email_exists(email):
                 response = {'success': False, 'error': 'Email already registered'}
                 self.wfile.write(json.dumps(response).encode())
                 return
             
-            # Generate unique activation token
+            # Generate activation token
             activation_token = str(uuid.uuid4())
             
-            # Hash the password
+            # Hash password
             password_hash = hash_password(password)
             
-            # Insert user with activation token and pending status
-            result = supabase.table('users').insert({
-                'first_name': first_name,
-                'last_name': last_name,
-                'email': email,
-                'password_hash': password_hash,
-                'activation_token': activation_token,
-                'status': 'pending_activation'
-            }).execute()
+            # Create user
+            user = create_user(first_name, last_name, email, password_hash, activation_token)
             
             # Send activation email
-            email_success, email_message = send_activation_email(email, first_name, last_name, activation_token)
+            email_success, email_message = send_activation_email(
+                email, first_name, last_name, activation_token
+            )
             
             if email_success:
                 response = {
@@ -193,7 +80,8 @@ class handler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps(response).encode())
             
         except Exception as e:
-            response = {'success': False, 'error': str(e)}
+            print(f"Registration error: {str(e)}")
+            response = {'success': False, 'error': 'An error occurred during registration'}
             self.wfile.write(json.dumps(response).encode())
     
     def do_OPTIONS(self):
