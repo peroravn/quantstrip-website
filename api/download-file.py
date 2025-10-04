@@ -1,5 +1,6 @@
 from http.server import BaseHTTPRequestHandler
 import json
+import os
 from datetime import datetime
 from supabase import create_client, Client
 
@@ -8,38 +9,12 @@ supabase_url = "https://ozamqnegrjquvwfzxocf.supabase.co"
 supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im96YW1xbmVncmpxdXZ3Znp4b2NmIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1Nzk0NzQ5OCwiZXhwIjoyMDczNTIzNDk4fQ.pxyJuiPZ9NZdspKVOlgSlLk1_Dgm5QNTuypSMy4gI_o"
 supabase: Client = create_client(supabase_url, supabase_key)
 
-# File mappings - these point to files in your /downloads directory
-# You'll upload these files to Vercel alongside your code
-DOWNLOAD_FILES = {
-    'platform': {
-        'windows': {
-            'path': '/downloads/installers/quantstrip-windows-v1.0.exe',
-            'filename': 'quantstrip-windows-v1.0.exe',
-            'url': 'https://quantstrip.com/downloads/installers/quantstrip-windows-v1.0.exe'
-        },
-        'macos': {
-            'path': '/downloads/installers/quantstrip-macos-v1.0.dmg',
-            'filename': 'quantstrip-macos-v1.0.dmg',
-            'url': 'https://quantstrip.com/downloads/installers/quantstrip-macos-v1.0.dmg'
-        },
-        'linux': {
-            'path': '/downloads/installers/quantstrip-linux-v1.0.tar.gz',
-            'filename': 'quantstrip-linux-v1.0.tar.gz',
-            'url': 'https://quantstrip.com/downloads/installers/quantstrip-linux-v1.0.tar.gz'
-        }
-    },
-    'plugins': {
-        'free': {
-            'path': '/downloads/plugins/quantstrip-plugins-free-v1.0.zip',
-            'filename': 'quantstrip-plugins-free-v1.0.zip',
-            'url': 'https://quantstrip.com/downloads/plugins/quantstrip-plugins-free-v1.0.zip'
-        },
-        'pro': {
-            'path': '/downloads/plugins/quantstrip-plugins-pro-v1.0.zip',
-            'filename': 'quantstrip-plugins-pro-v1.0.zip',
-            'url': 'https://quantstrip.com/downloads/plugins/quantstrip-plugins-pro-v1.0.zip'
-        }
-    }
+# Vercel Blob Storage URLs for installers
+# After uploading to Vercel Blob, replace these with your actual blob URLs
+INSTALLER_BLOB_URLS = {
+    'windows': os.environ.get('BLOB_URL_WINDOWS', 'https://your-blob-url.public.blob.vercel-storage.com/quantstrip-windows-v1.0.exe'),
+    'macos': os.environ.get('BLOB_URL_MACOS', 'https://your-blob-url.public.blob.vercel-storage.com/quantstrip-macos-v1.0.dmg'),
+    'linux': os.environ.get('BLOB_URL_LINUX', 'https://your-blob-url.public.blob.vercel-storage.com/quantstrip-linux-v1.0.tar.gz')
 }
 
 def validate_user_license(email, required_product=None):
@@ -119,40 +94,37 @@ class handler(BaseHTTPRequestHandler):
             data = json.loads(post_data.decode('utf-8'))
             
             email = data.get('email', '').strip()
-            file_type = data.get('fileType', '')  # 'platform' or 'plugins'
-            platform = data.get('platform', '')    # 'windows', 'macos', 'linux', 'free', 'pro'
+            file_type = data.get('fileType', '')  # 'platform'
+            platform = data.get('platform', '')    # 'windows', 'macos', 'linux'
             
             if not email or not file_type or not platform:
                 response = {'success': False, 'error': 'Missing required parameters'}
                 self.wfile.write(json.dumps(response).encode())
                 return
             
-            # Validate file type and platform
-            if file_type not in DOWNLOAD_FILES:
+            # Only handle platform installers here (plugins moved to templates page)
+            if file_type != 'platform':
                 response = {'success': False, 'error': 'Invalid file type'}
                 self.wfile.write(json.dumps(response).encode())
                 return
             
-            if platform not in DOWNLOAD_FILES[file_type]:
+            if platform not in INSTALLER_BLOB_URLS:
                 response = {'success': False, 'error': 'Invalid platform'}
                 self.wfile.write(json.dumps(response).encode())
                 return
             
-            # Check if Pro license is required
-            required_product = 'Pro' if platform == 'pro' else None
-            
-            # Validate user has appropriate license
-            is_valid, error_msg = validate_user_license(email, required_product)
+            # Validate user has active license (any license is fine for platform download)
+            is_valid, error_msg = validate_user_license(email)
             
             if not is_valid:
                 response = {'success': False, 'error': error_msg}
                 self.wfile.write(json.dumps(response).encode())
                 return
             
-            # Get file info
-            file_info = DOWNLOAD_FILES[file_type][platform]
+            # Get Vercel Blob URL for the installer
+            download_url = INSTALLER_BLOB_URLS[platform]
             
-            # Log the download attempt
+            # Log the download
             try:
                 user_result = supabase.table('users')\
                     .select('id, first_name, last_name')\
@@ -161,15 +133,14 @@ class handler(BaseHTTPRequestHandler):
                 
                 if user_result.data:
                     user_id = user_result.data[0]['id']
-                    print(f"Download authorized for user {user_id}: {file_info['filename']}")
-                    # You could log to a downloads table here for analytics
+                    print(f"Download authorized for user {user_id}: {platform} installer")
             except Exception as e:
                 print(f"Logging error (non-critical): {str(e)}")
             
             response = {
                 'success': True,
-                'downloadUrl': file_info['url'],
-                'filename': file_info['filename'],
+                'downloadUrl': download_url,
+                'filename': f'quantstrip-{platform}',
                 'message': 'Download authorized',
                 'fileInfo': {
                     'type': file_type,
