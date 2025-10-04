@@ -12,7 +12,7 @@ supabase: Client = create_client(supabase_url, supabase_key)
 # Vercel Blob Storage URLs for installers
 # After uploading to Vercel Blob, replace these with your actual blob URLs
 INSTALLER_BLOB_URLS = {
-    'windows': os.environ.get('BLOB_URL_WINDOWS', 'https://your-blob-url.public.blob.vercel-storage.com/quantstrip-windows-v1.0.exe'),
+    'windows': os.environ.get('BLOB_URL_WINDOWS', 'https://ykti6gajg8cwr1pz.public.blob.vercel-storage.com/Quantstrip_Installer.exe'),
     'macos': os.environ.get('BLOB_URL_MACOS', 'https://your-blob-url.public.blob.vercel-storage.com/quantstrip-macos-v1.0.dmg'),
     'linux': os.environ.get('BLOB_URL_LINUX', 'https://your-blob-url.public.blob.vercel-storage.com/quantstrip-linux-v1.0.tar.gz')
 }
