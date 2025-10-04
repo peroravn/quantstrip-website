@@ -7,10 +7,12 @@ import os
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from utils.db import create_user
-from utils.email import send_activation_email
-from utils.password import hash_password
-from utils.auth import check_email_exists
+from utils import (
+    create_user, 
+    send_activation_email, 
+    hash_password, 
+    check_email_exists
+)
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
