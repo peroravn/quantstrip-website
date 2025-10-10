@@ -1,6 +1,4 @@
 """
-ib_connect.py
-
 Synchronous wrapper around the Interactive Brokers Python API (ibapi).
 
 Provides a collection of blocking `get_...` methods that wrap IB's asynchronous
