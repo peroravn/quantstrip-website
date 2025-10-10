@@ -401,6 +401,9 @@
                         <div class="template-description">${template.description || 'No description available'}</div>
                     </div>
                     <div class="template-actions">
+                        <button class="download-btn" onclick="previewTemplate('${template.tier}', '${template.filename}')">
+                            👁️ Preview
+                        </button>
                         <button class="download-btn ${isLocked ? 'locked' : ''}" 
                                 onclick="downloadTemplate('${template.tier}', '${template.filename}')"
                                 ${isLocked ? 'disabled' : ''}>
@@ -446,6 +449,16 @@
                 alert('Download error: ' + error.message);
                 console.error('Download error:', error);
             }
+        }
+
+        function previewTemplate(tier, filename) {
+            if (tier === 'pro' && !hasProLicense) {
+                alert('This template requires an active Pro license. Please upgrade to access Pro templates.');
+                return;
+            }
+
+            // Open preview in new tab
+            window.open(`template-preview.html?tier=${encodeURIComponent(tier)}&filename=${encodeURIComponent(filename)}`, '_blank');
         }
 
         // Initialize

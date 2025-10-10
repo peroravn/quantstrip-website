@@ -1,6 +1,6 @@
 from http.server import BaseHTTPRequestHandler
 import json
-import os 
+import os
 import re
 
 class handler(BaseHTTPRequestHandler):
@@ -75,16 +75,22 @@ class handler(BaseHTTPRequestHandler):
                 content = f.read()
             
             # Match triple-quoted docstring at the start of the file
-            # Handles both """ and ''' style docstrings
-            pattern = r'^\s*["\']{{3}}(.*?)["\']{{3}}'
-            match = re.search(pattern, content, re.MULTILINE | re.DOTALL)
+            # More robust pattern that handles both """ and ''' style docstrings
+            patterns = [
+                r'^\s*"""(.*?)"""',  # Double quotes
+                r"^\s*'''(.*?)'''",  # Single quotes
+            ]
             
-            if match:
-                docstring = match.group(1).strip()
-                # Clean up the docstring - take first line or first sentence
-                lines = docstring.split('\n')
-                first_line = lines[0].strip()
-                return first_line if first_line else 'No description available'
+            for pattern in patterns:
+                match = re.search(pattern, content, re.MULTILINE | re.DOTALL)
+                if match:
+                    docstring = match.group(1).strip()
+                    # Take first line or first sentence
+                    lines = docstring.split('\n')
+                    first_line = lines[0].strip()
+                    # Remove any trailing punctuation for cleaner display
+                    first_line = first_line.rstrip('.,;:')
+                    return first_line if first_line else 'No description available'
             
             return 'No description available'
         except Exception as e:

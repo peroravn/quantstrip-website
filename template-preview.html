@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Preview - Quantstrip</title>
+    <!-- Highlight.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-name {
+            color: #666;
+            font-size: 14px;
+        }
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .preview-header {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .preview-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-copy {
+            background-color: #008CBA;
+            color: white;
+        }
+        .btn-copy:hover {
+            background-color: #007399;
+        }
+        .btn-download {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-download:hover {
+            background-color: #45a049;
+        }
+        .btn-back {
+            background-color: #999;
+            color: white;
+        }
+        .btn-back:hover {
+            background-color: #777;
+        }
+        .code-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        pre {
+            background: #282c34;
+            padding: 20px;
+            overflow-x: auto;
+            margin: 0;
+            line-height: 1.5;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+        .hljs {
+            background: none;
+            padding: 0;
+        }
+        .status-message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .status-message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status-message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #666;
+            background: white;
+            border-radius: 8px;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #4CAF50;
+            text-decoration: none;
+            padding: 10px 20px;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Template Preview</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName"></strong></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="statusMessage" class="status-message"></div>
+
+        <div id="loadingDiv" class="loading">
+            Loading template...
+        </div>
+
+        <div id="previewContent" style="display: none;">
+            <div class="preview-header">
+                <div class="preview-title" id="templateName">-</div>
+                <div class="preview-actions">
+                    <button class="btn btn-copy" onclick="copyCode()">📋 Copy Code</button>
+                    <button class="btn btn-download" onclick="downloadCode()">⬇️ Download</button>
+                    <button class="btn btn-back" onclick="goBack()">← Back</button>
+                </div>
+            </div>
+
+            <div class="code-container">
+                <pre><code id="codeDisplay" class="language-python"></code></pre>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="templates.html">← Back to Templates</a>
+        </div>
+    </div>
+
+    <script>
+        function checkAuth() {
+            const userStr = sessionStorage.getItem('user');
+            if (!userStr) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return JSON.parse(userStr);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
+        function goBack() {
+            window.history.back();
+        }
+
+        function showStatus(message, isError = false) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message ${isError ? 'error' : 'success'}`;
+            statusDiv.style.display = 'block';
+            
+            if (!isError) {
+                setTimeout(() => {
+                    statusDiv.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        async function loadTemplate() {
+            const user = checkAuth();
+            if (!user) return;
+
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
+
+            // Get template info from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const tier = urlParams.get('tier');
+            const filename = urlParams.get('filename');
+
+            if (!tier || !filename) {
+                document.getElementById('loadingDiv').innerHTML = 
+                    '<p style="color: #f44336;">Missing template information.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch('https://www.quantstrip.com/api/get-template-code', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: user.email,
+                        tier: tier,
+                        filename: filename
+                    })
+                });
+
+                const data = await response.json();
+
+                document.getElementById('loadingDiv').style.display = 'none';
+
+                if (data.success) {
+                    document.getElementById('templateName').textContent = filename;
+                    document.getElementById('codeDisplay').textContent = data.code;
+                    
+                    // Apply syntax highlighting
+                    hljs.highlightElement(document.getElementById('codeDisplay'));
+                    
+                    document.getElementById('previewContent').style.display = 'block';
+                } else {
+                    showStatus('Error loading template: ' + data.error, true);
+                }
+            } catch (error) {
+                document.getElementById('loadingDiv').style.display = 'none';
+                showStatus('Error: ' + error.message, true);
+                console.error('Error loading template:', error);
+            }
+        }
+
+        function copyCode() {
+            const codeElement = document.getElementById('codeDisplay');
+            const code = codeElement.textContent;
+
+            navigator.clipboard.writeText(code).then(() => {
+                showStatus('Code copied to clipboard!');
+            }).catch(err => {
+                showStatus('Failed to copy code', true);
+                console.error('Copy error:', err);
+            });
+        }
+
+        function downloadCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const filename = urlParams.get('filename');
+            const code = document.getElementById('codeDisplay').textContent;
+
+            // Create blob and download
+            const blob = new Blob([code], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+            showStatus('Download started');
+        }
+
+        // Initialize
+        loadTemplate();
+    </script>
+</body>
+</html>
