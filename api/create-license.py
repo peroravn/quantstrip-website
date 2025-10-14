@@ -20,45 +20,54 @@ SMTP_USER = "quantstrip@gmail.com"
 SMTP_PASSWORD = "svvpsmnmfcwccrsy"
 FROM_EMAIL = SMTP_USER
 
+
 def generate_license_key(user_id, product_id, expires_at):
     """
     Generate a license key in format: QSTR-XXXX-YYYY-ZZZZ-AAAA
-    Encodes: product type, expiration date, user ID, and checksum
+    
+    Encodes:
+    - Product ID (2 digits): 01=Free, 02=Pro
+    - User ID (4 digits): 0001-9999
+    - Expiration date (8 digits): YYYYMMDD
+    
+    Args:
+        user_id: User ID (integer)
+        product_id: Product ID (1=Free, 2=Pro)
+        expires_at: Expiration datetime object
+        
+    Returns:
+        str: License key (e.g., "QSTR-ABCD-EFGH-IJKL-ABC1")
     """
     # Format expiration date as YYYYMMDD
     exp_date = expires_at.strftime('%Y%m%d')
     
-    # Create data string: ProductID-UserID-ExpirationDate
+    # Create data string: ProductID(2) + UserID(4) + ExpirationDate(8) = 14 chars total
     data = f"{product_id:02d}{user_id:04d}{exp_date}"
     
-    # Generate checksum (first 4 chars of SHA256 hash)
+    # Generate checksum (first 4 chars of SHA256 hash, uppercase)
     checksum = hashlib.sha256(data.encode()).hexdigest()[:4].upper()
     
-    # Encode the data in base36 for compactness
-    try:
-        encoded = base64.b32encode(data.encode()).decode('utf-8').replace('=', '')[:12]
-    except:
-        encoded = data[:12]
+    # Encode the data in base32
+    encoded_with_padding = base64.b32encode(data.encode()).decode('utf-8')
+    
+    # Remove padding for display
+    encoded = encoded_with_padding.rstrip('=')
+    
+    # Split into 4-character chunks
+    part1 = encoded[0:4]
+    part2 = encoded[4:8]
+    part3 = encoded[8:12]
     
     # Format as QSTR-XXXX-YYYY-ZZZZ-AAAA
-    # Part 1: First 4 chars of encoded data
-    # Part 2: Next 4 chars of encoded data
-    # Part 3: Next 4 chars of encoded data
-    # Part 4: Checksum
-    part1 = encoded[0:4] if len(encoded) > 3 else (encoded + '0000')[:4]
-    part2 = encoded[4:8] if len(encoded) > 7 else (encoded + '0000')[4:8]
-    part3 = encoded[8:12] if len(encoded) > 11 else (encoded + '0000')[8:12]
-    
     license_key = f"QSTR-{part1}-{part2}-{part3}-{checksum}"
     
     return license_key
 
-def send_license_email(to_email, first_name, product_name, license_key, expires_at):
+
+def send_license_email(to_email, first_name, product_name, license_key, expires_at_formatted):
     """Send email with license key"""
     try:
         print(f"Sending license email to {to_email}")
-        
-        exp_date_formatted = expires_at.strftime('%B %d, %Y')
         
         # Create message
         msg = MIMEMultipart('alternative')
@@ -78,7 +87,7 @@ def send_license_email(to_email, first_name, product_name, license_key, expires_
         
         License Details:
         - Product: {product_name}
-        - Valid Until: {exp_date_formatted}
+        - Valid Until: {expires_at_formatted}
         
         To activate your software:
         1. Copy the license key above
@@ -110,7 +119,7 @@ def send_license_email(to_email, first_name, product_name, license_key, expires_
                 <div style="background-color: #e8f5e9; padding: 15px; border-radius: 4px; margin: 20px 0;">
                     <h4 style="margin-top: 0; color: #2e7d32;">License Details</h4>
                     <p style="margin: 5px 0;"><strong>Product:</strong> {product_name}</p>
-                    <p style="margin: 5px 0;"><strong>Valid Until:</strong> {exp_date_formatted}</p>
+                    <p style="margin: 5px 0;"><strong>Valid Until:</strong> {expires_at_formatted}</p>
                 </div>
                 
                 <h3>How to Activate</h3>
@@ -144,6 +153,7 @@ def send_license_email(to_email, first_name, product_name, license_key, expires_
         error_msg = f"Email error: {type(e).__name__} - {str(e)}"
         print(error_msg)
         return False, error_msg
+
 
 class handler(BaseHTTPRequestHandler):
     def do_POST(self):
@@ -231,7 +241,7 @@ class handler(BaseHTTPRequestHandler):
                 user['first_name'],
                 product['name'],
                 license_key,
-                expires_at
+                expires_at.strftime('%B %d, %Y')
             )
             
             response = {
