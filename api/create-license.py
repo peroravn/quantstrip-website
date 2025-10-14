@@ -23,7 +23,7 @@ FROM_EMAIL = SMTP_USER
 
 def generate_license_key(user_id, product_id, expires_at):
     """
-    Generate a license key in format: QSTR-XXXX-YYYY-ZZZZ-AAAA
+    Generate a license key in format: QSTR-XXXX-XXXX-...-AAAA
     
     Encodes:
     - Product ID (2 digits): 01=Free, 02=Pro
@@ -36,7 +36,7 @@ def generate_license_key(user_id, product_id, expires_at):
         expires_at: Expiration datetime object
         
     Returns:
-        str: License key (e.g., "QSTR-ABCD-EFGH-IJKL-ABC1")
+        str: License key (e.g., "QSTR-XXXX-XXXX-XXXX-XXXX-XXXX-XXXX-AAAA")
     """
     # Format expiration date as YYYYMMDD
     exp_date = expires_at.strftime('%Y%m%d')
@@ -53,13 +53,11 @@ def generate_license_key(user_id, product_id, expires_at):
     # Remove padding for display
     encoded = encoded_with_padding.rstrip('=')
     
-    # Split into 4-character chunks
-    part1 = encoded[0:4]
-    part2 = encoded[4:8]
-    part3 = encoded[8:12]
+    # Split into 4-character chunks (preserves all data)
+    chunks = [encoded[i:i+4] for i in range(0, len(encoded), 4)]
     
-    # Format as QSTR-XXXX-YYYY-ZZZZ-AAAA
-    license_key = f"QSTR-{part1}-{part2}-{part3}-{checksum}"
+    # Format as QSTR-XXXX-XXXX-...-AAAA (all chunks + checksum)
+    license_key = f"QSTR-{'-'.join(chunks)}-{checksum}"
     
     return license_key
 
