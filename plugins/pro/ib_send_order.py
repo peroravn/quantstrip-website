@@ -6,11 +6,10 @@
     
 """
 
-from clients._client_base import ClientBase
+from quantstrip import ClientBase, db_handler
 from IBKR.ib_connect import IB
 from IBKR.ib_objects import ib_contract, ib_order
 import traceback
-import db
 import logging
 
 # --- Set up logger ---
@@ -18,22 +17,21 @@ logger = logging.getLogger(__name__)
 
 # --- Create contract and order objects
 contract = ib_contract("SPY")
-order = ib_order(100)
+order = ib_order(quantity = 100, orderType = "MKT")
 
 class Client(ClientBase):
     """ A minimal client sending an order to IB
     """
     def __init__(self, *args):
         super().__init__()
-        self.db = db.DBHandler()
-        self.db.get_connection()
+        db_handler.get_connection()
         self.display_name = "IB Send Order Test"
         self.scheduler.every(1).seconds.do(self.job)
 
 
     def job(self):
         ib = IB()
-        order_id = self.db.next_order_id()
+        order_id = db_handler.next_order_id()
         logger.info(f"Sending MOC order to IB with order ID {order_id}")
         
         try:
@@ -43,7 +41,7 @@ class Client(ClientBase):
                 ib.placeOrder(order_id, contract, order)
                 
                 # Step 2: Insert order in DB.
-                self.db.insert_order( order_id = order_id,
+                db_handler.insert_order( order_id = order_id,
                                         strategy_id     = 1, # Test Strategy
                                         broker_id       = 1, 
                                         symbol          = "SPY",
@@ -52,7 +50,7 @@ class Client(ClientBase):
                                         total_quantity  = 100)
                 
                 # Step 3: Insert position in the internal position table in DB
-                self.db.insert_position( strategy_id = 1, 
+                db_handler.insert_position( strategy_id = 1, 
                                         broker_id   = 1, 
                                         symbol      = "SPY",
                                         position    = 100, 
