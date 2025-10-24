@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quantstrip — Automatisera din handel på IBKR ISK</title>
+  <meta name="description" content="Automatisera din handel på Interactive Brokers ISK. Testa Quantstrip i vår svenska beta — smidig exekvering av algoritmer, säker integration och stöd för flera strategiplattformar." />
+  <style>
+    :root{--accent:#0b63ff;--muted:#6b7280;--bg:#f7fafc;--card:#ffffff}
+    *{box-sizing:border-box}
+    body{font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; margin:0; background:var(--bg); color:#0f172a; line-height:1.45}
+    .container{max-width:1100px;margin:0 auto;padding:28px}
+    header{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+    .logo{display:flex;gap:12px;align-items:center}
+    .logo .mark{width:44px;height:44px;background:linear-gradient(135deg,var(--accent),#06b6d4);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    nav a{margin-left:18px;color:var(--muted);text-decoration:none;font-weight:600}
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-top:28px}
+    .eyebrow{font-weight:700;color:var(--accent);margin-bottom:8px}
+    h1{font-size:34px;margin:0 0 12px}
+    p.lead{color:var(--muted);margin:0 0 18px}
+    .cta-group{display:flex;gap:12px;align-items:center}
+    .btn{background:var(--accent);color:#fff;padding:12px 18px;border-radius:10px;text-decoration:none;font-weight:700;display:inline-block}
+    .btn.secondary{background:transparent;color:var(--accent);border:2px solid rgba(11,99,255,0.12)}
+    .card{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.06)}
+    .form-row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+    label{font-size:13px;color:var(--muted)}
+    input[type=text],input[type=email]{padding:10px;border-radius:8px;border:1px solid #e6e9ef;font-size:15px}
+    .small{font-size:13px;color:var(--muted)}
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+    .feature{background:var(--card);padding:12px;border-radius:10px}
+    .how{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
+    .how .step{background:var(--card);padding:14px;border-radius:10px;text-align:center}
+    footer{margin-top:36px;padding:18px 0;border-top:1px solid #eef2f7;color:var(--muted)}
+    .beta-badge{display:inline-block;background:#eaf2ff;color:var(--accent);padding:6px 10px;border-radius:999px;font-weight:700}
+    @media (max-width:960px){
+      .hero{grid-template-columns:1fr;}
+      .features{grid-template-columns:1fr}
+      .how{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="mark">Q</div>
+        <div>
+          <div style="font-weight:800">Quantstrip</div>
+          <div style="font-size:13px;color:var(--muted)">Automatisk exekvering • IBKR ISK</div>
+        </div>
+      </div>
+      <nav>
+        <a href="/sv/ibkr-isk">Sverige</a>
+        <a href="/docs">Dokumentation</a>
+        <a href="/pricing">Prissättning</a>
+        <a href="https://discord.gg/quantstrip" target="_blank">Discord</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="eyebrow">NYTT — IBKR ISK</div>
+        <h1>Automatisera din handel på IBKR:s nya ISK‑konton — utan krångel.</h1>
+        <p class="lead">Quantstrip är en stabil plattform för algoritmisk exekvering. Kör dina strategier mot Interactive Brokers ISK, hantera portföljer, och få pålitlig exekvering — byggd för traders som vill ha kontroll.</p>
+        <div class="cta-group">
+          <a class="btn" href="#signup">Anmäl dig till betan</a>
+          <a class="btn secondary" href="https://discord.gg/quantstrip" target="_blank">Gå med i Discord</a>
+        </div>
+
+        <div style="margin-top:18px;color:var(--muted);font-size:13px">
+          <span class="beta-badge">Svensk beta</span>
+          <span style="margin-left:10px">Lanseras före jul — platserna är begränsade.</span>
+        </div>
+
+        <div style="margin-top:22px;display:flex;gap:12px;align-items:center">
+          <div style="font-size:13px;color:var(--muted)">Samarbete med</div>
+          <div style="padding:6px 10px;background:#111827;color:#fff;border-radius:8px;font-weight:700;font-size:13px">Robot Wealth</div>
+        </div>
+      </div>
+
+      <aside class="card">
+        <h3 style="margin:0 0 8px">Säkra din plats i betan</h3>
+        <p class="small" style="margin:0 0 12px">Fyll i dina uppgifter så bjuder vi in dig när betan öppnar. Vi skickar också en kort guide för hur du ansluter IBKR ISK.</p>
+
+        <form id="signup" action="/subscribe" method="post" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <label for="name">Namn</label>
+            <input id="name" name="name" type="text" placeholder="Förnamn Efternamn" required />
+          </div>
+          <div class="form-row">
+            <label for="email">E‑post</label>
+            <input id="email" name="email" type="email" placeholder="mejladress@exempel.se" required />
+          </div>
+          <div class="form-row">
+            <label for="note">(Valfritt) Länk till strategi / tidigare plattform</label>
+            <input id="note" name="note" type="text" placeholder="t.ex. GitHub, TradingView eller Autostock" />
+          </div>
+          <button class="btn" type="submit">Anmäl mig till betan</button>
+          <p class="small" style="margin-top:10px">Genom att anmäla dig accepterar du att vi skickar mejl angående betan. Vi behandlar dina uppgifter enligt GDPR. <a href="/privacy">Integritetspolicy</a>.</p>
+        </form>
+      </aside>
+    </section>
+
+    <section class="features">
+      <div class="feature">
+        <h4 style="margin:0 0 6px">IBKR ISK-stöd</h4>
+        <p class="small">Kör strategier direkt mot Interactive Brokers ISK-konton. Ingen mellanhand.</p>
+      </div>
+      <div class="feature">
+        <h4 style="margin:0 0 6px">Flera strategikällor</h4>
+        <p class="small">Stöd för Python-skript, TradingView-signaler, QuantConnect och egna API‑anrop.</p>
+      </div>
+      <div class="feature">
+        <h4 style="margin:0 0 6px">Robust exekvering</h4>
+        <p class="small">Molnbaserad exekvering med loggning, återanslutning och riskbegränsning.</p>
+      </div>
+    </section>
+
+    <section class="how">
+      <div class="step">
+        <div style="font-weight:800;font-size:18px">1</div>
+        <div style="margin-top:8px;font-weight:700">Koppla IBKR</div>
+        <div class="small" style="margin-top:6px">Anslut din Interactive Brokers ISK via säkert tokenflöde.</div>
+      </div>
+      <div class="step">
+        <div style="font-weight:800;font-size:18px">2</div>
+        <div style="margin-top:8px;font-weight:700">Ladda upp strategi</div>
+        <div class="small" style="margin-top:6px">Importera från TradingView, GitHub eller skriv Python direkt i plattformen.</div>
+      </div>
+      <div class="step">
+        <div style="font-weight:800;font-size:18px">3</div>
+        <div style="margin-top:8px;font-weight:700">Simulera & testa</div>
+        <div class="small" style="margin-top:6px">Backtesta och kör på papper innan live‑exekvering.</div>
+      </div>
+      <div class="step">
+        <div style="font-weight:800;font-size:18px">4</div>
+        <div style="margin-top:8px;font-weight:700">Kör live</div>
+        <div class="small" style="margin-top:6px">Låt Quantstrip sköta exekveringen medan du följer statistiken i realtid.</div>
+      </div>
+    </section>
+
+    <section style="margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:18px">
+      <div class="card">
+        <h3 style="margin-top:0">Demo (kort)</h3>
+        <p class="small">Se en snabb demo av plattformen. Videon visar hur du kopplar IBKR och startar en strategi.</p>
+        <div style="margin-top:12px;background:#0f172a;color:#fff;padding:14px;border-radius:8px;text-align:center">Demo video placeholder — lägg in din Loom/YouTube-länk här</div>
+        <div style="margin-top:12px"><a class="btn secondary" href="/demo">Se full demo</a></div>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0">Gå med i communityn</h3>
+        <p class="small">Vår Discord samlar svenska användare, utvecklare och tidiga betatestare. Diskutera strategi‑implementation, migrering från Autostock och teknisk support.</p>
+        <div style="margin-top:12px"><a class="btn" href="https://discord.gg/quantstrip" target="_blank">Gå med i Discord</a></div>
+      </div>
+    </section>
+
+    <footer>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="font-size:14px">© <strong>Quantstrip</strong> — Automatiserad exekvering för IBKR ISK</div>
+        <div style="font-size:13px;color:var(--muted)">Kontakt: <a href="mailto:info@quantstrip.com">info@quantstrip.com</a></div>
+      </div>
+    </footer>
+  </div>
+
+  <script>
+    function handleSubmit(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      if(!name || !email){
+        alert('Fyll i namn och e‑post för att anmäla dig.');
+        return;
+      }
+      // Här kan du ersätta med fetch() till ditt API/endpoint
+      alert('Tack! Vi har tagit emot din anmälan. Du får ett mejl inom kort.');
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
