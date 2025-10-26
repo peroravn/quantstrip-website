@@ -108,6 +108,7 @@
             position: relative;
             z-index: 2;
             max-width: 600px;
+            margin-left: 200px;
         }
 
         .hero-content h1 {
@@ -159,11 +160,11 @@
         }
 
         .news-card {
-            background: #151b3d;
+            background: #ffffff;  /* Change from #151b3d */
             border-radius: 12px;
             overflow: hidden;
             transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid #e0e0e0;  /* Change border color */
         }
 
         .news-card:hover {
@@ -185,13 +186,13 @@
         .news-card-content h3 {
             font-size: 20px;
             margin-bottom: 12px;
-            color: #ffffff;
+            color: #1a1a1a;  /* Change from #ffffff to dark text */
         }
 
         .news-card-content p {
             font-size: 15px;
             line-height: 1.6;
-            color: #b0b0b0;
+            color: #666666;  /* Change from #b0b0b0 */
         }
 
         /* Dashboard Preview in Hero */
@@ -326,25 +327,30 @@
     <section class="news-section">
         <div class="news-grid">
             <div class="news-card">
-                <div class="news-card-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
                 <div class="news-card-content">
                     <h3>Implementing a simple reversal strategy</h3>
+                </div>
+                <div class="news-card-image" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+                <div class="news-card-content">
                     <p>Learn how to implement and backtest a mean reversion strategy using our platform. Discover the key metrics and optimization techniques for better performance.</p>
                 </div>
             </div>
 
             <div class="news-card">
+                <div class="news-card-content">
+                    <h3>Interactive Brokers launch ISK ("Investeringssparkonto") for Swedish investors</h3>                </div>
                 <div class="news-card-image" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);"></div>
                 <div class="news-card-content">
-                    <h3>Interactive Brokers launch ISK ("Investeringssparkonto") for Swedish investors</h3>
                     <p>Swedish investors can now access tax-advantaged investment accounts through Interactive Brokers integration with our platform.</p>
                 </div>
             </div>
 
             <div class="news-card">
-                <div class="news-card-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
                 <div class="news-card-content">
                     <h3>Platform Updates & New Features</h3>
+                </div>
+                <div class="news-card-image" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);"></div>
+                <div class="news-card-content">
                     <p>Check out the latest updates to our trading platform, including enhanced monitoring tools, improved execution speeds, and new analytics dashboards.</p>
                 </div>
             </div>
