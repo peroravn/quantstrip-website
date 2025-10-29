@@ -33,6 +33,30 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .reference-text a {
+            color: #00376b;           /* Teal color for links */
+            text-decoration: none;    /* Remove the underline */
+            font-weight: 500;         /* Slightly bolder text */
+            }
+
+        .reference-text a:hover {
+            text-decoration: underline; /* Underline on hover for clarity */
+            color: rgb(8, 0, 75);             /* Darker teal on hover */
+            }
+
+        .learn-more-link {
+            display: inline-block;
+            margin-top: 8px;
+            color: #00376b;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .learn-more-link:hover {
+            text-decoration: underline;
+            color: rgb(8, 0, 75);
+        }
+
         .logo {
             display: flex;
             align-items: center;
@@ -197,9 +221,8 @@
 
         .section-image {
             width: 100%;
-            height: 400px;
+            height: auto;
             border-radius: 8px;
-            object-fit: cover;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
         }
 
@@ -363,11 +386,14 @@
      <div class="content-sections">
     <section class="content-section">
         <div class="section-text">
-            <div class="section-label">AUTOMATED STRATEGY EXECUTION</div>
+            <div class="section-label">AUTOMATED EXECUTION - STRATEGY EXAMPLE</div>
             <h2>Trading institutional flows at the end of month</h2>
-            <p>Finding alpha is a challenging task. As the universe of data expands rapidly and the pace of technological development accelerates, you need every advantage the market has to offer.</p>
-            <p>You need a complete suite of cloud-based tools to research investment approaches, assess strategies with backtesting, then rapidly deploy to maximize returns. For more bespoke requirements or proprietary datasets, replicate the full QuantConnect experience on-premise with our Local Platform.</p>
-            <p>QuantConnect offers the powerful financial tools you need for every stage of your quant journey.</p>
+            <p class="reference-text">This strategy was introduced by Kris Longmore from <a href="https://www.robotwealth.com" target="_blank">Robot Wealth</a> 
+            and the post is available on 
+                <a href="https://krislongmore.substack.com/p/how-wealth-managers-pay-you-to-trade" target="_blank">substack</a>. 
+            The trade is based on the monthly rebalancing flows created when wealth managers and other institutional investors rebalance their portfolios, creating noisily predictable return patterns that can be traded at the end of each month.</p>
+            <p>Compared to buying and holding SPY (the red line), the strategy performs remarkably well for such simple system. Find out how to implement the strategy in Quantstrip to automate order execution and track performance over time. <a href="posts/1_Trading_Institutional_Flows.html" class="learn-more-link">Read full article →</a>
+            </p>
         </div>
         <div>
             <img src="assets/strategy_performance.jpg" alt="Platform" class="section-image">
