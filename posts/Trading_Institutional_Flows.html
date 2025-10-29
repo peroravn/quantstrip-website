@@ -159,11 +159,8 @@
             }
         }
     </style>
-    <!-- Prism.js CSS & JS (light theme + Python) -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/themes/prism.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/prism.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-python.min.js"></script>
-
+    <link href="https://cdn.jsdelivr.net/npm/enlighterjs@latest/dist/enlighterjs.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/enlighterjs@latest/dist/enlighterjs.min.js"></script>
 </head>
 
 <body>
@@ -204,7 +201,7 @@
         <h2>Python Strategy Example</h2>
         <p>Here’s a simple Python function demonstrating moving averages:</p>
 
-        <pre><code class="language-python">
+        <pre data-enlighter-language="python">
         from quantstrip import ClientBase
         import logging
         from Utils import calendar_utils as cu
@@ -268,10 +265,14 @@
                         ib.disconnect_client()
                         
                 self.stop_client()
-        </code></pre>
+        </pre>
 
         <p>You can use this as a starting point for your strategy implementation.</p>
         <p>More article text goes here. You can include charts, screenshots, or diagrams related to your topic.</p>
     </section>
+    <!-- EnlighterJS init -->
+    <script>
+      EnlighterJS.init('pre');
+    </script>
 </body>
 </html>
