@@ -125,9 +125,12 @@
             font-size: 18px;
         }
 
-        pre {
-            padding: 10px 10px; /* top/bottom left/right */
-            margin-left: 0;     /* remove left margin if any */
+        pre.line-numbers {
+            padding-left: 10px;  /* reduces space between left edge and code */
+            padding-right: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            margin-left: 0;
         }
 
         @media (max-width: 768px) {
@@ -139,12 +142,13 @@
             }
         }
     </style>
-    <!-- Prism.js CSS for GitHub theme -->
+    <!-- Prism.js CSS & JS (light theme + Python + line numbers) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/themes/prism.min.css" rel="stylesheet" />
-
-    <!-- Prism.js library -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
 </head>
 
 <body>
@@ -179,10 +183,10 @@
 
         
         <div class="image-placeholder">Image Placeholder</div>
-        <h2>Example Python Strategy</h2>
-        <p>Here’s a simple Python function demonstrating moving averages:</p>
+    <h2>Python Strategy Example</h2>
+    <p>Here’s a simple Python function demonstrating moving averages:</p>
 
-        <pre><code class="language-python">
+    <pre class="line-numbers"><code class="language-python">
         # Calculate simple moving average
         def moving_average(prices, window=3):
             return [sum(prices[i:i+window])/window for i in range(len(prices)-window+1)]
@@ -190,7 +194,7 @@
         prices = [10, 12, 11, 14, 15]
         ma = moving_average(prices)
         print(ma)
-        </code></pre>
+    </code></pre>
 
         <p>You can use this as a starting point for your strategy implementation.</p>
         <p>More article text goes here. You can include charts, screenshots, or diagrams related to your topic.</p>
