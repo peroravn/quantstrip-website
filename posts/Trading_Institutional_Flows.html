@@ -83,7 +83,7 @@
         /* --- ARTICLE SECTION --- */
         .article {
             background-color: #ffffff;
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 60px auto;
             padding: 40px 60px;
             border-radius: 8px;
@@ -107,23 +107,13 @@
             margin: 20px 0;
         }
 
-        pre[class*="language-"] {
-            margin-left: 0 !important;      /* zero left margin */
-            margin-right: 0 !important;     /* optional: zero right margin */
-            padding-left: 0px !important;   /* small left padding */
-            padding-right: 8px !important;  /* small right padding */
-            padding-top: 4px !important;
-            padding-bottom: 4px !important;
-            font-size: 13px !important;     /* smaller font size */
-            background-color: #f5f2f0 !important; /* light background */
-            overflow-x: auto;                /* horizontal scroll if needed */
-        }
-
-        /* also target code inside the pre (to ensure font size inheritance) */
-        pre[class*="language-"] code {
-            font-size: inherit !important;
-            padding: 0 !important;
-            margin: 0 !important;
+        /* Make code block scroll horizontally instead of wrapping */
+        .article pre {
+            overflow-x: auto;   /* adds horizontal scrollbar */
+            white-space: pre;   /* prevent wrapping of long lines */
+            font-size: 13px;    /* smaller font size */
+            padding: 8px 10px;  /* reduce inner padding */
+            background-color: #f5f2f0; /* Enlighter light theme background */
         }
 
         .image-placeholder {
@@ -143,12 +133,7 @@
             color: #555;
             font-size: 18px;
         }
-        pre {
-            padding: 8px 10px; /* small padding all around */
-            margin-left: 0;    /* no extra left margin */
-            background-color: #f6f8fa; /* light GitHub-style background */
-            overflow-x: auto;  /* horizontal scroll if needed */
-        }
+
 
         @media (max-width: 768px) {
             .article {
