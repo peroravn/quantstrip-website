@@ -124,13 +124,11 @@
             color: #555;
             font-size: 18px;
         }
-
-        pre.line-numbers {
-            padding-left: 10px;  /* reduces space between left edge and code */
-            padding-right: 10px;
-            padding-top: 10px;
-            padding-bottom: 10px;
-            margin-left: 0;
+        pre {
+            padding: 8px 10px; /* small padding all around */
+            margin-left: 0;    /* no extra left margin */
+            background-color: #f6f8fa; /* light GitHub-style background */
+            overflow-x: auto;  /* horizontal scroll if needed */
         }
 
         @media (max-width: 768px) {
@@ -142,12 +140,10 @@
             }
         }
     </style>
-    <!-- Prism.js CSS & JS (light theme + Python + line numbers) -->
+    <!-- Prism.js CSS & JS (light theme + Python) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/themes/prism.min.css" rel="stylesheet" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/prism.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/components/prism-python.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.30.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
 
 </head>
 
@@ -186,14 +182,17 @@
     <h2>Python Strategy Example</h2>
     <p>Here’s a simple Python function demonstrating moving averages:</p>
 
-    <pre class="line-numbers"><code class="language-python">
-        # Calculate simple moving average
-        def moving_average(prices, window=3):
-            return [sum(prices[i:i+window])/window for i in range(len(prices)-window+1)]
+<h2>Python Strategy Example</h2>
+    <p>Here’s a simple Python function demonstrating moving averages:</p>
 
-        prices = [10, 12, 11, 14, 15]
-        ma = moving_average(prices)
-        print(ma)
+    <pre><code class="language-python">
+    # Calculate simple moving average
+    def moving_average(prices, window=3):
+        return [sum(prices[i:i+window])/window for i in range(len(prices)-window+1)]
+
+    prices = [10, 12, 11, 14, 15]
+    ma = moving_average(prices)
+    print(ma)
     </code></pre>
 
         <p>You can use this as a starting point for your strategy implementation.</p>
