@@ -210,9 +210,9 @@
             def job(self):
                 TLT_contract = ib_contract("TLT")
                 SPY_contract = ib_contract("SPY")
-                
                 # Check if today is 16th trading day of the month (open position)
                 if cu.business_day_number_today(calendar = "NYSE") == 16:
+                #if True:
                     try:
                         if ib.connect_client(client_id = 1):
                             
@@ -221,12 +221,20 @@
                             SPY = ib.get_historical_data(SPY_contract, "", "16 D", "1 day")
 
                             # Calculate performance
-                            TLT_perf, TLT_qty = (TLT.iloc[-1]["close"]/TLT.iloc[0]["close"], ALLOCATION / TLT.iloc[0]["close"]) 
-                            SPY_perf, SPY_qty = (SPY.iloc[-1]["close"]/SPY.iloc[0]["close"], ALLOCATION / SPY.iloc[0]["close"])
-
+                            TLT_perf    = TLT.iloc[-1]["close"] / TLT.iloc[0]["close"]
+                            TLT_qty     = ALLOCATION / TLT.iloc[0]["close"] 
+                            SPY_perf    = SPY.iloc[-1]["close"] / SPY.iloc[0]["close"]
+                            SPY_qty     = ALLOCATION / SPY.iloc[0]["close"])
+                            
                             # Open position
-                            contract, quantity = (SPY_contract, int(SPY_qty)) if TLT_perf > SPY_perf else (TLT_contract, int(TLT_qty))
-                            ib.placeOrder(ib.get_next_order_id(), contract, ib_order(quantity, "Rebalancing", "MKT"))
+                            if TLT_perf > SPY_perf:
+                                contract, quantity = (SPY_contract, int(SPY_qty))  
+                            else: 
+                                contract, quantity = (TLT_contract, int(TLT_qty))
+                            
+                            ib.placeOrder(ib.get_next_order_id(), 
+                                            contract, 
+                                            ib_order(quantity, "Rebalancing", "MKT"))
                             
                     except Exception as e:
                         logger.error(e)
@@ -235,13 +243,26 @@
                         ib.disconnect_client()
                 
                 # Check if today is 1st trading day of the month (close position)
-                if cu.is_last_business_day_of_month(calendar = "NYSE"):
+                #if cu.is_last_business_day_of_month(calendar = "NYSE"):
+                if True:
                     try:
                         if ib.connect_client(client_id = 1):
                             positions = {p['contract'].symbol : p['position'] for p in ib.get_positions()} 
                             logger.info(f"Positions {positions}")
-                            if "TLT" in positions: ib.placeOrder(ib.get_next_order_id(), TLT_contract, ib_order(-int(positions["TLT"]), "Rebalancing", "MKT") )
-                            if "SPY" in positions: ib.placeOrder(ib.get_next_order_id(), SPY_contract, ib_order(-int(positions["SPY"]), "Rebalancing", "MKT") )
+                            
+                            if "TLT" in positions: 
+                                ib.placeOrder(ib.get_next_order_id(), 
+                                                TLT_contract, 
+                                                ib_order(-int(positions["TLT"]), 
+                                                "Rebalancing", 
+                                                "MKT") )
+                                                
+                            if "SPY" in positions: 
+                                ib.placeOrder(ib.get_next_order_id(), 
+                                                SPY_contract, 
+                                                ib_order(-int(positions["SPY"]),
+                                                "Rebalancing", 
+                                                "MKT") )
                     
                     except Exception as e:
                         logger.error(e)
@@ -250,6 +271,10 @@
                         ib.disconnect_client()
                         
                 self.stop_client()
+                        
+                
+        
+        
         </pre>
 
         <p>You can use this as a starting point for your strategy implementation.</p>
