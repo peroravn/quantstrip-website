@@ -1,288 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantstrip - Article Page</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quantstrip - Article Page</title>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #1a1a1a;
-        }
+  <!-- PrismJS core + Python language -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
 
-        /* --- NAVIGATION --- */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 60px;
-            background: rgba(0, 0, 0, 0.97);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 24px;
-            font-weight: 600;
-            color: #ffffff;
-            text-decoration: none;
-        }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #1a1a1a;
+    }
 
-        .logo img {
-            height: 24px;
-            width: auto;
-            margin-left: 160px;
-        }
+    /* --- NAVIGATION --- */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 60px;
+      background: rgba(0, 0, 0, 0.97);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 40px;
-            align-items: center;
-        }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 24px;
+      font-weight: 600;
+      color: #ffffff;
+      text-decoration: none;
+    }
 
-        .nav-links a {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
+    .logo img {
+      height: 24px;
+      width: auto;
+      margin-left: 160px;
+    }
 
-        .nav-links a:hover {
-            color: #00bcd4;
-        }
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      align-items: center;
+    }
 
-        /* --- GREY BANNER --- */
-        .banner {
-            margin-top: 64px; /* account for fixed nav */
-            background-color: #535353;
-            color: #d4d4d4;
-            text-align: left;
-            padding: 60px 40px 60px 200px; /* top right bottom left */
-        }
+    .nav-links a {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 16px;
+      transition: color 0.3s;
+    }
 
-        .banner h1 {
-            font-size: 40px;
-            font-weight: 700;
-        }
+    .nav-links a:hover {
+      color: #00bcd4;
+    }
 
-        /* --- ARTICLE SECTION --- */
-        .article {
-            background-color: #ffffff;
-            max-width: 1000px;
-            margin: 60px auto;
-            padding: 40px 60px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
+    /* --- GREY BANNER --- */
+    .banner {
+      margin-top: 64px;
+      background-color: #535353;
+      color: #d4d4d4;
+      text-align: left;
+      padding: 60px 40px 60px 200px;
+    }
 
-        .article h2 {
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
+    .banner h1 {
+      font-size: 40px;
+      font-weight: 700;
+    }
 
-        .article p {
-            line-height: 1.8;
-            margin-bottom: 20px;
-            color: #333;
-        }
+    /* --- ARTICLE SECTION --- */
+    .article {
+      background-color: #ffffff;
+      max-width: 1000px;
+      margin: 60px auto;
+      padding: 40px 60px;
+      border-radius: 8px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+      position: relative;
+    }
 
-        .article img {
-            width: 100%;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
+    .article h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
 
-        /* Make code block scroll horizontally instead of wrapping */
-        .article pre {
-            overflow-x: auto;   /* adds horizontal scrollbar */
-            white-space: pre;   /* prevent wrapping of long lines */
-            font-size: 14px;    /* smaller font size */
-            padding: 8px 10px;  /* reduce inner padding */
-            background-color: #f5f2f0; /* Enlighter light theme background */
-        }
+    .article p {
+      line-height: 1.8;
+      margin-bottom: 20px;
+      color: #333;
+    }
 
-        .image-placeholder {
-            width: 100%;
-            height: 300px;
-            border-radius: 8px;
-            background: repeating-linear-gradient(
-                45deg,
-                #ccc,
-                #ccc 10px,
-                #ddd 10px,
-                #ddd 20px
-            );
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #555;
-            font-size: 18px;
-        }
+    .article img {
+      width: 100%;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
 
+    .image-placeholder {
+      width: 100%;
+      height: 300px;
+      border-radius: 8px;
+      background: repeating-linear-gradient(
+        45deg,
+        #ccc,
+        #ccc 10px,
+        #ddd 10px,
+        #ddd 20px
+      );
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #555;
+      font-size: 18px;
+    }
 
-        @media (max-width: 768px) {
-            .article {
-                padding: 30px 20px;
-            }
-            .banner h1 {
-                font-size: 30px;
-            }
-        }
-    </style>
-    <link href="https://cdn.jsdelivr.net/npm/enlighterjs@latest/dist/enlighterjs.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/enlighterjs@latest/dist/enlighterjs.min.js"></script>
+    /* --- MkDocs Light+ inspired Prism style --- */
+    pre[class*="language-"],
+    code[class*="language-"] {
+      font-family: 'Source Code Pro', Menlo, Consolas, monospace;
+      background: #f8f8f8 !important;
+      color: #2b2b2b;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    pre[class*="language-"] {
+      padding: 12px 14px;
+      margin: 1.2em 0;
+      overflow-x: auto;
+      border-radius: 4px;
+      background: #f8f8f8 !important;
+      position: relative;
+    }
+
+    :not(pre) > code[class*="language-"] {
+      background: #f0f0f0;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+
+    /* --- Light+ color palette --- */
+    .token.comment,
+    .token.prolog,
+    .token.doctype,
+    .token.cdata {
+      color: #6a9955;
+      font-style: italic;
+    }
+
+    .token.keyword {
+      color: #0000ff;
+    }
+
+    .token.string {
+      color: #a31515;
+    }
+
+    .token.number {
+      color: #098658;
+    }
+
+    .token.function {
+      color: #795e26;
+    }
+
+    .token.class-name {
+      color: #267f99;
+    }
+
+    .token.operator {
+      color: #000000;
+    }
+
+    .token.punctuation {
+      color: #393a34;
+    }
+
+    .token.variable {
+      color: #001080;
+    }
+
+    /* --- Copy Button --- */
+    .copy-button {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      background: #e0e0e0;
+      color: #333;
+      border: none;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 3px;
+      cursor: pointer;
+      opacity: 0.6;
+      transition: opacity 0.2s, background 0.2s;
+    }
+
+    .copy-button:hover {
+      opacity: 1;
+      background: #d0d0d0;
+    }
+
+    @media (max-width: 768px) {
+      .article {
+        padding: 30px 20px;
+      }
+      .banner h1 {
+        font-size: 30px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-    <!-- NAVIGATION -->
-    <nav class="nav">
-        <a href="/" class="logo">
-            <img src="../assets/Logo.png" alt="Quantstrip Logo">
-        </a>
-        <div class="nav-links">
-            <a href="#platform">Platform</a>
-            <a href="#pricing">Pricing</a>
-            <a href="#learn">Learn</a>
-            <a href="login.html" class="sign-in">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-                Sign in
-            </a>
-        </div>
-    </nav>
+  <!-- NAVIGATION -->
+  <nav class="nav">
+    <a href="/" class="logo">
+      <img src="../assets/Logo.png" alt="Quantstrip Logo" />
+    </a>
+    <div class="nav-links">
+      <a href="#platform">Platform</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#learn">Learn</a>
+      <a href="login.html" class="sign-in">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+          <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+        Sign in
+      </a>
+    </div>
+  </nav>
 
-    <!-- GREY BANNER -->
-    <section class="banner">
-        <h1>Article Title or Page Header</h1>
-    </section>
+  <!-- GREY BANNER -->
+  <section class="banner">
+    <h1>Article Title or Page Header</h1>
+  </section>
 
-    <!-- WHITE ARTICLE AREA -->
-    <section class="article">
-        <h2>Implementing a flow trading strategy in Quantstrip</h2>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec feugiat, ipsum et hendrerit efficitur, enim eros congue arcu, a tempus risus enim eget orci.</p>
+  <!-- WHITE ARTICLE AREA -->
+  <section class="article">
+    <h2>Implementing a flow trading strategy in Quantstrip</h2>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec feugiat,
+      ipsum et hendrerit efficitur, enim eros congue arcu, a tempus risus enim
+      eget orci.
+    </p>
 
+    <div class="image-placeholder">Image Placeholder</div>
+
+    <h2>Python Strategy Example</h2>
+    <p>Here’s a simple Python function demonstrating moving averages:</p>
+
+    <pre><button class="copy-button">Copy</button><code class="language-python">
+from quantstrip import ClientBase
+import logging
+from Utils import calendar_utils as cu
+from IBKR.ib_objects import ib_order, ib_contract
+from IBKR.ib_connect import ib 
+
+# --- Logging setup ---
+logger = logging.getLogger(__name__)
+
+ALLOCATION = 100000
+
+class Client(ClientBase):
+    """ A trading client executing the SPY/TLT rebalancing trade """
+    def __init__(self, *args):
+        super().__init__()
+        self.display_name = "Rebalancing Flow"
+        self.scheduler.every(1).second.do(self.job)
         
-        <div class="image-placeholder">Image Placeholder</div>
-        <h2>Python Strategy Example</h2>
-        <p>Here’s a simple Python function demonstrating moving averages:</p>
+    def job(self):
+        TLT_contract = ib_contract("TLT")
+        SPY_contract = ib_contract("SPY")
 
-        <h2>Python Strategy Example</h2>
-        <p>Here’s a simple Python function demonstrating moving averages:</p>
+        if cu.business_day_number_today(calendar = "NYSE") == 16:
+            try:
+                if ib.connect_client(client_id = 1):
+                    TLT = ib.get_historical_data(TLT_contract, "", "16 D", "1 day")
+                    SPY = ib.get_historical_data(SPY_contract, "", "16 D", "1 day")
 
-        <pre data-enlighter-language="python">
-        from quantstrip import ClientBase
-        import logging
-        from Utils import calendar_utils as cu
-        from IBKR.ib_objects import ib_order, ib_contract
-        from IBKR.ib_connect import ib 
+                    TLT_perf = TLT.iloc[-1]["close"] / TLT.iloc[0]["close"]
+                    SPY_perf = SPY.iloc[-1]["close"] / SPY.iloc[0]["close"]
 
-        # --- Logging setup ---
-        logger = logging.getLogger(__name__)
+                    TLT_qty = ALLOCATION / TLT.iloc[0]["close"] 
+                    SPY_qty = ALLOCATION / SPY.iloc[0]["close"]
 
-        ALLOCATION = 100000
-
-        class Client(ClientBase):
-            """ A trading client executing the SPY/TLT rebalancing trade
-            """
-            def __init__(self, *args):
-                super().__init__()
-                self.display_name = "Rebalancing Flow"
-                #self.scheduler.every().day.at("03:45", "America/New_York").do(self.job)
-                self.scheduler.every(1).second.do(self.job)
-                
-            def job(self):
-                TLT_contract = ib_contract("TLT")
-                SPY_contract = ib_contract("SPY")
-                # Check if today is 16th trading day of the month (open position)
-                if cu.business_day_number_today(calendar = "NYSE") == 16:
-                #if True:
-                    try:
-                        if ib.connect_client(client_id = 1):
-                            
-                            # Get historical prices for last 16 days
-                            TLT = ib.get_historical_data(TLT_contract, "", "16 D", "1 day")
-                            SPY = ib.get_historical_data(SPY_contract, "", "16 D", "1 day")
-
-                            # Calculate performance
-                            TLT_perf    = TLT.iloc[-1]["close"] / TLT.iloc[0]["close"]
-                            TLT_qty     = ALLOCATION / TLT.iloc[0]["close"] 
-                            SPY_perf    = SPY.iloc[-1]["close"] / SPY.iloc[0]["close"]
-                            SPY_qty     = ALLOCATION / SPY.iloc[0]["close"])
-                            
-                            # Open position
-                            if TLT_perf > SPY_perf:
-                                contract, quantity = (SPY_contract, int(SPY_qty))  
-                            else: 
-                                contract, quantity = (TLT_contract, int(TLT_qty))
-                            
-                            ib.placeOrder(ib.get_next_order_id(), 
-                                            contract, 
-                                            ib_order(quantity, "Rebalancing", "MKT"))
-                            
-                    except Exception as e:
-                        logger.error(e)
+                    if TLT_perf > SPY_perf:
+                        contract, quantity = (SPY_contract, int(SPY_qty))  
+                    else: 
+                        contract, quantity = (TLT_contract, int(TLT_qty))
                     
-                    finally:
-                        ib.disconnect_client()
-                
-                # Check if today is 1st trading day of the month (close position)
-                #if cu.is_last_business_day_of_month(calendar = "NYSE"):
-                if True:
-                    try:
-                        if ib.connect_client(client_id = 1):
-                            positions = {p['contract'].symbol : p['position'] for p in ib.get_positions()} 
-                            logger.info(f"Positions {positions}")
-                            
-                            if "TLT" in positions: 
-                                ib.placeOrder(ib.get_next_order_id(), 
-                                                TLT_contract, 
-                                                ib_order(-int(positions["TLT"]), 
-                                                "Rebalancing", 
-                                                "MKT") )
-                                                
-                            if "SPY" in positions: 
-                                ib.placeOrder(ib.get_next_order_id(), 
-                                                SPY_contract, 
-                                                ib_order(-int(positions["SPY"]),
-                                                "Rebalancing", 
-                                                "MKT") )
-                    
-                    except Exception as e:
-                        logger.error(e)
-                    
-                    finally:
-                        ib.disconnect_client()
-                        
-                self.stop_client()
-                        
-                
-        
-        
-        </pre>
+                    ib.placeOrder(ib.get_next_order_id(), contract, ib_order(quantity, "Rebalancing", "MKT"))
+            except Exception as e:
+                logger.error(e)
+            finally:
+                ib.disconnect_client()
+    </code></pre>
 
-        <p>You can use this as a starting point for your strategy implementation.</p>
-        <p>More article text goes here. You can include charts, screenshots, or diagrams related to your topic.</p>
-    </section>
-    <!-- EnlighterJS init -->
-    <script>
-      EnlighterJS.init('pre');
-    </script>
+    <p>
+      You can use this as a starting point for your strategy implementation.
+    </p>
+  </section>
+
+  <!-- Copy to Clipboard Script -->
+  <script>
+    document.querySelectorAll('.copy-button').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const code = btn.nextElementSibling.innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = 'Copied!';
+          setTimeout(() => (btn.textContent = 'Copy'), 1500);
+        });
+      });
+    });
+  </script>
 </body>
 </html>
+
