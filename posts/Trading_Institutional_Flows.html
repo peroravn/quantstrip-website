@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quantstrip - Article Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- PrismJS core + Python language -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.css" rel="stylesheet" />
@@ -18,9 +19,15 @@
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; */
+      font-family: -apple-system, BlinkMacSystemFont, 'Lato', sans-serif;
       background-color: #f5f5f5;
       color: #1a1a1a;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
+    color: #353434;
     }
 
     /* --- NAVIGATION --- */
@@ -100,6 +107,8 @@
     .article h2 {
       font-size: 28px;
       margin-bottom: 20px;
+      margin-top: 20px;
+      font-family: 'Lato', sans-serif;
     }
 
     .article p {
@@ -107,6 +116,17 @@
       margin-bottom: 20px;
       color: #333;
     }
+
+    .article code {
+            font-family: 'Source Code Pro', Menlo, Consolas, monospace;
+            font-size: 16px;
+            background-color: #eeeeee;
+            margin-left: 4px;
+            margin-right: 4px;
+            padding-left: 4px;
+            padding-right: 4px;
+            border-radius: 4px;
+        }
 
     .article img {
       width: 100%;
@@ -132,13 +152,23 @@
       font-size: 18px;
     }
 
+    ul, ol {
+            margin: 15px 0;
+    }
+
+    li {
+            margin: 8px 0;
+            margin-bottom: 16px;
+            margin-left: 28px;
+    }
+
     /* --- MkDocs Light+ inspired Prism style --- */
     pre[class*="language-"],
     code[class*="language-"] {
       font-family: 'Source Code Pro', Menlo, Consolas, monospace;
       background: #f8f8f8 !important;
       color: #2b2b2b;
-      font-size: 13px;
+      font-size: 15px;
       line-height: 1.5;
     }
 
@@ -158,7 +188,10 @@
     }
 
     /* --- Light+ color palette --- */
-    .token.comment,
+    .token.comment {
+      color: #af840f;
+      font-style: italic;
+    }
     .token.prolog,
     .token.doctype,
     .token.cdata {
@@ -264,69 +297,171 @@
 
   <!-- WHITE ARTICLE AREA -->
   <section class="article">
-    <h2>Implementing a flow trading strategy in Quantstrip</h2>
-    <p>
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec feugiat,
-      ipsum et hendrerit efficitur, enim eros congue arcu, a tempus risus enim
-      eget orci.
-    </p>
+       <h2>Overview</h2>
+    <p>This trading client implements a systematic rebalancing strategy that capitalizes on end-of-month portfolio flows from wealth managers and institutional investors. As detailed in <a href="https://krislongmore.substack.com/p/how-wealth-managers-pay-you-to-trade" class="learn-more-link" target="_blank">Kris Longmore's analysis</a>, large asset managers typically rebalance their 60/40 stock-bond portfolios at month-end to maintain target allocations. This creates predictable selling pressure on the outperforming asset and buying pressure on the underperformer.</p>
 
-    <div class="image-placeholder">Image Placeholder</div>
+    <p><strong>Strategy Logic:</strong></p>
+    <ul>
+        <li>On the 16th trading day of each month, identify which asset (SPY or TLT) has underperformed over the past 16 days</li>
+        <li>Buy the underperformer with the full allocation</li>
+        <li>Hold through month-end rebalancing flows</li>
+        <li>Exit the position on the last trading day of the month</li>
+    </ul>
 
-    <h2>Python Strategy Example</h2>
-    <p>Here’s a simple Python function demonstrating moving averages:</p>
+    <p>The strategy anticipates that the underperforming asset will benefit from systematic buying as portfolio managers sell winners to buy losers, returning their portfolios to balanced allocations.</p>
 
-    <pre><button class="copy-button">Copy</button><code class="language-python">
-from quantstrip import ClientBase
+    <hr>
+
+    <h2>Part 1: General Setup</h2>
+
+    <h3>Imports and Configuration</h3>
+
+    <pre><button class="copy-button">Copy</button><code class="language-python">from quantstrip import ClientBase
 import logging
 from Utils import calendar_utils as cu
 from IBKR.ib_objects import ib_order, ib_contract
-from IBKR.ib_connect import ib 
+from IBKR.ib_connect import ib</code></pre>
 
-# --- Logging setup ---
-logger = logging.getLogger(__name__)
+    <p>The implementation begins by importing the necessary Quantstrip components:</p>
 
-ALLOCATION = 100000
+    <ul>
+        <li><code>ClientBase</code>: The foundation class from the Quantstrip module that handles client connectivity and task scheduling. By subclassing <code>ClientBase</code>, your strategy inherits all the connection management and scheduling infrastructure needed to run reliably.</li>
+        
+        <li><code>calendar_utils</code>: A utility module that provides trading calendar functions, eliminating the need to manually track business days across different exchanges.</li>
+        
+        <li><code>ib_objects</code> and <code>ib_connect</code>: Quantstrip's synchronous wrapper around Interactive Brokers' TWS API. Rather than wrestling with callback-based asynchronous code, these modules provide a clean, blocking interface that makes order placement and data retrieval straightforward.</li>
+    </ul>
+
+    <h3>Client Class Structure</h3>
+
+    <pre><button class="copy-button">Copy</button><code class="language-python">ALLOCATION = 100000
 
 class Client(ClientBase):
-    """ A trading client executing the SPY/TLT rebalancing trade """
+    """ A trading client executing the SPY/TLT rebalancing trade
+    """
     def __init__(self, *args):
         super().__init__()
-        self.display_name = "Rebalancing Flow"
-        self.scheduler.every(1).second.do(self.job)
-        
-    def job(self):
-        TLT_contract = ib_contract("TLT")
-        SPY_contract = ib_contract("SPY")
+        self.display_name = "Rebalancing Flow"</code></pre>
 
-        if cu.business_day_number_today(calendar = "NYSE") == 16:
-            try:
-                if ib.connect_client(client_id = 1):
-                    TLT = ib.get_historical_data(TLT_contract, "", "16 D", "1 day")
-                    SPY = ib.get_historical_data(SPY_contract, "", "16 D", "1 day")
+    <p>The <code>Client</code> class extends <code>ClientBase</code>, inheriting the built-in scheduler and connection management. The <code>ALLOCATION</code> constant defines the dollar amount to deploy per trade ($100,000 in this example).</p>
 
-                    TLT_perf = TLT.iloc[-1]["close"] / TLT.iloc[0]["close"]
-                    SPY_perf = SPY.iloc[-1]["close"] / SPY.iloc[0]["close"]
+    <p><strong>Scheduler Configuration:</strong><br>
+    The inherited <code>self.scheduler</code> uses a simple, intuitive syntax for job scheduling.</p>
 
-                    TLT_qty = ALLOCATION / TLT.iloc[0]["close"] 
-                    SPY_qty = ALLOCATION / SPY.iloc[0]["close"]
+    <pre><button class="copy-button">Copy</button><code class="language-python">self.scheduler.every().day.at("15:45", "America/New_York").do(self.job)</code></pre>
 
-                    if TLT_perf > SPY_perf:
-                        contract, quantity = (SPY_contract, int(SPY_qty))  
-                    else: 
-                        contract, quantity = (TLT_contract, int(TLT_qty))
-                    
-                    ib.placeOrder(ib.get_next_order_id(), contract, ib_order(quantity, "Rebalancing", "MKT"))
-            except Exception as e:
-                logger.error(e)
-            finally:
-                ib.disconnect_client()
-    </code></pre>
+    <p>This runs the strategy logic once daily at 3:45 PM ET, ensuring all trading logic is evaluated and orders are sent in time before market close.</p>
 
-    <p>
-      You can use this as a starting point for your strategy implementation.
-    </p>
+    <hr>
+
+    <h2>Part 2: Entry Rule - Opening the Position</h2>
+
+    <h3>Identifying the 16th Trading Day</h3>
+
+    <pre><button class="copy-button">Copy</button><code class="language-python">if cu.business_day_number_today(calendar = "NYSE") == 16:</code></pre>
+
+    <p>The entry logic triggers on the 16th trading day of each month using Quantstrip's <code>calendar_utils</code>. This function automatically accounts for weekends, holidays, and exchange-specific calendars—no need to maintain your own holiday databases or write complex date arithmetic.</p>
+
+    <h3>Fetching Historical Data and Calculating Performance</h3>
+
+    <pre><button class="copy-button">Copy</button><code class="language-python">if ib.connect_client(client_id = 1):
+    # Get historical prices for last 16 days
+    TLT = ib.get_historical_data(TLT_contract, "", "16 D", "1 day")
+    SPY = ib.get_historical_data(SPY_contract, "", "16 D", "1 day")
+
+    # Calculate performance
+    TLT_perf = TLT.iloc[-1]["close"]/TLT.iloc[0]["close"]
+    TLT_qty = ALLOCATION / TLT.iloc[-1]["close"]
+    
+    SPY_perf = SPY.iloc[-1]["close"]/SPY.iloc[0]["close"]
+    SPY_qty = ALLOCATION / SPY.iloc[-1]["close"]</code></pre>
+
+    <p>The synchronous IB wrapper simplifies what would otherwise be complex asynchronous API calls:</p>
+
+    <ol>
+        <li><code>ib.connect_client(client_id = 1)</code>: Establishes connection to TWS/IB Gateway with a specific client ID</li>
+        <li><code>ib.get_historical_data()</code>: Returns a pandas DataFrame with OHLC data—much easier to work with than raw API responses</li>
+        <li><strong>Performance calculation</strong>: Simple ratio of latest close to first close gives the 16-day return</li>
+        <li><strong>Position sizing</strong>: Calculates quantity based on the exit price (last close in the dataset)</li>
+    </ol>
+
+    <h3>Placing the Entry Order</h3>
+
+    <pre><button class="copy-button">Copy</button><code class="language-python"># Open position
+if TLT_perf > SPY_perf:
+    contract, quantity = (SPY_contract, int(SPY_qty)) 
+else:
+    contract, quantity = (TLT_contract, int(TLT_qty))
+    
+ib.placeOrder(ib.get_next_order_id(), 
+              contract, 
+              ib_order(quantity, "Rebalancing", "MKT"))</code></pre>
+
+    <p>The strategy selects the underperformer (if TLT outperformed, buy SPY; otherwise buy TLT) and places a market order. The <code>ib_order()</code> helper function constructs the order object with clean, readable parameters: quantity, tag for tracking ("Rebalancing"), and order type ("MKT").</p>
+
+    <p><strong>Error Handling:</strong><br>
+    The entire entry logic is wrapped in try-except-finally blocks, ensuring the IB connection is always properly closed via <code>ib.disconnect_client()</code>, even if an exception occurs.</p>
+
+    <hr>
+
+    <h2>Part 3: Exit Rule - Closing the Position</h2>
+
+    <h3>Detecting Month-End</h3>
+
+    <pre><button class="copy-button">Copy</button><code class="language-python">if cu.is_last_business_day_of_month(calendar = "NYSE"):</code></pre>
+
+    <p>The exit trigger uses another calendar utility that identifies the last trading day of the month, accounting for the same holiday and weekend complexities.</p>
+
+    <h3>Retrieving Current Positions and Exiting</h3>
+
+    <pre><button class="copy-button">Copy</button><code class="language-python">if ib.connect_client(client_id = 1):
+    positions = {p['contract'].symbol : p['position'] for p in ib.get_positions()} 
+    logger.info(f"Positions {positions}")
+    
+    if "TLT" in positions:
+        ib.placeOrder(ib.get_next_order_id(), 
+                      TLT_contract, 
+                      ib_order(-int(positions["TLT"]), "Rebalancing", "MKT"))
+                      
+    if "SPY" in positions: 
+        ib.placeOrder(ib.get_next_order_id(), 
+                      SPY_contract, 
+                      ib_order(-int(positions["SPY"]), "Rebalancing", "MKT"))</code></pre>
+
+    <p>The exit logic:</p>
+    <ol>
+        <li><strong>Fetches current positions</strong>: <code>ib.get_positions()</code> returns all open positions, which are converted to a dictionary mapping symbols to quantities</li>
+        <li><strong>Checks for each symbol</strong>: Determines if either TLT or SPY is held</li>
+        <li><strong>Places closing orders</strong>: For any held position, places a market order with negative quantity (selling the position)</li>
+    </ol>
+
+    <p>The same robust error handling ensures clean disconnection regardless of execution success.</p>
+
+    <hr>
+
+       <h2>Running the script</h2>
+       <p>Open the Python editor and create a new file called "rebalancing_flow" in the Test folder. Paste the complete code into the editor and save it.
+        <img src="assets/posts/python_editor.png" alt="Python editor" style="display: block; margin: 10px 0;">
+       To simulate the client, you need to have the Interactive Brokers TWS or IB Gateway running and properly configured to accept API connections. 
+       For testing purposes it is recommended to use the TWS to get visual confirmation that orders are placed as expected. The client will connect to the standard paper trading port (7497).
+       To force the opening and closing trades, replace the calendar utility functions with "True" in the if statements.
+       In test mode the client will run only once and then exit. In live mode the client will run continuously, evaluating the job at the scheduled time each trading day.</p>
+
+       <hr>
+
+    <h2>Summary</h2>
+
+    <p>This implementation demonstrates how Quantstrip streamlines systematic strategy development by providing:</p>
+    <ul>
+        <li>Reliable scheduling and connection management through <code>ClientBase</code></li>
+        <li>Calendar-aware utilities that handle the complexities of trading day calculations</li>
+        <li>A synchronous, Pythonic interface to Interactive Brokers that eliminates callback complexity</li>
+    </ul>
+
+    <p>The entire strategy—from scheduling to data retrieval to order placement—fits in under 70 lines of readable code. Whether you're implementing sophisticated quantitative strategies or simple rebalancing rules, Quantstrip's infrastructure lets you focus on strategy logic rather than plumbing.</p>
+
   </section>
+
 
   <!-- Copy to Clipboard Script -->
   <script>
