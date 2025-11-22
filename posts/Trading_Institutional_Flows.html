@@ -82,15 +82,21 @@
     /* --- GREY BANNER --- */
     .banner {
       margin-top: 64px;
-      background-color: #535353;
       color: #d4d4d4;
       text-align: left;
       padding: 60px 40px 60px 200px;
+      height: 150px; /* Adjust this to control height */
+      background-image: url('./pictures/PostHeaderBackground.png');
+      background-size: cover; /* Stretches and crops to fill */
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
     }
 
     .banner h1 {
       font-size: 40px;
       font-weight: 700;
+      color: #d4d4d4;
     }
 
     /* --- ARTICLE SECTION --- */
@@ -292,7 +298,7 @@
 
   <!-- GREY BANNER -->
   <section class="banner">
-    <h1>Article Title or Page Header</h1>
+    <h1>Trading institutional flows at the end of month</h1>
   </section>
 
   <!-- WHITE ARTICLE AREA -->
@@ -364,22 +370,23 @@ class Client(ClientBase):
 
     <h3>Fetching Historical Data and Calculating Performance</h3>
 
-    <pre><button class="copy-button">Copy</button><code class="language-python">if ib.connect_client(client_id = 1):
-    # Get historical prices for last 16 days
-    TLT = ib.get_historical_data(TLT_contract, "", "16 D", "1 day")
-    SPY = ib.get_historical_data(SPY_contract, "", "16 D", "1 day")
+    <pre><button class="copy-button">Copy</button><code class="language-python">with IB() as ib:
+  # Get historical prices for last 16 days
+  TLT = ib.get_historical_data(TLT_contract, "", "16 D", "1 day")
+  SPY = ib.get_historical_data(SPY_contract, "", "16 D", "1 day")
 
-    # Calculate performance
-    TLT_perf = TLT.iloc[-1]["close"]/TLT.iloc[0]["close"]
-    TLT_qty = ALLOCATION / TLT.iloc[-1]["close"]
-    
-    SPY_perf = SPY.iloc[-1]["close"]/SPY.iloc[0]["close"]
-    SPY_qty = ALLOCATION / SPY.iloc[-1]["close"]</code></pre>
+  # Calculate performance
+  TLT_perf    = TLT.iloc[0]["close"]/TLT.iloc[-1]["close"]
+  TLT_qty     = ALLOCATION / TLT.iloc[0]["close"]
+
+  SPY_perf    = SPY.iloc[0]["close"]/SPY.iloc[-1]["close"]
+  SPY_qty     = ALLOCATION / SPY.iloc[0]["close"]
+</code></pre>
 
     <p>The synchronous IB wrapper simplifies what would otherwise be complex asynchronous API calls:</p>
 
     <ol>
-        <li><code>ib.connect_client(client_id = 1)</code>: Establishes connection to TWS/IB Gateway with a specific client ID</li>
+        <li><code>with IB() as ib</code>: Context manager that establishes connection to TWS/IB Gateway. The client ID for the connection is generated from a pool that recycles used IDs once connection is closed.</li>
         <li><code>ib.get_historical_data()</code>: Returns a pandas DataFrame with OHLC data—much easier to work with than raw API responses</li>
         <li><strong>Performance calculation</strong>: Simple ratio of latest close to first close gives the 16-day return</li>
         <li><strong>Position sizing</strong>: Calculates quantity based on the exit price (last close in the dataset)</li>
@@ -440,12 +447,33 @@ ib.placeOrder(ib.get_next_order_id(),
     <hr>
 
        <h2>Running the script</h2>
-       <p>Open the Python editor and create a new file called "rebalancing_flow" in the Test folder. Paste the complete code into the editor and save it.
-        <img src="assets/posts/python_editor.png" alt="Python editor" style="display: block; margin: 10px 0;">
-       To simulate the client, you need to have the Interactive Brokers TWS or IB Gateway running and properly configured to accept API connections. 
+       <p>Open the Python editor and create a new file called "rebalancing_flow" in the Test folder. Paste the complete code into the editor and save it.</p>
+      <figure>
+        <img src="./pictures/python_editor.png" alt="TWS Configuration" style="max-width: 100%; height: auto;">
+      </figure>
+       <p>To simulate the client, you need to have the Interactive Brokers TWS or IB Gateway running and properly configured to accept API connections. 
        For testing purposes it is recommended to use the TWS to get visual confirmation that orders are placed as expected. The client will connect to the standard paper trading port (7497).
-       To force the opening and closing trades, replace the calendar utility functions with "True" in the if statements.
-       In test mode the client will run only once and then exit. In live mode the client will run continuously, evaluating the job at the scheduled time each trading day.</p>
+       
+       <p>In test mode you typically want the client to run only once and then exit. You can do this by overriding the scheduler:</p> 
+       <pre><code class="language-python">
+#self.scheduler.every().day.at("15:45", "America/New_York").do(self.job)
+self.scheduler.every(1).second.do(self.job)
+      </code></pre>
+        <p> At the end of the job function add the following line to stop the scheduler after one run:</p>
+       <pre><code class="language-python">  self.stop_client()</code></pre>
+        <p>This will make the client run the job once after one second and then exit.</p>
+
+
+       <p>To force the opening and closing trades, replace the calendar utility functions with "True" in the if statements.</p>
+        <pre><code class="language-python">
+#if cu.business_day_number_today(calendar = "NYSE") == 16:
+if True:
+        </code></pre>
+        <p>Overriding the entry rule by forcing it to "True" will create and send an order to open a position in the underperforming asset.</p>
+        <figure>
+        <img src="./pictures/TWS_entry_order.png" alt="TWS Configuration" style="max-width: 100%; height: auto;">
+        </figure>
+        <p>In live mode the client will run continuously, evaluating the job at the scheduled time each trading day.</p>
 
        <hr>
 
@@ -459,7 +487,12 @@ ib.placeOrder(ib.get_next_order_id(),
     </ul>
 
     <p>The entire strategy—from scheduling to data retrieval to order placement—fits in under 70 lines of readable code. Whether you're implementing sophisticated quantitative strategies or simple rebalancing rules, Quantstrip's infrastructure lets you focus on strategy logic rather than plumbing.</p>
+    <hr>
 
+    <h2>Limitations</h2>
+        <p>Though the script contains all the necessary parts to automate the rebalancing flow trading strategy, there are no internal revcords created that allows you to manage the trade-life cycle.
+          This may be acceptable for a single trade strategy, but for more complex strategies it is recommended to implement proper trade management using Quantstrip's trade life-cycle datamodel.
+        </p>
   </section>
 
 
