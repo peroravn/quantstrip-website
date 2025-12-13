@@ -1,0 +1,96 @@
+/* Change body font size */
+.md-typeset {
+    font-size: 0.7rem;  /* default is 1rem */
+  }
+
+  .crisp {
+    image-rendering: crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+  }
+
+  .sql-table table {
+    font-family: Consolas, monospace;
+    font-size: 0.9em;
+    table-layout: auto;
+    width: auto;
+  }
+  
+  .sql-table th, .sql-table td {
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  /* Function signature styling */
+.funcname {
+    font-family: var(--md-code-font-family);
+    font-size: .7rem;               /* Slightly larger */
+    font-weight: 500;                 /* Semi-bold */
+    color: var(--md-accent-fg-color); /* Primary accent color */
+    background: var(--md-code-bg-color);
+    padding: 4px 8px;
+    /*border-radius: 3px;
+    border: 1px solid var(--md-default-fg-color--lighter);*/
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* ===== LEFT NAVIGATION MENU ===== */
+
+/* Smaller text for all navigation */
+.md-nav {
+    font-size: 0.65rem;
+    line-height: 1.5;
+}
+
+/* Top level items - bold */
+.md-nav--primary > .md-nav__list > .md-nav__item > .md-nav__link {
+    font-weight: 700;
+    font-size: 0.7rem;
+}
+
+/* Child items - regular weight */
+.md-nav--primary .md-nav__item .md-nav__item .md-nav__link {
+    font-weight: 400;
+    font-size: 0.65rem;
+}
+
+/* Active/current page highlight */
+.md-nav__link--active {
+    font-weight: 600;
+}
+
+/* ===== RIGHT TABLE OF CONTENTS ===== */
+
+/* Smaller TOC text */
+.md-sidebar--secondary .md-nav {
+    font-size: 0.6rem;
+}
+
+/* Top level TOC headings - bold */
+.md-sidebar--secondary .md-nav__list > .md-nav__item > .md-nav__link {
+    font-weight: 700;
+    font-size: 0.65rem;
+}
+
+/* Nested TOC items - regular */
+.md-sidebar--secondary .md-nav__list .md-nav__list .md-nav__link {
+    font-weight: 400;
+    font-size: 0.6rem;
+}
+
+/* ===== FUNCTION NAMES ===== */
+/*
+.funcname {
+    font-family: 'Roboto Mono', 'Courier New', monospace;
+    font-size: 0.9em;
+    font-weight: 600;
+    color: #e91e63;
+    background-color: #f8f8f8;
+    padding: 2px 6px;
+    border-radius: 3px;
+    border: 1px solid #eee;
+}
+    */
