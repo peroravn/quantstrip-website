@@ -1,0 +1,2365 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="IBKR_template.html">
+      
+      
+        <link rel="next" href="../API/quantstrip.html">
+      
+      
+      <link rel="icon" href="../assets/Q_logo.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.12">
+    
+    
+      
+        <title>Monthly Rebalancing - Documentation 0.94</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.2afb09e1.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../styles/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="github" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#monthly-rebalancing-flow-strategy" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../index.html" title="Documentation 0.94" class="md-header__button md-logo" aria-label="Documentation 0.94" data-md-component="logo">
+      
+  <img src="../assets/Logo_all_white.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Documentation 0.94
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Monthly Rebalancing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../index.html" title="Documentation 0.94" class="md-nav__button md-logo" aria-label="Documentation 0.94" data-md-component="logo">
+      
+  <img src="../assets/Logo_all_white.png" alt="logo">
+
+    </a>
+    Documentation 0.94
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../index.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Basic Concepts
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            Basic Concepts
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting_started/overview.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Dashboard Apps
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Dashboard Apps
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_apps/client_monitor.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Client Monitor
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_apps/python_editor.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Python Editor
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_apps/email.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Notification
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_apps/SQL_database.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    SQL Database
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_apps/logging.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard_apps/settings.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Settings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Code examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Code examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="templates_general.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    About examples
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Broker Integration
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            Broker Integration
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="IBKR_template.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Interactive Brokers
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Strategy Templates
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            Strategy Templates
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Monthly Rebalancing
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="rebalancing_strategy.html" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Monthly Rebalancing
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategy-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strategy Rationale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plugin-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plugin System
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Breakdown
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Code Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-imports-and-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Imports and Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuration-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuration Loading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-client-class-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Client Class Definition
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-trading-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Main Trading Logic
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Main Trading Logic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-job-execution-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Job Execution Method
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Job Execution Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-contract-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      A. Contract Initialization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-opening-position-logic-day-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Opening Position Logic (Day 16)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Opening Position Logic (Day 16)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-position-safety-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      A. Position Safety Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-historical-data-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      B. Historical Data Retrieval
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-performance-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      C. Performance Calculation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-position-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      D. Position Sizing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-trade-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      E. Trade Selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-order-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      F. Order Execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-database-recording" class="md-nav__link">
+    <span class="md-ellipsis">
+      G. Database Recording
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-closing-position-logic-last-business-day" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Closing Position Logic (Last Business Day)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Closing Position Logic (Last Business Day)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-position-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      A. Position Retrieval
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-position-details-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      B. Position Details Extraction
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-close-order-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      C. Close Order Execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-database-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      D. Database Update
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-client-shutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Client Shutdown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Schema
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trading-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trading Timeline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-defensive-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Defensive Programming
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuration-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuration Separation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-clean-resource-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Clean Resource Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Audit Trail
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-and-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Risks and Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risks and Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#market-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Market Risks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational Risks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mitigations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Monitoring
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Enhancements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#position-not-opening" class="md-nav__link">
+    <span class="md-ellipsis">
+      Position Not Opening
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#position-not-closing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Position Not Closing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unexpected-position-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unexpected Position State
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-and-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Support and Resources
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    API
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            API
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/quantstrip.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    quantstrip
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/database.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    db_handler
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/email.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    email_manager
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/settings.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    settings
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../API/logging.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    logging
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="/dashboard.html" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Back to Dashboard
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Overview
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strategy-rationale" class="md-nav__link">
+    <span class="md-ellipsis">
+      Strategy Rationale
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      Architecture
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plugin-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      Plugin System
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#code-breakdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      Code Breakdown
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Code Breakdown">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-imports-and-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Imports and Setup
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuration-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuration Loading
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-client-class-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Client Class Definition
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#main-trading-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      Main Trading Logic
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Main Trading Logic">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-job-execution-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Job Execution Method
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Job Execution Method">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-contract-initialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      A. Contract Initialization
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-opening-position-logic-day-16" class="md-nav__link">
+    <span class="md-ellipsis">
+      5. Opening Position Logic (Day 16)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Opening Position Logic (Day 16)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-position-safety-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      A. Position Safety Check
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-historical-data-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      B. Historical Data Retrieval
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-performance-calculation" class="md-nav__link">
+    <span class="md-ellipsis">
+      C. Performance Calculation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-position-sizing" class="md-nav__link">
+    <span class="md-ellipsis">
+      D. Position Sizing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#e-trade-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      E. Trade Selection
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#f-order-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      F. Order Execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#g-database-recording" class="md-nav__link">
+    <span class="md-ellipsis">
+      G. Database Recording
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-closing-position-logic-last-business-day" class="md-nav__link">
+    <span class="md-ellipsis">
+      6. Closing Position Logic (Last Business Day)
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Closing Position Logic (Last Business Day)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-position-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      A. Position Retrieval
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#b-position-details-extraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      B. Position Details Extraction
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#c-close-order-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      C. Close Order Execution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#d-database-update" class="md-nav__link">
+    <span class="md-ellipsis">
+      D. Database Update
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-client-shutdown" class="md-nav__link">
+    <span class="md-ellipsis">
+      7. Client Shutdown
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#error-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      Error Handling
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      Database Schema
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      Configuration Example
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#trading-timeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      Trading Timeline
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      Key Features
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key Features">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-defensive-programming" class="md-nav__link">
+    <span class="md-ellipsis">
+      1. Defensive Programming
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-configuration-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      2. Configuration Separation
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-clean-resource-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      3. Clean Resource Management
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-audit-trail" class="md-nav__link">
+    <span class="md-ellipsis">
+      4. Audit Trail
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#risks-and-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Risks and Considerations
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Risks and Considerations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#market-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Market Risks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operational-risks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Operational Risks
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mitigations" class="md-nav__link">
+    <span class="md-ellipsis">
+      Mitigations
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      Performance Monitoring
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-enhancements" class="md-nav__link">
+    <span class="md-ellipsis">
+      Future Enhancements
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Troubleshooting
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#position-not-opening" class="md-nav__link">
+    <span class="md-ellipsis">
+      Position Not Opening
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#position-not-closing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Position Not Closing
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unexpected-position-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      Unexpected Position State
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#support-and-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      Support and Resources
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="monthly-rebalancing-flow-strategy">Monthly Rebalancing Flow Strategy</h1>
+<h2 id="overview">Overview</h2>
+<p>The Monthly Rebalancing Flow strategy is an automated trading bot that exploits predictable institutional rebalancing flows at month-end. The strategy takes advantage of the fact that large institutional funds (pension funds, mutual funds, etc.) typically rebalance their portfolios back to target allocations (e.g., 60/40 stocks/bonds) at the end of each month.</p>
+<h3 id="strategy-rationale">Strategy Rationale</h3>
+<p>Large institutional investors maintain fixed allocation targets between different asset classes. As prices fluctuate throughout the month, their actual allocations drift away from these targets. At month-end, they must rebalance by:</p>
+<ul>
+<li><strong>Selling the outperformer</strong> (the asset that gained more)</li>
+<li><strong>Buying the underperformer</strong> (the asset that gained less or declined more)</li>
+</ul>
+<p>This creates predictable buying pressure on the underperforming asset in the final days of the month. The strategy aims to <strong>front-run these flows</strong> by:</p>
+<ol>
+<li>Identifying which asset (stocks or rates) underperformed over the first 16 trading days</li>
+<li>Buying the underperformer on day 16</li>
+<li>Holding until the last business day of the month</li>
+<li>Selling to capture the rebalancing flow premium</li>
+</ol>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<h3 id="plugin-system">Plugin System</h3>
+<p>The strategy is implemented as a <strong>Quantstrip client plugin</strong> that inherits from the <code>ClientBase</code> class. This architecture allows the Quantstrip system to:</p>
+<ul>
+<li>Automatically register the strategy as a worker client</li>
+<li>Manage the strategy lifecycle (start, stop, error handling)</li>
+<li>Schedule and execute trading jobs</li>
+<li>Provide access to shared resources (database, settings, brokers)</li>
+</ul>
+<hr />
+<h2 id="code-breakdown">Code Breakdown</h2>
+<h3 id="1-imports-and-setup">1. Imports and Setup</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">quantstrip</span><span class="w"> </span><span class="kn">import</span> <span class="n">ClientBase</span><span class="p">,</span> <span class="n">db_handler</span><span class="p">,</span> <span class="n">settings</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">Utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">calendar_utils</span> <span class="k">as</span> <span class="n">cu</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IBKR.ib_objects</span><span class="w"> </span><span class="kn">import</span> <span class="n">ib_order</span><span class="p">,</span> <span class="n">ib_contract</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IBKR.ib_connect</span><span class="w"> </span><span class="kn">import</span> <span class="n">IB</span>
+</code></pre></div>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li><code>ClientBase</code>: Base class providing the plugin framework</li>
+<li><code>db_handler</code>: Database API for position tracking and strategy events</li>
+<li><code>settings</code>: Configuration management (separates code from config)</li>
+<li><code>calendar_utils</code>: NYSE trading calendar utilities</li>
+<li><code>ib_objects</code>: IBKR contract and order wrapper classes</li>
+<li><code>IB</code>: Connection manager for Interactive Brokers API</li>
+</ul>
+<h3 id="2-configuration-loading">2. Configuration Loading</h3>
+<div class="highlight"><pre><span></span><code><span class="n">ALLOCATION</span>      <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get_by_path</span><span class="p">(</span><span class="s1">&#39;Settings/Strategy Settings/Monthly Flow Rebalancing/allocation&#39;</span><span class="p">)</span>
+<span class="n">RATE_SYMBOL</span>     <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get_by_path</span><span class="p">(</span><span class="s1">&#39;Settings/Strategy Settings/Monthly Flow Rebalancing/rate_symbol&#39;</span><span class="p">)</span>
+<span class="n">STOCK_SYMBOL</span>    <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">get_by_path</span><span class="p">(</span><span class="s1">&#39;Settings/Strategy Settings/Monthly Flow Rebalancing/stock_symbol&#39;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Loads strategy parameters from external JSON configuration:</p>
+<ul>
+<li><code>ALLOCATION</code>: Dollar amount to allocate to the trade (e.g., $10,000)</li>
+<li><code>RATE_SYMBOL</code>: Ticker for the interest rate instrument (e.g., "TLT" for 20+ Year Treasury ETF)</li>
+<li><code>STOCK_SYMBOL</code>: Ticker for the equity instrument (e.g., "SPY" for S&amp;P 500 ETF)</li>
+</ul>
+<p><strong>Benefit:</strong> Configuration changes don't require code modifications, making the strategy more maintainable and flexible.</p>
+<h3 id="3-client-class-definition">3. Client Class Definition</h3>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">Client</span><span class="p">(</span><span class="n">ClientBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot; A trading client executing the stock/interest rate rebalancing trade</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">display_name</span> <span class="o">=</span> <span class="s2">&quot;Rebalancing Flow&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">every</span><span class="p">()</span><span class="o">.</span><span class="n">day</span><span class="o">.</span><span class="n">at</span><span class="p">(</span><span class="s2">&quot;15:45&quot;</span><span class="p">,</span> <span class="s2">&quot;America/New_York&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">do</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">job</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Components:</strong></p>
+<ul>
+<li><strong>Inheritance</strong>: Extends <code>ClientBase</code> to integrate with Quantstrip framework</li>
+<li><strong>Display Name</strong>: Human-readable identifier for logging and monitoring</li>
+<li><strong>Scheduler</strong>: Sets up daily execution at 3:45 PM Eastern Time (15 minutes before market close)</li>
+<li>This timing allows for:<ul>
+<li>Final price discovery of the day</li>
+<li>Sufficient time to execute orders before close</li>
+<li>Reduced intraday volatility impact</li>
+</ul>
+</li>
+</ul>
+<hr />
+<h2 id="main-trading-logic">Main Trading Logic</h2>
+<h3 id="4-job-execution-method">4. Job Execution Method</h3>
+<p>The <code>job()</code> method contains the core trading logic and is executed daily by the scheduler.</p>
+<h4 id="a-contract-initialization">A. Contract Initialization</h4>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">job</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">rate_contract</span>  <span class="o">=</span> <span class="n">ib_contract</span><span class="p">(</span><span class="n">RATE_SYMBOL</span><span class="p">)</span>
+    <span class="n">stock_contract</span> <span class="o">=</span> <span class="n">ib_contract</span><span class="p">(</span><span class="n">STOCK_SYMBOL</span><span class="p">)</span>
+</code></pre></div>
+<p>Creates IBKR contract objects for both instruments being traded.</p>
+<hr />
+<h3 id="5-opening-position-logic-day-16">5. Opening Position Logic (Day 16)</h3>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">cu</span><span class="o">.</span><span class="n">business_day_number_today</span><span class="p">(</span><span class="n">calendar</span> <span class="o">=</span> <span class="s2">&quot;NYSE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
+</code></pre></div>
+<p><strong>Trigger:</strong> Executes on the 16th trading day of the month.</p>
+<h4 id="a-position-safety-check">A. Position Safety Check</h4>
+<div class="highlight"><pre><span></span><code><span class="n">current_state</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">get_last_strategy_event</span><span class="p">(</span><span class="n">strategy_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">current_state</span> <span class="ow">and</span> <span class="n">current_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected position found in strategy </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">display_name</span><span class="si">}</span><span class="s2"> (should be zero)&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Ensures no position is already open (defensive programming to prevent double-entry).</p>
+<h4 id="b-historical-data-retrieval">B. Historical Data Retrieval</h4>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">IB</span><span class="p">()</span> <span class="k">as</span> <span class="n">ib</span><span class="p">:</span>
+    <span class="n">rate_price</span> <span class="o">=</span> <span class="n">ib</span><span class="o">.</span><span class="n">get_historical_data</span><span class="p">(</span><span class="n">rate_contract</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;16 D&quot;</span><span class="p">,</span> <span class="s2">&quot;1 day&quot;</span><span class="p">)</span>
+    <span class="n">stock_price</span> <span class="o">=</span> <span class="n">ib</span><span class="o">.</span><span class="n">get_historical_data</span><span class="p">(</span><span class="n">stock_contract</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;16 D&quot;</span><span class="p">,</span> <span class="s2">&quot;1 day&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Data Retrieved:</strong>
+- Last 16 trading days of daily close prices
+- Returns Pandas DataFrames with OHLC data</p>
+<p><strong>Context Manager:</strong> The <code>with IB()</code> block ensures proper connection handling (automatic connect/disconnect).</p>
+<h4 id="c-performance-calculation">C. Performance Calculation</h4>
+<div class="highlight"><pre><span></span><code><span class="n">rate_perf</span>  <span class="o">=</span> <span class="n">rate_price</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;close&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">rate_price</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;close&quot;</span><span class="p">]</span>
+<span class="n">stock_perf</span> <span class="o">=</span> <span class="n">stock_price</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;close&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">stock_price</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;close&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Formula:</strong> Performance = (Most Recent Close) / (Close 16 Days Ago)</p>
+<ul>
+<li>Value &gt; 1.0: Asset gained</li>
+<li>Value &lt; 1.0: Asset declined</li>
+<li>Value = 1.0: No change</li>
+</ul>
+<p><strong>Example:</strong>
+- Stock: 100 → 110 = 1.10 (gained 10%)
+- Rate: 50 → 48 = 0.96 (declined 4%)
+- <strong>Result:</strong> Buy stocks (the underperformer in relative terms)</p>
+<h4 id="d-position-sizing">D. Position Sizing</h4>
+<div class="highlight"><pre><span></span><code><span class="n">rate_qty</span>  <span class="o">=</span> <span class="n">ALLOCATION</span> <span class="o">/</span> <span class="n">rate_price</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;close&quot;</span><span class="p">]</span>
+<span class="n">stock_qty</span> <span class="o">=</span> <span class="n">ALLOCATION</span> <span class="o">/</span> <span class="n">stock_price</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;close&quot;</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>Calculation:</strong> Shares = Dollar Allocation / Current Price</p>
+<p><strong>Example:</strong>
+- Allocation: $10,000
+- Stock Price: $450
+- Quantity: 10,000 / 450 = <strong>22 shares</strong></p>
+<h4 id="e-trade-selection">E. Trade Selection</h4>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">rate_perf</span> <span class="o">&gt;</span> <span class="n">stock_perf</span><span class="p">:</span>
+    <span class="n">contract</span><span class="p">,</span> <span class="n">quantity</span> <span class="o">=</span> <span class="p">(</span><span class="n">stock_contract</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">stock_qty</span><span class="p">))</span> 
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">contract</span><span class="p">,</span> <span class="n">quantity</span> <span class="o">=</span> <span class="p">(</span><span class="n">rate_contract</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">rate_qty</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>Logic:</strong>
+- If rates outperformed stocks → Buy stocks
+- If stocks outperformed rates → Buy rates
+- <strong>Always buy the underperformer</strong></p>
+<h4 id="f-order-execution">F. Order Execution</h4>
+<div class="highlight"><pre><span></span><code><span class="n">ib</span><span class="o">.</span><span class="n">placeOrder</span><span class="p">(</span><span class="n">ib</span><span class="o">.</span><span class="n">get_next_order_id</span><span class="p">(),</span> 
+              <span class="n">contract</span><span class="p">,</span> 
+              <span class="n">ib_order</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="s2">&quot;Rebalancing&quot;</span><span class="p">,</span> <span class="s2">&quot;MKT&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>Order Details:</strong>
+- <strong>Order Type:</strong> Market order (immediate execution)
+- <strong>Label:</strong> "Rebalancing" (for tracking)
+- <strong>Order ID:</strong> Auto-generated unique identifier</p>
+<h4 id="g-database-recording">G. Database Recording</h4>
+<div class="highlight"><pre><span></span><code><span class="n">db_handler</span><span class="o">.</span><span class="n">insert_strategy_event</span><span class="p">(</span>
+    <span class="n">strategy_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">broker_id</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">symbol</span>      <span class="o">=</span> <span class="n">contract</span><span class="o">.</span><span class="n">symbol</span><span class="p">,</span>
+    <span class="n">position</span>    <span class="o">=</span> <span class="n">quantity</span><span class="p">,</span>
+    <span class="n">event_type</span>  <span class="o">=</span> <span class="s2">&quot;OPEN&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Records the position in the database for:
+- Position tracking
+- Performance monitoring
+- Risk management
+- Audit trail</p>
+<hr />
+<h3 id="6-closing-position-logic-last-business-day">6. Closing Position Logic (Last Business Day)</h3>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">cu</span><span class="o">.</span><span class="n">is_last_business_day_of_month</span><span class="p">(</span><span class="n">calendar</span> <span class="o">=</span> <span class="s2">&quot;NYSE&quot;</span><span class="p">):</span>
+</code></pre></div>
+<p><strong>Trigger:</strong> Executes on the last trading day of the month.</p>
+<h4 id="a-position-retrieval">A. Position Retrieval</h4>
+<div class="highlight"><pre><span></span><code><span class="n">current_state</span> <span class="o">=</span> <span class="n">db_handler</span><span class="o">.</span><span class="n">get_last_strategy_event</span><span class="p">(</span><span class="n">strategy_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">current_state</span> <span class="ow">or</span> <span class="n">current_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find any open position associated with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">display_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Safety Check:</strong> Ensures a position exists before attempting to close.</p>
+<h4 id="b-position-details-extraction">B. Position Details Extraction</h4>
+<div class="highlight"><pre><span></span><code><span class="n">symbol</span>   <span class="o">=</span> <span class="n">current_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;symbol&quot;</span><span class="p">)</span>
+<span class="n">quantity</span> <span class="o">=</span> <span class="n">current_state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;position&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Retrieves the symbol and quantity from the last strategy event.</p>
+<h4 id="c-close-order-execution">C. Close Order Execution</h4>
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">IB</span><span class="p">()</span> <span class="k">as</span> <span class="n">ib</span><span class="p">:</span>
+    <span class="n">ib</span><span class="o">.</span><span class="n">placeOrder</span><span class="p">(</span><span class="n">ib</span><span class="o">.</span><span class="n">get_next_order_id</span><span class="p">(),</span> 
+                  <span class="n">ib_contract</span><span class="p">(</span><span class="n">symbol</span><span class="p">),</span> 
+                  <span class="n">ib_order</span><span class="p">(</span><span class="o">-</span><span class="n">quantity</span><span class="p">,</span> <span class="s2">&quot;Rebalancing&quot;</span><span class="p">,</span> <span class="s2">&quot;MKT&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>Key Detail:</strong> Negative quantity (<code>-quantity</code>) creates a <strong>sell order</strong> to close the long position.</p>
+<h4 id="d-database-update">D. Database Update</h4>
+<div class="highlight"><pre><span></span><code><span class="n">db_handler</span><span class="o">.</span><span class="n">insert_strategy_event</span><span class="p">(</span>
+    <span class="n">strategy_id</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">broker_id</span>   <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">symbol</span>      <span class="o">=</span> <span class="n">symbol</span><span class="p">,</span>
+    <span class="n">position</span>    <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="n">event_type</span>  <span class="o">=</span> <span class="s2">&quot;CLOSE&quot;</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Records the position closure with <code>position = 0</code>.</p>
+<hr />
+<h3 id="7-client-shutdown">7. Client Shutdown</h3>
+<div class="highlight"><pre><span></span><code><span class="bp">self</span><span class="o">.</span><span class="n">stop_client</span><span class="p">()</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> Gracefully stops the client after job execution. The Quantstrip framework will restart it for the next trading day.</p>
+<hr />
+<h2 id="error-handling">Error Handling</h2>
+<p>The strategy implements comprehensive error handling:</p>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
+    <span class="c1"># Trading logic</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Benefits:</strong>
+- Prevents strategy crashes from affecting other system components
+- Logs errors for debugging and monitoring
+- Allows the system to continue operating even if one execution fails</p>
+<hr />
+<h2 id="database-schema">Database Schema</h2>
+<p>The strategy uses the <code>strategy_event</code> table to track positions:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>strategy_id</td>
+<td>INTEGER</td>
+<td>Strategy identifier (1 for this strategy)</td>
+</tr>
+<tr>
+<td>broker_id</td>
+<td>INTEGER</td>
+<td>Broker identifier (1 for IBKR)</td>
+</tr>
+<tr>
+<td>symbol</td>
+<td>TEXT</td>
+<td>Ticker symbol of the position</td>
+</tr>
+<tr>
+<td>position</td>
+<td>REAL</td>
+<td>Current position size (0 = flat)</td>
+</tr>
+<tr>
+<td>event_type</td>
+<td>TEXT</td>
+<td>"OPEN" or "CLOSE"</td>
+</tr>
+<tr>
+<td>create_time</td>
+<td>TIMESTAMP</td>
+<td>Event timestamp</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Position Lifecycle:</strong></p>
+<div class="highlight"><pre><span></span><code>Day 16:  INSERT (symbol=&quot;SPY&quot;, position=22, event_type=&quot;OPEN&quot;)
+         ↓
+Last Day: INSERT (symbol=&quot;SPY&quot;, position=0, event_type=&quot;CLOSE&quot;)
+</code></pre></div>
+<hr />
+<h2 id="configuration-example">Configuration Example</h2>
+<p>Example JSON configuration structure:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;Settings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;Strategy Settings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;Monthly Flow Rebalancing&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;allocation&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;rate_symbol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;TLT&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;stock_symbol&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SPY&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<hr />
+<h2 id="trading-timeline">Trading Timeline</h2>
+<div class="highlight"><pre><span></span><code>Day 1-15:  No action (observation period)
+Day 16:    Calculate performance, open position
+Day 17-29: Hold position
+Last Day:  Close position, realize P&amp;L
+</code></pre></div>
+<hr />
+<h2 id="key-features">Key Features</h2>
+<h3 id="1-defensive-programming">1. <strong>Defensive Programming</strong></h3>
+<ul>
+<li>Position state validation before opening/closing</li>
+<li>Error handling with logging</li>
+<li>Database-backed position tracking</li>
+</ul>
+<h3 id="2-configuration-separation">2. <strong>Configuration Separation</strong></h3>
+<ul>
+<li>External JSON configuration</li>
+<li>No hardcoded parameters</li>
+<li>Easy strategy tuning without code changes</li>
+</ul>
+<h3 id="3-clean-resource-management">3. <strong>Clean Resource Management</strong></h3>
+<ul>
+<li>Context managers for broker connections</li>
+<li>Automatic cleanup on errors</li>
+<li>Graceful shutdown</li>
+</ul>
+<h3 id="4-audit-trail">4. <strong>Audit Trail</strong></h3>
+<ul>
+<li>All trades recorded in database</li>
+<li>Strategy events tracked</li>
+<li>Position history maintained</li>
+</ul>
+<hr />
+<h2 id="risks-and-considerations">Risks and Considerations</h2>
+<h3 id="market-risks">Market Risks</h3>
+<ul>
+<li><strong>Execution Risk</strong>: Market orders may experience slippage</li>
+<li><strong>Timing Risk</strong>: Front-running may not always work if rebalancing flows are delayed</li>
+<li><strong>Liquidity Risk</strong>: Large positions may face execution challenges</li>
+</ul>
+<h3 id="operational-risks">Operational Risks</h3>
+<ul>
+<li><strong>Connection Failures</strong>: Network or broker API issues could prevent trades</li>
+<li><strong>Timing Errors</strong>: Incorrect trading day calculations could trigger early/late</li>
+<li><strong>Position Reconciliation</strong>: Database and actual positions could diverge</li>
+</ul>
+<h3 id="mitigations">Mitigations</h3>
+<ul>
+<li>Error handling and logging</li>
+<li>Position validation checks</li>
+<li>Market orders for immediate execution</li>
+<li>Database-backed state management</li>
+</ul>
+<hr />
+<h2 id="performance-monitoring">Performance Monitoring</h2>
+<p>To monitor strategy performance, query the database:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">-- View all strategy events</span>
+<span class="k">SELECT</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">strategy_event</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">strategy_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span>
+<span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">create_time</span><span class="w"> </span><span class="k">DESC</span><span class="p">;</span>
+
+<span class="c1">-- Calculate monthly P&amp;L</span>
+<span class="k">SELECT</span><span class="w"> </span>
+<span class="w">    </span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">create_time</span><span class="p">)</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="k">month</span><span class="p">,</span>
+<span class="w">    </span><span class="n">symbol</span><span class="p">,</span>
+<span class="w">    </span><span class="n">event_type</span><span class="p">,</span>
+<span class="w">    </span><span class="k">position</span>
+<span class="k">FROM</span><span class="w"> </span><span class="n">strategy_event</span><span class="w"> </span>
+<span class="k">WHERE</span><span class="w"> </span><span class="n">strategy_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+</code></pre></div>
+<hr />
+<h2 id="future-enhancements">Future Enhancements</h2>
+<p>Potential improvements to consider:</p>
+<ol>
+<li><strong>Dynamic Position Sizing</strong>: Adjust allocation based on volatility or portfolio size</li>
+<li><strong>Multiple Asset Classes</strong>: Expand beyond stocks/rates</li>
+<li><strong>Limit Orders</strong>: Replace market orders with limit orders to reduce slippage</li>
+<li><strong>Performance Analytics</strong>: Add P&amp;L tracking and reporting</li>
+<li><strong>Risk Controls</strong>: Maximum position size limits, stop losses</li>
+<li><strong>Backtesting Framework</strong>: Historical simulation before live trading</li>
+</ol>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="position-not-opening">Position Not Opening</h3>
+<ul>
+<li>Check if it's exactly the 16th trading day</li>
+<li>Verify broker connection is active</li>
+<li>Check account has sufficient buying power</li>
+<li>Review error logs for exceptions</li>
+</ul>
+<h3 id="position-not-closing">Position Not Closing</h3>
+<ul>
+<li>Verify it's the last business day of the month</li>
+<li>Check database has an open position record</li>
+<li>Ensure broker connection is working</li>
+<li>Review error logs</li>
+</ul>
+<h3 id="unexpected-position-state">Unexpected Position State</h3>
+<ul>
+<li>Query database: <code>SELECT * FROM strategy_event WHERE strategy_id = 1</code></li>
+<li>Compare with broker's actual positions</li>
+<li>Manual intervention may be required to reconcile</li>
+</ul>
+<hr />
+<h2 id="support-and-resources">Support and Resources</h2>
+<ul>
+<li><strong>Calendar Utilities</strong>: Uses NYSE trading calendar for accurate day counting</li>
+<li><strong>Database Handler</strong>: Full API documentation in Quantstrip docs</li>
+<li><strong>IBKR Wrapper</strong>: Interactive Brokers API wrapper documentation</li>
+<li><strong>Settings Management</strong>: JSON path-based configuration access</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="IBKR_template.html" class="md-footer__link md-footer__link--prev" aria-label="Previous: Interactive Brokers">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Interactive Brokers
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../API/quantstrip.html" class="md-footer__link md-footer__link--next" aria-label="Next: quantstrip">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                quantstrip
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["navigation.footer"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
