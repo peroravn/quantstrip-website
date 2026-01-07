@@ -5,62 +5,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - Quantstrip</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
         }
-
         .header {
             background-color: #ffffff;
             padding: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: center;
         }
-
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+        }
         .container {
             max-width: 600px;
             margin: 40px auto;
             padding: 0 20px;
         }
-
         .checkout-card {
             background: white;
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-
         .checkout-header {
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
             border-bottom: 2px solid #f0f0f0;
         }
-
+        .checkout-header h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
         .checkout-header p {
             color: #666;
         }
-
         .order-summary {
             background: #f9f9f9;
             padding: 20px;
             border-radius: 6px;
             margin-bottom: 30px;
         }
-
         .order-summary h3 {
+            color: #333;
             margin-bottom: 15px;
+            font-size: 18px;
         }
-
         .order-item {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
             color: #666;
         }
-
         .order-item.total {
             font-weight: bold;
             color: #333;
@@ -69,25 +73,34 @@
             padding-top: 15px;
             border-top: 2px solid #ddd;
         }
-
+        .form-group {
+            margin-bottom: 20px;
+        }
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
+            color: #333;
         }
-
         input {
             width: 100%;
             padding: 12px;
             border: 1px solid #ccc;
             border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 14px;
         }
-
+        input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
         .coupon-group {
             display: flex;
             gap: 10px;
         }
-
+        .coupon-group input {
+            flex: 1;
+        }
         .apply-btn {
             padding: 12px 20px;
             background-color: #008CBA;
@@ -95,8 +108,16 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 14px;
+            white-space: nowrap;
         }
-
+        .apply-btn:hover {
+            background-color: #007399;
+        }
+        .apply-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
         .complete-btn {
             width: 100%;
             padding: 15px;
@@ -104,264 +125,270 @@
             color: white;
             border: none;
             border-radius: 4px;
+            cursor: pointer;
             font-size: 16px;
             font-weight: bold;
             margin-top: 20px;
-            cursor: pointer;
         }
-
+        .complete-btn:hover {
+            background-color: #45a049;
+        }
         .complete-btn:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
-
         .message {
             padding: 12px;
             margin-bottom: 20px;
             border-radius: 4px;
             display: none;
         }
-
-        .info {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .error {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
         .success {
             background-color: #d4edda;
             color: #155724;
+            border: 1px solid #c3e6cb;
         }
-
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
         .discount-applied {
             color: #4CAF50;
             font-weight: bold;
             margin-top: 10px;
             display: none;
         }
-
         .back-link {
             text-align: center;
             margin-top: 20px;
         }
-
         .back-link a {
             color: #4CAF50;
             text-decoration: none;
         }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
-
-<div class="header">
-    <h1>Complete Your Purchase</h1>
-</div>
-
-<div class="container">
-    <div class="checkout-card">
-
-        <div class="checkout-header">
-            <h2>Checkout</h2>
-            <p>Invite-only beta access</p>
-        </div>
-
-        <div id="message" class="message"></div>
-
-        <div class="order-summary">
-            <h3>Order Summary</h3>
-
-            <div class="order-item">
-                <span>Product:</span>
-                <span id="productName">-</span>
-            </div>
-
-            <div class="order-item">
-                <span>Price:</span>
-                <span id="originalPrice">-</span>
-            </div>
-
-            <div class="order-item" id="discountRow" style="display: none; color: #4CAF50;">
-                <span>Discount:</span>
-                <span id="discountAmount">-</span>
-            </div>
-
-            <div class="order-item total">
-                <span>Total:</span>
-                <span id="totalPrice">-</span>
-            </div>
-
-            <div class="discount-applied" id="discountApplied"></div>
-        </div>
-
-        <form id="checkoutForm">
-            <label for="couponCode">Coupon Code</label>
-
-            <div class="coupon-group">
-                <input type="text" id="couponCode" placeholder="Enter invite code">
-                <button type="button" class="apply-btn" id="applyBtn">Apply</button>
-            </div>
-
-            <button type="submit" class="complete-btn" id="completeBtn" disabled>
-                Complete Purchase
-            </button>
-        </form>
-
-        <div class="back-link">
-            <a href="products.html">← Back to Products</a>
-        </div>
-
+    <div class="header">
+        <h1>Complete Your Purchase</h1>
     </div>
-</div>
 
-<script>
-    let currentProduct = null;
-    let originalPrice = 0;
-    let currentPrice = 0;
-    let appliedCoupon = null;
+    <div class="container">
+        <div class="checkout-card">
+            <div class="checkout-header">
+                <h2>Checkout</h2>
+                <p>You're almost there!</p>
+            </div>
 
-    const PURCHASE_LOCKED_MESSAGE =
-        'This product is currently available by invitation only. Please apply a valid coupon or contact sales for more information.';
+            <div id="message" class="message"></div>
 
-    function showMessage(text, type = 'info') {
-        const el = document.getElementById('message');
-        el.textContent = text;
-        el.className = 'message ' + type;
-        el.style.display = 'block';
-    }
+            <div class="order-summary">
+                <h3>Order Summary</h3>
+                <div class="order-item">
+                    <span>Product:</span>
+                    <span id="productName">-</span>
+                </div>
+                <div class="order-item">
+                    <span>Price:</span>
+                    <span id="originalPrice">-</span>
+                </div>
+                <div class="order-item" id="discountRow" style="display: none; color: #4CAF50;">
+                    <span>Discount:</span>
+                    <span id="discountAmount">-</span>
+                </div>
+                <div class="order-item total">
+                    <span>Total:</span>
+                    <span id="totalPrice">-</span>
+                </div>
+                <div class="discount-applied" id="discountApplied"></div>
+            </div>
 
-    function hideMessage() {
-        document.getElementById('message').style.display = 'none';
-    }
+            <form id="checkoutForm">
+                <div class="form-group">
+                    <label for="couponCode">Coupon Code (Optional)</label>
+                    <div class="coupon-group">
+                        <input type="text" id="couponCode" name="couponCode" placeholder="Enter coupon code">
+                        <button type="button" class="apply-btn" id="applyBtn" onclick="applyCoupon()">Apply</button>
+                    </div>
+                </div>
 
-    function checkAuth() {
-        const userStr = sessionStorage.getItem('user');
-        if (!userStr) {
-            window.location.href = 'login.html';
-            return null;
+                <button type="submit" class="complete-btn" id="completeBtn">Complete Purchase</button>
+            </form>
+
+            <div class="back-link">
+                <a href="products.html">← Back to Products</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentProduct = null;
+        let originalPrice = 0;
+        let currentPrice = 0;
+        let appliedCoupon = null;
+
+        function checkAuth() {
+            const userStr = sessionStorage.getItem('user');
+            if (!userStr) {
+                window.location.href = 'login.html';
+                return null;
+            }
+            return JSON.parse(userStr);
         }
-        return JSON.parse(userStr);
-    }
 
-    async function loadProduct() {
-        const productStr = sessionStorage.getItem('selectedProduct');
-        if (!productStr) {
-            showMessage('No product selected. Redirecting...', 'error');
-            setTimeout(() => window.location.href = 'products.html', 2000);
-            return;
+        function showMessage(text, type = 'info') {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = 'message ' + type;
+            messageDiv.style.display = 'block';
         }
 
-        currentProduct = JSON.parse(productStr);
+        function hideMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
 
-        try {
-            const response = await fetch(
-                `https://www.quantstrip.com/api/get-product?id=${currentProduct.id}`
-            );
-            const data = await response.json();
-
-            if (!data.success) {
-                showMessage('Error loading product', 'error');
+        async function loadProduct() {
+            const productStr = sessionStorage.getItem('selectedProduct');
+            if (!productStr) {
+                showMessage('No product selected. Redirecting...', 'error');
+                setTimeout(() => window.location.href = 'products.html', 2000);
                 return;
             }
 
-            originalPrice = parseFloat(data.product.price_usd);
-            currentPrice = originalPrice;
-
-            document.getElementById('productName').textContent = data.product.name;
-            document.getElementById('originalPrice').textContent = `$${originalPrice.toFixed(2)}`;
-            document.getElementById('totalPrice').textContent = `$${currentPrice.toFixed(2)}`;
-
-            showMessage(PURCHASE_LOCKED_MESSAGE, 'info');
-
-        } catch (err) {
-            showMessage('Error loading product: ' + err.message, 'error');
+            currentProduct = JSON.parse(productStr);
+            
+            // Fetch product details from API
+            try {
+                const response = await fetch(`https://www.quantstrip.com/api/get-product?id=${currentProduct.id}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    originalPrice = parseFloat(data.product.price_usd);
+                    currentPrice = originalPrice;
+                    
+                    document.getElementById('productName').textContent = data.product.name;
+                    document.getElementById('originalPrice').textContent = `$${originalPrice.toFixed(2)}`;
+                    document.getElementById('totalPrice').textContent = `$${currentPrice.toFixed(2)}`;
+                } else {
+                    showMessage('Error loading product details', 'error');
+                }
+            } catch (error) {
+                showMessage('Error loading product: ' + error.message, 'error');
+            }
         }
-    }
 
-    async function applyCoupon() {
-        hideMessage();
+        async function applyCoupon() {
+            hideMessage();
+            const couponCode = document.getElementById('couponCode').value.trim().toUpperCase();
+            
+            if (!couponCode) {
+                showMessage('Please enter a coupon code', 'error');
+                return;
+            }
 
-        const code = document.getElementById('couponCode').value.trim().toUpperCase();
-        if (!code) {
-            showMessage('Please enter a coupon code', 'error');
-            return;
-        }
+            const applyBtn = document.getElementById('applyBtn');
+            applyBtn.disabled = true;
+            applyBtn.textContent = 'Checking...';
 
-        const applyBtn = document.getElementById('applyBtn');
-        applyBtn.disabled = true;
-        applyBtn.textContent = 'Checking...';
-
-        try {
-            const response = await fetch(
-                'https://www.quantstrip.com/api/validate-coupon',
-                {
+            try {
+                const response = await fetch('https://www.quantstrip.com/api/validate-coupon', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        couponCode: code,
+                        couponCode: couponCode,
                         productId: currentProduct.id
                     })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    appliedCoupon = data.coupon;
+                    const discount = originalPrice * (data.coupon.discount_percent / 100);
+                    currentPrice = originalPrice - discount;
+
+                    document.getElementById('discountRow').style.display = 'flex';
+                    document.getElementById('discountAmount').textContent = `-$${discount.toFixed(2)} (${data.coupon.discount_percent}%)`;
+                    document.getElementById('totalPrice').textContent = `$${currentPrice.toFixed(2)}`;
+                    document.getElementById('discountApplied').textContent = `✓ Coupon "${couponCode}" applied!`;
+                    document.getElementById('discountApplied').style.display = 'block';
+                    
+                    showMessage('Coupon applied successfully!', 'success');
+                    document.getElementById('couponCode').disabled = true;
+                    applyBtn.textContent = 'Applied';
+                } else {
+                    showMessage(data.error, 'error');
+                    applyBtn.disabled = false;
+                    applyBtn.textContent = 'Apply';
                 }
-            );
-
-            const data = await response.json();
-
-            if (!data.success) {
-                showMessage(data.error, 'error');
+            } catch (error) {
+                showMessage('Error validating coupon: ' + error.message, 'error');
                 applyBtn.disabled = false;
                 applyBtn.textContent = 'Apply';
-                return;
             }
-
-            appliedCoupon = data.coupon;
-
-            const discount = originalPrice * (data.coupon.discount_percent / 100);
-            currentPrice = originalPrice - discount;
-
-            document.getElementById('discountRow').style.display = 'flex';
-            document.getElementById('discountAmount').textContent =
-                `-$${discount.toFixed(2)} (${data.coupon.discount_percent}%)`;
-
-            document.getElementById('totalPrice').textContent =
-                `$${currentPrice.toFixed(2)}`;
-
-            document.getElementById('discountApplied').textContent =
-                `✓ Coupon "${code}" applied`;
-            document.getElementById('discountApplied').style.display = 'block';
-
-            document.getElementById('completeBtn').disabled = false;
-            document.getElementById('couponCode').disabled = true;
-            applyBtn.textContent = 'Applied';
-
-            showMessage('Invite accepted — you may complete your purchase.', 'success');
-
-        } catch (err) {
-            showMessage('Error validating coupon: ' + err.message, 'error');
-            applyBtn.disabled = false;
-            applyBtn.textContent = 'Apply';
-        }
-    }
-
-    document.getElementById('applyBtn').addEventListener('click', applyCoupon);
-
-    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        hideMessage();
-
-        if (!appliedCoupon) {
-            showMessage(PURCHASE_LOCKED_MESSAGE, 'info');
-            return;
         }
 
-        showMessage('Purchase completed (beta flow).', 'success');
-    });
+        document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessage();
 
-    checkAuth();
-    loadProduct();
-</script>
+            const user = checkAuth();
+            if (!user) return;
 
+            const completeBtn = document.getElementById('completeBtn');
+            completeBtn.disabled = true;
+            completeBtn.textContent = 'Processing...';
+
+            try {
+                const response = await fetch('https://www.quantstrip.com/api/create-license', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: user.email,
+                        productId: currentProduct.id,
+                        couponCode: appliedCoupon ? appliedCoupon.code : null
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showMessage('Purchase successful! Check your email for your license key.', 'success');
+                    
+                    // Redirect to dashboard after 3 seconds
+                    setTimeout(() => {
+                        sessionStorage.removeItem('selectedProduct');
+                        window.location.href = 'dashboard.html';
+                    }, 3000);
+                } else {
+                    showMessage('Error: ' + data.error, 'error');
+                    completeBtn.disabled = false;
+                    completeBtn.textContent = 'Complete Purchase';
+                }
+            } catch (error) {
+                showMessage('Error completing purchase: ' + error.message, 'error');
+                completeBtn.disabled = false;
+                completeBtn.textContent = 'Complete Purchase';
+            }
+        });
+
+        // Initialize
+        checkAuth();
+        loadProduct();
+    </script>
 </body>
 </html>
