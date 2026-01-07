@@ -27,7 +27,10 @@ class handler(BaseHTTPRequestHandler):
             product_id = data.get('productId')
             
             if not coupon_code:
-                response = {'success': False, 'error': 'Coupon code is required'}
+                response = {
+                    'success': False,
+                    'error': 'This product is not yet available for purchase without a valid coupon. Please contact sales for more information.'
+                }
                 self.wfile.write(json.dumps(response).encode())
                 return
             
@@ -39,7 +42,10 @@ class handler(BaseHTTPRequestHandler):
                 .execute()
             
             if not result.data or len(result.data) == 0:
-                response = {'success': False, 'error': 'Invalid coupon code'}
+                response = {
+                    'success': False,
+                    'error': 'This product is not yet available for purchase without a valid coupon. Please contact sales for more information.'
+                }
                 self.wfile.write(json.dumps(response).encode())
                 return
             
