@@ -84,105 +84,96 @@
             font-size: 22px;
             color: #333;
             margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .section-title span {
-            font-size: 28px;
         }
         .section-description {
             color: #666;
             margin-bottom: 25px;
             line-height: 1.6;
         }
-        .downloads-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+
+        /* Download table styles */
+        .downloads-table {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
-        .download-card {
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            transition: all 0.3s;
-            position: relative;
+        .download-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 0;
+            background: white;
         }
-        .download-card:hover {
-            border-color: #4CAF50;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        .download-row:hover {
+            background-color: #f9f9f9;
         }
-        .download-card.locked {
-            opacity: 0.6;
-            background-color: #fafafa;
+        .download-row.disabled {
+            opacity: 0.55;
         }
-        .download-card.locked:hover {
-            transform: none;
-            border-color: #e0e0e0;
+        .download-row-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .platform-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+        .download-row-info {
+            flex: 1;
         }
-        .download-title {
-            font-size: 18px;
+        .download-row-title {
+            font-size: 14px;
             font-weight: bold;
             color: #333;
-            margin-bottom: 8px;
+            margin-bottom: 3px;
         }
-        .download-description {
-            font-size: 14px;
+        .download-row-desc {
+            font-size: 13px;
             color: #666;
-            margin-bottom: 15px;
         }
-        .download-btn {
-            display: inline-block;
-            padding: 10px 24px;
+        .download-row-version {
+            width: 90px;
+            flex-shrink: 0;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+        }
+        .download-row-size {
+            width: 80px;
+            flex-shrink: 0;
+            text-align: center;
+            font-size: 13px;
+            color: #666;
+        }
+        .download-row-btn {
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 20px;
             background-color: #4CAF50;
             color: white;
-            text-decoration: none;
-            border-radius: 4px;
-            font-size: 14px;
+            border: none;
+            border-radius: 0;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
-            border: none;
             transition: background-color 0.3s;
         }
-        .download-btn:hover {
+        .download-row-btn:hover {
             background-color: #45a049;
         }
-        .download-btn.locked {
+        .download-row-btn.coming-soon {
             background-color: #ccc;
-            cursor: not-allowed;
-            pointer-events: none;
+            cursor: default;
+            color: #888;
         }
-        .pro-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #ff9800;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
+        .download-row-btn.coming-soon:hover {
+            background-color: #ccc;
         }
-        .lock-icon {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-        .upgrade-link {
-            display: inline-block;
-            margin-top: 10px;
-            color: #4CAF50;
-            font-size: 13px;
-            text-decoration: none;
-        }
-        .upgrade-link:hover {
-            text-decoration: underline;
-        }
+
         .no-license-warning {
             background-color: #fff3cd;
             border: 1px solid #ffc107;
@@ -215,11 +206,6 @@
             padding: 60px;
             color: #666;
         }
-        .file-size {
-            font-size: 12px;
-            color: #999;
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -250,52 +236,55 @@
         </div>
 
         <div id="downloadsContent" style="display: none;">
-            <!-- Platform Installers Section -->
             <div class="section">
-                <div class="section-title">
-                    <span>💻</span>
-                    <div>Platform Installers</div>
-                </div>
+                <div class="section-title">Platform Installers</div>
                 <div class="section-description">
                     Download the Quantstrip algorithmic trading platform installer for your operating system.
                 </div>
-                <div class="downloads-grid">
-                    <div class="download-card">
-                        <div class="platform-icon">
-                             <img src="assets/windows_download.png" alt="Windows" style="width: 48px; height: 48px;">
+
+                <div class="downloads-table">
+
+                    <div class="download-row">
+                        <div class="download-row-icon">
+                            <img src="assets/windows_download.png" alt="Windows" style="width: 28px; height: 28px;">
                         </div>
-
-
-                        <div class="download-title">Windows</div>
-                        <div class="download-description">Windows 10/11 (64-bit)</div>
-                        <button class="download-btn" onclick="downloadFile('platform', 'windows')">
-                            Download
+                        <div class="download-row-info">
+                            <div class="download-row-title">Windows 11</div>
+                            <div class="download-row-desc">Windows installer for 64-bit systems (.exe)</div>
+                        </div>
+                        <div class="download-row-version">v0.95 Beta</div>
+                        <div class="download-row-size">~100 MB</div>
+                        <button class="download-row-btn" onclick="downloadFile('platform', 'windows')">
+                            ↓ Download
                         </button>
-                        <div class="file-size">~100 MB</div>
-                    </div>
-                    <!-- <div class="download-card">
-                        <div class="platform-icon">🍎</div>
-                        <div class="download-title">macOS</div>
-                        <div class="download-description">macOS 11+ (Intel & Apple Silicon)</div>
-                        <button class="download-btn" onclick="downloadFile('platform', 'macos')">
-                            Download
-                        </button>
-                        <div class="file-size">~45 MB</div>
                     </div>
 
-                    <div class="download-card">
-                        <div class="platform-icon">🐧</div>
-                        <div class="download-title">Linux</div>
-                        <div class="download-description">Ubuntu 20.04+ / Debian-based</div>
-                        <button class="download-btn" onclick="downloadFile('platform', 'linux')">
-                            Download
-                        </button>
-                        <div class="file-size">~48 MB</div>
-                    </div> -->
+                    <div class="download-row disabled">
+                        <div class="download-row-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28">
+                                <circle cx="12" cy="12" r="9" stroke="#E95420" stroke-width="1.5"/>
+                                <circle cx="12" cy="12" r="4" fill="#E95420"/>
+                                <path d="M12 3C12 3 9 6 9 9" stroke="#E95420" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M12 3C12 3 15 6 15 9" stroke="#E95420" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M3.5 14C5 13 7.5 13.5 9 12" stroke="#E95420" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M3.5 10C5 11 7.5 10.5 9 12" stroke="#E95420" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M20.5 14C19 13 16.5 13.5 15 12" stroke="#E95420" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M20.5 10C19 11 16.5 10.5 15 12" stroke="#E95420" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M12 21C12 21 9 18 9 15" stroke="#E95420" stroke-width="1.2" stroke-linecap="round"/>
+                                <path d="M12 21C12 21 15 18 15 15" stroke="#E95420" stroke-width="1.2" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <div class="download-row-info">
+                            <div class="download-row-title">Linux</div>
+                            <div class="download-row-desc">Debian/Ubuntu package for 64-bit systems (.deb)</div>
+                        </div>
+                        <div class="download-row-version"></div>
+                        <div class="download-row-size"></div>
+                        <button class="download-row-btn coming-soon" disabled>Coming soon</button>
+                    </div>
+
                 </div>
             </div>
-
-
         </div>
 
         <div class="back-link">
@@ -341,7 +330,6 @@
                 if (data.success && data.licenses && data.licenses.length > 0) {
                     userLicenses = data.licenses;
                     
-                    // Check if user has any active licenses
                     const hasActiveLicense = userLicenses.some(license => {
                         const daysRemaining = calculateDaysRemaining(license.expires_at);
                         return license.status === 'active' && daysRemaining > 0;
@@ -352,7 +340,6 @@
                         return;
                     }
 
-                    // Check if user has Pro license
                     hasProLicense = userLicenses.some(license => {
                         const daysRemaining = calculateDaysRemaining(license.expires_at);
                         return license.product_name === 'Pro' && 
@@ -360,11 +347,7 @@
                                daysRemaining > 0;
                     });
 
-                    // Show downloads content
                     document.getElementById('downloadsContent').style.display = 'block';
-
-                    // Update Pro plugins card
-                    updateProPluginsAccess();
 
                 } else {
                     document.getElementById('noLicenseWarning').style.display = 'block';
@@ -388,36 +371,11 @@
             return diffDays;
         }
 
-        function updateProPluginsAccess() {
-            const proCard = document.getElementById('proPluginsCard');
-            const proBtn = document.getElementById('proPluginsBtn');
-
-            if (!hasProLicense) {
-                proCard.classList.add('locked');
-                proBtn.classList.add('locked');
-                proBtn.textContent = '🔒 Locked';
-                
-                // Add upgrade link
-                const upgradeLink = document.createElement('a');
-                upgradeLink.href = 'products.html';
-                upgradeLink.className = 'upgrade-link';
-                upgradeLink.textContent = '⬆️ Upgrade to Pro';
-                proCard.appendChild(upgradeLink);
-            }
-        }
-
         async function downloadFile(type, platform) {
             const user = checkAuth();
             if (!user) return;
 
-            // Check if trying to download Pro plugins without Pro license
-            if (type === 'plugins' && platform === 'pro' && !hasProLicense) {
-                alert('Pro templates require an active Pro license. Please upgrade to access these templates.');
-                return;
-            }
-
             try {
-                // Call download API
                 const response = await fetch('https://www.quantstrip.com/api/download-file', {
                     method: 'POST',
                     headers: {
@@ -433,7 +391,6 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Trigger download by redirecting to the file URL
                     window.location.href = data.downloadUrl;
                 } else {
                     alert('Download failed: ' + data.error);
@@ -444,7 +401,6 @@
             }
         }
 
-        // Initialize
         loadUserLicenses();
     </script>
 </body>
