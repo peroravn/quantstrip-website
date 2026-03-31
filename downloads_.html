@@ -10,67 +10,111 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background-color: #ffffff;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 24px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-name {
+            color: #666;
+            font-size: 14px;
+        }
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
         .page-header {
             margin-bottom: 40px;
         }
         .page-header h2 {
-            color: #202124;
+            color: #333;
             font-size: 28px;
             margin-bottom: 10px;
-            font-weight: 500;
         }
         .page-header p {
-            color: #5f6368;
-            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
         }
-        
+        .doc-note {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 4px;
+            color: #1565c0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
         .section {
             background: white;
             border-radius: 8px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .section-title {
-            font-size: 20px;
-            color: #202124;
+            font-size: 22px;
+            color: #333;
             margin-bottom: 10px;
-            font-weight: 500;
         }
         .section-description {
-            color: #5f6368;
+            color: #666;
             margin-bottom: 25px;
             line-height: 1.6;
-            font-size: 14px;
         }
 
         /* Download table styles */
         .downloads-table {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
         }
         .download-row {
             display: flex;
             align-items: center;
             gap: 16px;
-            padding: 20px;
+            padding: 16px 20px;
             border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            background: #fafafa;
-            transition: all 0.2s;
+            border-radius: 0;
+            background: white;
         }
         .download-row:hover {
-            background-color: #f5f5f5;
-            border-color: #d0d0d0;
+            background-color: #f9f9f9;
         }
         .download-row.disabled {
             opacity: 0.55;
         }
         .download-row-icon {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             flex-shrink: 0;
             display: flex;
             align-items: center;
@@ -80,138 +124,157 @@
             flex: 1;
         }
         .download-row-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #202124;
-            margin-bottom: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 3px;
         }
         .download-row-desc {
             font-size: 13px;
-            color: #5f6368;
+            color: #666;
         }
         .download-row-version {
-            width: 100px;
+            width: 90px;
             flex-shrink: 0;
             text-align: center;
             font-size: 13px;
-            color: #5f6368;
-            font-weight: 500;
+            color: #666;
         }
         .download-row-size {
             width: 80px;
             flex-shrink: 0;
             text-align: center;
             font-size: 13px;
-            color: #5f6368;
+            color: #666;
         }
         .download-row-btn {
             flex-shrink: 0;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 24px;
-            background-color: #1967d2;
-            color: white;
-            border: none;
-            border-radius: 4px;
+            gap: 6px;
+            padding: 8px 20px;
+            background-color: #fdfdfd;
+            color: rgb(53, 52, 52);
+            border: 1px solid #555555;
+            border-radius: 3px;
             font-size: 13px;
-            font-weight: 600;
+            font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.3s;
         }
         .download-row-btn:hover {
-            background-color: #1557b0;
+            background-color: #dddddd;
         }
         .download-row-btn.coming-soon {
-            background-color: #dadce0;
-            cursor: not-allowed;
-            color: #5f6368;
+            background-color: #ccc;
+            cursor: default;
+            color: #888;
         }
         .download-row-btn.coming-soon:hover {
-            background-color: #dadce0;
+            background-color: #ccc;
         }
 
         .no-license-warning {
-            background-color: #fef7e0;
-            border: 1px solid #f9ab00;
-            color: #5f4b00;
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 30px;
+            text-align: center;
         }
         .no-license-warning h3 {
             margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
         .no-license-warning a {
-            color: #1967d2;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .no-license-warning a:hover {
+            color: #856404;
             text-decoration: underline;
         }
-        
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #2f61eb;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
         .loading {
             text-align: center;
             padding: 60px;
-            color: #5f6368;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <div class="page-header">
-        <h2>Downloads</h2>
-        <p>Access your platform installers and plugin templates</p>
+    <div class="header">
+        <h1>Downloads</h1>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName"></strong></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
     </div>
 
-    <div id="loadingDiv" class="loading">
-        <i class="fas fa-spinner fa-spin"></i> Loading your downloads...
-    </div>
+    <div class="container">
+        <div class="page-header">
+            <h2>Download</h2>
+            <p>Access your platform installers and plugin templates</p>
+        </div>
 
-    <div id="noLicenseWarning" class="no-license-warning" style="display: none;">
-        <h3><i class="fas fa-exclamation-triangle"></i> No Active License Found</h3>
-        <p>You need an active license to download the platform. <a href="#" onclick="loadPage(event, 'products.html')">Purchase a license here</a></p>
-    </div>
+        <div id="loadingDiv" class="loading">
+            Loading your downloads...
+        </div>
 
-    <div id="downloadsContent" style="display: none;">
-        <div class="section">
-            <div class="section-title">Platform Installers</div>
-            <div class="section-description">
-                Download the Quantstrip algorithmic trading platform installer for your operating system.
-            </div>
+        <div id="noLicenseWarning" class="no-license-warning" style="display: none;">
+            <h3>⚠️ No Active License Found</h3>
+            <p>You need an active license to download the platform. <a href="products.html">Purchase a license here</a></p>
+        </div>
 
-            <div class="downloads-table">
-                <div class="download-row">
-                    <div class="download-row-icon">
-                        <i class="fab fa-windows" style="font-size: 32px; color: #0078d4;"></i>
-                    </div>
-                    <div class="download-row-info">
-                        <div class="download-row-title">Windows 11</div>
-                        <div class="download-row-desc">Windows installer for 64-bit systems (.exe)</div>
-                    </div>
-                    <div class="download-row-version">v0.95 Beta</div>
-                    <div class="download-row-size">~100 MB</div>
-                    <button class="download-row-btn" onclick="downloadFile('platform', 'windows')">
-                        <i class="fas fa-download"></i> Download
-                    </button>
+        <div id="downloadsContent" style="display: none;">
+            <div class="section">
+                <div class="section-title">Platform Installers</div>
+                <div class="section-description">
+                    Download the Quantstrip algorithmic trading platform installer for your operating system.
                 </div>
 
-                <div class="download-row disabled">
-                    <div class="download-row-icon">
-                        <i class="fab fa-linux" style="font-size: 32px; color: #fcc624;"></i>
+                <div class="downloads-table">
+
+                    <div class="download-row">
+                        <div class="download-row-icon">
+                            <img src="assets/windows_download.png" alt="Windows" style="width: 28px; height: 28px;">
+                        </div>
+                        <div class="download-row-info">
+                            <div class="download-row-title">Windows 11</div>
+                            <div class="download-row-desc">Windows installer for 64-bit systems (.exe)</div>
+                        </div>
+                        <div class="download-row-version">v0.95 Beta</div>
+                        <div class="download-row-size">~100 MB</div>
+                        <button class="download-row-btn" onclick="downloadFile('platform', 'windows')">
+                            ↓ Download
+                        </button>
                     </div>
-                    <div class="download-row-info">
-                        <div class="download-row-title">Linux</div>
-                        <div class="download-row-desc">Debian/Ubuntu package for 64-bit systems (.deb)</div>
+
+                    <div class="download-row disabled">
+                        <div class="download-row-icon">
+                            <img src="assets/linux_download.png" alt="Linux" style="width: 28px; height: 28px;">
+                        </div>
+                        <div class="download-row-info">
+                            <div class="download-row-title">Linux</div>
+                            <div class="download-row-desc">Debian/Ubuntu package for 64-bit systems (.deb)</div>
+                        </div>
+                        <div class="download-row-version"></div>
+                        <div class="download-row-size"></div>
+                        <button class="download-row-btn coming-soon" disabled>Coming soon</button>
                     </div>
-                    <div class="download-row-version">—</div>
-                    <div class="download-row-size">—</div>
-                    <button class="download-row-btn coming-soon" disabled>Coming soon</button>
+
                 </div>
             </div>
+        </div>
+
+        <div class="back-link">
+            <a href="dashboard.html">← Back to Dashboard</a>
         </div>
     </div>
 
@@ -228,9 +291,16 @@
             return JSON.parse(userStr);
         }
 
+        function logout() {
+            sessionStorage.removeItem('user');
+            window.location.href = 'index.html';
+        }
+
         async function loadUserLicenses() {
             const user = checkAuth();
             if (!user) return;
+
+            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
 
             try {
                 const response = await fetch(`https://www.quantstrip.com/api/get-licenses?email=${encodeURIComponent(user.email)}`);
@@ -272,7 +342,7 @@
                 document.getElementById('loadingDiv').style.display = 'none';
                 document.getElementById('noLicenseWarning').style.display = 'block';
                 document.getElementById('noLicenseWarning').innerHTML = `
-                    <h3><i class="fas fa-exclamation-triangle"></i> Unable to Load Licenses</h3>
+                    <h3>⚠️ Unable to Load Licenses</h3>
                     <p>There was an error connecting to the server. Please try refreshing the page or contact support if the problem persists.</p>
                 `;
                 console.error('Error loading licenses:', error);
@@ -317,7 +387,6 @@
             }
         }
 
-        // Auto-load when page is included
         loadUserLicenses();
     </script>
 </body>
