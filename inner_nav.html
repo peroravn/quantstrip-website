@@ -1,0 +1,86 @@
+    
+    <head>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .navbar {
+            background-color: #000000;
+            padding: 0 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        .navbar h1 {
+            color: #ffffff;
+            font-size: 24px;
+            padding: 20px 0;
+        }
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: #cccccc;
+            text-decoration: none;
+            font-size: 14px;
+            padding: 20px 0;
+            display: block;
+            transition: opacity 0.3s;
+        }
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .user-name {
+            color: #ffffff;
+            font-size: 14px;
+        }
+        .logout-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+
+    </style>
+    </head>
+    
+    
+    <div class="navbar">
+        <div class="navbar-left">
+            <h1>Quantstrip Dashboard</h1>
+            <ul class="nav-links">
+                <li><a href="#">Account Settings</a></li>
+                <li><a href="#">Support</a></li>
+                <li><a href="docs/index.html">Documentation</a></li>
+            </ul>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, <strong id="userName"></strong></span>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>

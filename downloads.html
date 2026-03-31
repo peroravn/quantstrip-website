@@ -209,6 +209,7 @@
     </style>
 </head>
 <body>
+    <div id="inner_nav"></div>
     <div class="header">
         <h1>Downloads</h1>
         <div class="user-info">
@@ -388,6 +389,13 @@
         }
 
         loadUserLicenses();
+    </script>
+    <script>
+        fetch("header.html")
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("header").innerHTML = data;
+        });
     </script>
 </body>
 </html>
