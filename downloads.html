@@ -209,14 +209,13 @@
     </style>
 </head>
 <body>
-    <div id="inner_nav"></div>
-<!--     <div class="header">
+    <div class="header">
         <h1>Downloads</h1>
         <div class="user-info">
             <span class="user-name">Welcome, <strong id="userName"></strong></span>
             <button class="logout-btn" onclick="logout()">Logout</button>
         </div>
-    </div> -->
+    </div>
 
     <div class="container">
         <div class="page-header">
@@ -389,13 +388,6 @@
         }
 
         loadUserLicenses();
-    </script>
-    <script>
-        fetch("inner_nav.html")
-        .then(res => res.text())
-        .then(data => {
-            document.getElementById("header").innerHTML = data;
-        });
     </script>
 </body>
 </html>
