@@ -131,11 +131,14 @@
         .main-content {
             margin-left: 220px;
             margin-top: 60px;
-            min-height: calc(100vh - 60px);
+            height: calc(100vh - 60px);
             background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
         }
 
-        .content-wrapper {
+        /* Dashboard home grid view */
+        #dashboard-home {
             padding: 40px;
             max-width: 1400px;
         }
@@ -165,7 +168,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 20px;
-            margin-top: 20px;
         }
 
         .card {
@@ -224,10 +226,12 @@
             background-color: #1557b0;
         }
 
-        .loading {
-            text-align: center;
-            padding: 60px;
-            color: #5f6368;
+        /* Iframe fills the remaining space perfectly */
+        #subpage-frame {
+            display: none;
+            width: 100%;
+            flex: 1;
+            border: none;
         }
 
         @media (max-width: 768px) {
@@ -235,15 +239,13 @@
             .sidebar-nav a span { display: none; }
             .sidebar-nav a { justify-content: center; padding: 14px 10px; }
             .main-content { margin-left: 60px; }
-            .content-wrapper { padding: 20px; }
+            #dashboard-home { padding: 20px; }
             .dashboard-grid { grid-template-columns: 1fr; }
         }
-
-        #subpage-content { display: none; }
-        #dashboard-home { display: block; }
     </style>
 </head>
 <body>
+
     <div class="top-banner">
         <div class="logo-container">
             <img src="assets/quantstrip_logo.png" alt="Quantstrip" onerror="this.style.display='none'">
@@ -311,70 +313,54 @@
     </div>
 
     <div class="main-content">
-        <div class="content-wrapper">
-            <div id="dashboard-home">
-                <div class="welcome-card">
-                    <h2>Welcome to Your Dashboard</h2>
-                    <p>Manage your software licenses, downloads, and account settings from here.</p>
-                </div>
 
-                <div class="dashboard-grid">
-                    <div class="card" onclick="loadPage(event, 'products.html')">
-                        <h3><i class="fas fa-box card-icon"></i> Products</h3>
-                        <p>Browse and purchase software products and licenses.</p>
-                        <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'products.html')">
-                            Browse Products <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="card" onclick="loadPage(event, 'my-licenses.html')">
-                        <h3><i class="fas fa-key card-icon"></i> My Licenses</h3>
-                        <p>Manage your active licenses and view license keys.</p>
-                        <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'my-licenses.html')">
-                            View Licenses <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="card" onclick="loadPage(event, 'templates.html')">
-                        <h3><i class="fas fa-plug card-icon"></i> Templates & Utilities</h3>
-                        <p>Browse and download client templates and utility modules.</p>
-                        <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'templates.html')">
-                            Browse Templates <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="card" onclick="loadPage(event, 'downloads.html')">
-                        <h3><i class="fas fa-download card-icon"></i> Downloads</h3>
-                        <p>Download platform installers and plugin templates.</p>
-                        <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'downloads.html')">
-                            Browse Downloads <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </div>
+        <div id="dashboard-home">
+            <div class="welcome-card">
+                <h2>Welcome to Your Dashboard</h2>
+                <p>Manage your software licenses, downloads, and account settings from here.</p>
+            </div>
+            <div class="dashboard-grid">
+                <div class="card" onclick="loadPage(event, 'products.html')">
+                    <h3><i class="fas fa-box card-icon"></i> Products</h3>
+                    <p>Browse and purchase software products and licenses.</p>
+                    <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'products.html')">
+                        Browse Products <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="card" onclick="loadPage(event, 'my-licenses.html')">
+                    <h3><i class="fas fa-key card-icon"></i> My Licenses</h3>
+                    <p>Manage your active licenses and view license keys.</p>
+                    <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'my-licenses.html')">
+                        View Licenses <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="card" onclick="loadPage(event, 'templates.html')">
+                    <h3><i class="fas fa-plug card-icon"></i> Templates & Utilities</h3>
+                    <p>Browse and download client templates and utility modules.</p>
+                    <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'templates.html')">
+                        Browse Templates <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                <div class="card" onclick="loadPage(event, 'downloads.html')">
+                    <h3><i class="fas fa-download card-icon"></i> Downloads</h3>
+                    <p>Download platform installers and plugin templates.</p>
+                    <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'downloads.html')">
+                        Browse Downloads <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
             </div>
-
-            <div id="subpage-content"></div>
         </div>
+
+        <!--
+            The iframe loads each subpage as a normal, fully independent page.
+            Scripts, styles, and layout all work exactly as they do standalone.
+            sessionStorage is shared across same-origin frames so auth just works.
+        -->
+        <iframe id="subpage-frame" title="Subpage"></iframe>
+
     </div>
 
 <script>
-    const SUBPAGE_INIT_FNS = [
-        'loadUserLicenses',
-        'loadUserData',
-        'initPage',
-        'init',
-        'loadData',
-        'loadPageData'
-    ];
-
-    // Strip bare top-level self-init calls from subpage scripts so they
-    // don't fire immediately on injection before the DOM is ready.
-    function stripAutoCall(scriptText) {
-        let result = scriptText;
-        for (const fn of SUBPAGE_INIT_FNS) {
-            const re = new RegExp(`^[ \\t]*${fn}\\s*\\(.*?\\)\\s*;?[ \\t]*$`, 'gm');
-            result = result.replace(re, '/* auto-call removed by dashboard loader */');
-        }
-        return result;
-    }
-
     function checkAuth() {
         const userStr = sessionStorage.getItem('user');
         if (!userStr) {
@@ -397,7 +383,7 @@
     }
 
     function setActiveLink(element) {
-        document.querySelectorAll('.sidebar-nav a').forEach(link => link.classList.remove('active'));
+        document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
         if (element && element.closest && element.closest('.sidebar-nav')) {
             element.classList.add('active');
         }
@@ -411,99 +397,21 @@
             dashboardLink.classList.add('active');
         }
         document.getElementById('dashboard-home').style.display = 'block';
-        document.getElementById('subpage-content').style.display = 'none';
+        document.getElementById('subpage-frame').style.display = 'none';
+        document.getElementById('subpage-frame').src = '';
     }
 
-    async function loadPage(event, pageName) {
+    function loadPage(event, pageName) {
         if (event) event.preventDefault();
 
         const link = event?.currentTarget || event?.target?.closest('a');
         setActiveLink(link);
 
-        const home = document.getElementById('dashboard-home');
-        const contentDiv = document.getElementById('subpage-content');
+        document.getElementById('dashboard-home').style.display = 'none';
 
-        home.style.display = 'none';
-        contentDiv.style.display = 'block';
-        contentDiv.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
-
-        try {
-            const response = await fetch(pageName);
-            if (!response.ok) throw new Error('Page not found');
-
-            const html = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(html, 'text/html');
-
-            // ── STEP 1: Collect ALL scripts from the FULL document BEFORE
-            //   touching innerHTML. Subpage scripts are typically at the bottom
-            //   of <body>, OUTSIDE .container, so extracting container.innerHTML
-            //   alone would silently discard them.
-            const allScripts = [...doc.querySelectorAll('script')];
-
-            // ── STEP 2: Remove scripts from the parsed doc so they don't get
-            //   copied into contentDiv and double-execute later.
-            allScripts.forEach(s => s.remove());
-
-            // ── STEP 3: Strip navigation chrome the subpage renders for its
-            //   standalone view — the dashboard shell provides these already.
-            ['.header', 'header', '.navbar', 'nav', '.back-link'].forEach(sel => {
-                doc.querySelectorAll(sel).forEach(el => el.remove());
-            });
-
-            // ── STEP 4: Inject the visible HTML content (now script-free).
-            const container = doc.querySelector('.container');
-            contentDiv.innerHTML = container ? container.innerHTML : doc.body.innerHTML;
-
-            // ── STEP 5: Re-execute scripts in order, stripping bare init calls
-            //   so they don't fire before the DOM is ready.
-            for (const oldScript of allScripts) {
-                const newScript = document.createElement('script');
-
-                for (const attr of oldScript.attributes) {
-                    newScript.setAttribute(attr.name, attr.value);
-                }
-
-                if (oldScript.src) {
-                    await new Promise((resolve, reject) => {
-                        newScript.onload = resolve;
-                        newScript.onerror = reject;
-                        newScript.src = oldScript.src;
-                        document.body.appendChild(newScript);
-                    });
-                } else {
-                    newScript.textContent = stripAutoCall(oldScript.textContent);
-                    document.body.appendChild(newScript);
-                }
-            }
-
-            // ── STEP 6: Wait one frame — DOM is painted, init functions are
-            //   defined. Now it's safe to call the subpage's init function.
-            await new Promise(r => requestAnimationFrame(r));
-
-            for (const fn of SUBPAGE_INIT_FNS) {
-                if (typeof window[fn] === 'function') {
-                    try {
-                        window[fn]();
-                        break;
-                    } catch (e) {
-                        console.warn(`Init function "${fn}" failed:`, e);
-                    }
-                }
-            }
-
-        } catch (error) {
-            contentDiv.innerHTML = `
-                <div class="welcome-card">
-                    <h2>Page Not Found</h2>
-                    <p>Sorry, the requested page could not be loaded.</p>
-                    <button class="card-action" onclick="showDashboard(event)">
-                        <i class="fas fa-home"></i> Return to Dashboard
-                    </button>
-                </div>
-            `;
-            console.error('Error loading page:', error);
-        }
+        const frame = document.getElementById('subpage-frame');
+        frame.style.display = 'block';
+        frame.src = pageName;
     }
 
     loadUserData();
