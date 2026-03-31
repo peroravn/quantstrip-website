@@ -18,7 +18,6 @@
             overflow-x: hidden;
         }
 
-        /* Top Banner */
         .top-banner {
             position: fixed;
             top: 0;
@@ -78,7 +77,6 @@
             background-color: #c82333;
         }
 
-        /* Sidebar */
         .sidebar {
             position: fixed;
             left: 0;
@@ -130,7 +128,6 @@
             text-align: center;
         }
 
-        /* Main Content Area */
         .main-content {
             margin-left: 220px;
             margin-top: 60px;
@@ -143,7 +140,6 @@
             max-width: 1400px;
         }
 
-        /* Welcome Card */
         .welcome-card {
             background: white;
             padding: 30px;
@@ -165,7 +161,6 @@
             font-size: 14px;
         }
 
-        /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -229,52 +224,26 @@
             background-color: #1557b0;
         }
 
-        /* Loading State */
         .loading {
             text-align: center;
             padding: 60px;
             color: #5f6368;
         }
 
-        /* Responsive */
         @media (max-width: 768px) {
-            .sidebar {
-                width: 60px;
-            }
-
-            .sidebar-nav a span {
-                display: none;
-            }
-
-            .sidebar-nav a {
-                justify-content: center;
-                padding: 14px 10px;
-            }
-
-            .main-content {
-                margin-left: 60px;
-            }
-
-            .content-wrapper {
-                padding: 20px;
-            }
-
-            .dashboard-grid {
-                grid-template-columns: 1fr;
-            }
+            .sidebar { width: 60px; }
+            .sidebar-nav a span { display: none; }
+            .sidebar-nav a { justify-content: center; padding: 14px 10px; }
+            .main-content { margin-left: 60px; }
+            .content-wrapper { padding: 20px; }
+            .dashboard-grid { grid-template-columns: 1fr; }
         }
 
-        #subpage-content {
-            display: none;
-        }
-
-        #dashboard-home {
-            display: block;
-        }
+        #subpage-content { display: none; }
+        #dashboard-home { display: block; }
     </style>
 </head>
 <body>
-    <!-- Top Banner -->
     <div class="top-banner">
         <div class="logo-container">
             <img src="assets/quantstrip_logo.png" alt="Quantstrip" onerror="this.style.display='none'">
@@ -288,7 +257,6 @@
         </div>
     </div>
 
-    <!-- Sidebar -->
     <div class="sidebar">
         <ul class="sidebar-nav">
             <li>
@@ -342,10 +310,8 @@
         </ul>
     </div>
 
-    <!-- Main Content -->
     <div class="main-content">
         <div class="content-wrapper">
-            <!-- Dashboard Home View -->
             <div id="dashboard-home">
                 <div class="welcome-card">
                     <h2>Welcome to Your Dashboard</h2>
@@ -354,43 +320,28 @@
 
                 <div class="dashboard-grid">
                     <div class="card" onclick="loadPage(event, 'products.html')">
-                        <h3>
-                            <i class="fas fa-box card-icon"></i>
-                            Products
-                        </h3>
+                        <h3><i class="fas fa-box card-icon"></i> Products</h3>
                         <p>Browse and purchase software products and licenses.</p>
                         <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'products.html')">
                             Browse Products <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
-
                     <div class="card" onclick="loadPage(event, 'my-licenses.html')">
-                        <h3>
-                            <i class="fas fa-key card-icon"></i>
-                            My Licenses
-                        </h3>
+                        <h3><i class="fas fa-key card-icon"></i> My Licenses</h3>
                         <p>Manage your active licenses and view license keys.</p>
                         <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'my-licenses.html')">
                             View Licenses <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
-
                     <div class="card" onclick="loadPage(event, 'templates.html')">
-                        <h3>
-                            <i class="fas fa-plug card-icon"></i>
-                            Templates & Utilities
-                        </h3>
+                        <h3><i class="fas fa-plug card-icon"></i> Templates & Utilities</h3>
                         <p>Browse and download client templates and utility modules.</p>
                         <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'templates.html')">
                             Browse Templates <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
-
                     <div class="card" onclick="loadPage(event, 'downloads.html')">
-                        <h3>
-                            <i class="fas fa-download card-icon"></i>
-                            Downloads
-                        </h3>
+                        <h3><i class="fas fa-download card-icon"></i> Downloads</h3>
                         <p>Download platform installers and plugin templates.</p>
                         <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'downloads.html')">
                             Browse Downloads <i class="fas fa-arrow-right"></i>
@@ -399,18 +350,11 @@
                 </div>
             </div>
 
-            <!-- Subpage Content Container -->
             <div id="subpage-content"></div>
         </div>
     </div>
 
 <script>
-    // Subpage init function names — these are called as bare statements at
-    // the bottom of each subpage's <script> block to self-initialise.
-    // We strip those bare calls before executing the script so they don't
-    // fire immediately on injection (before the DOM elements they reference
-    // have been painted). The dashboard then calls the right one itself,
-    // after a requestAnimationFrame, when the DOM is ready.
     const SUBPAGE_INIT_FNS = [
         'loadUserLicenses',
         'loadUserData',
@@ -420,9 +364,8 @@
         'loadPageData'
     ];
 
-    // Remove any top-level bare calls like `loadUserLicenses();` from a
-    // script string. Only matches lines where the call is the whole statement
-    // (not inside a function body) to avoid over-stripping.
+    // Strip bare top-level self-init calls from subpage scripts so they
+    // don't fire immediately on injection before the DOM is ready.
     function stripAutoCall(scriptText) {
         let result = scriptText;
         for (const fn of SUBPAGE_INIT_FNS) {
@@ -454,11 +397,7 @@
     }
 
     function setActiveLink(element) {
-        document.querySelectorAll('.sidebar-nav a').forEach(link => {
-            link.classList.remove('active');
-        });
-        // Only mark active if the element is actually a sidebar link —
-        // injected buttons (e.g. "Return to Dashboard") are not sidebar links
+        document.querySelectorAll('.sidebar-nav a').forEach(link => link.classList.remove('active'));
         if (element && element.closest && element.closest('.sidebar-nav')) {
             element.classList.add('active');
         }
@@ -466,15 +405,11 @@
 
     function showDashboard(event) {
         if (event) event.preventDefault();
-
-        // Always highlight the Dashboard sidebar entry, regardless of whether
-        // the call came from the sidebar link or an injected subpage button
         const dashboardLink = document.querySelector('.sidebar-nav a[onclick*="showDashboard"]');
         if (dashboardLink) {
             document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
             dashboardLink.classList.add('active');
         }
-
         document.getElementById('dashboard-home').style.display = 'block';
         document.getElementById('subpage-content').style.display = 'none';
     }
@@ -497,25 +432,32 @@
             if (!response.ok) throw new Error('Page not found');
 
             const html = await response.text();
-
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
 
-            // Strip duplicate navigation elements that subpages render for
-            // their standalone view — the dashboard shell provides these
+            // ── STEP 1: Collect ALL scripts from the FULL document BEFORE
+            //   touching innerHTML. Subpage scripts are typically at the bottom
+            //   of <body>, OUTSIDE .container, so extracting container.innerHTML
+            //   alone would silently discard them.
+            const allScripts = [...doc.querySelectorAll('script')];
+
+            // ── STEP 2: Remove scripts from the parsed doc so they don't get
+            //   copied into contentDiv and double-execute later.
+            allScripts.forEach(s => s.remove());
+
+            // ── STEP 3: Strip navigation chrome the subpage renders for its
+            //   standalone view — the dashboard shell provides these already.
             ['.header', 'header', '.navbar', 'nav', '.back-link'].forEach(sel => {
                 doc.querySelectorAll(sel).forEach(el => el.remove());
             });
 
+            // ── STEP 4: Inject the visible HTML content (now script-free).
             const container = doc.querySelector('.container');
             contentDiv.innerHTML = container ? container.innerHTML : doc.body.innerHTML;
 
-            // Pull out all <script> tags BEFORE they can auto-execute with a
-            // stale/missing DOM
-            const scripts = [...contentDiv.querySelectorAll('script')];
-            scripts.forEach(s => s.remove());
-
-            for (const oldScript of scripts) {
+            // ── STEP 5: Re-execute scripts in order, stripping bare init calls
+            //   so they don't fire before the DOM is ready.
+            for (const oldScript of allScripts) {
                 const newScript = document.createElement('script');
 
                 for (const attr of oldScript.attributes) {
@@ -523,7 +465,6 @@
                 }
 
                 if (oldScript.src) {
-                    // External script — wait for it to finish loading
                     await new Promise((resolve, reject) => {
                         newScript.onload = resolve;
                         newScript.onerror = reject;
@@ -531,19 +472,15 @@
                         document.body.appendChild(newScript);
                     });
                 } else {
-                    // Inline script — strip the bare self-init call so it
-                    // doesn't fire before the DOM is ready, then execute
-                    // the function definitions
                     newScript.textContent = stripAutoCall(oldScript.textContent);
                     document.body.appendChild(newScript);
                 }
             }
 
-            // Give the browser one frame to paint the injected HTML so that
-            // getElementById / querySelector calls inside init functions work
+            // ── STEP 6: Wait one frame — DOM is painted, init functions are
+            //   defined. Now it's safe to call the subpage's init function.
             await new Promise(r => requestAnimationFrame(r));
 
-            // Now call the subpage's init function
             for (const fn of SUBPAGE_INIT_FNS) {
                 if (typeof window[fn] === 'function') {
                     try {
