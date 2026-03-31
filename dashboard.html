@@ -221,6 +221,8 @@
             font-size: 13px;
             font-weight: 500;
             transition: background-color 0.2s;
+            border: none;
+            cursor: pointer;
         }
 
         .card-action:hover {
@@ -262,7 +264,6 @@
             }
         }
 
-        /* Subpage Content Styles */
         #subpage-content {
             display: none;
         }
@@ -404,6 +405,33 @@
     </div>
 
 <script>
+    // Subpage init function names — these are called as bare statements at
+    // the bottom of each subpage's <script> block to self-initialise.
+    // We strip those bare calls before executing the script so they don't
+    // fire immediately on injection (before the DOM elements they reference
+    // have been painted). The dashboard then calls the right one itself,
+    // after a requestAnimationFrame, when the DOM is ready.
+    const SUBPAGE_INIT_FNS = [
+        'loadUserLicenses',
+        'loadUserData',
+        'initPage',
+        'init',
+        'loadData',
+        'loadPageData'
+    ];
+
+    // Remove any top-level bare calls like `loadUserLicenses();` from a
+    // script string. Only matches lines where the call is the whole statement
+    // (not inside a function body) to avoid over-stripping.
+    function stripAutoCall(scriptText) {
+        let result = scriptText;
+        for (const fn of SUBPAGE_INIT_FNS) {
+            const re = new RegExp(`^[ \\t]*${fn}\\s*\\(.*?\\)\\s*;?[ \\t]*$`, 'gm');
+            result = result.replace(re, '/* auto-call removed by dashboard loader */');
+        }
+        return result;
+    }
+
     function checkAuth() {
         const userStr = sessionStorage.getItem('user');
         if (!userStr) {
@@ -429,7 +457,9 @@
         document.querySelectorAll('.sidebar-nav a').forEach(link => {
             link.classList.remove('active');
         });
-        if (element && element.classList) {
+        // Only mark active if the element is actually a sidebar link —
+        // injected buttons (e.g. "Return to Dashboard") are not sidebar links
+        if (element && element.closest && element.closest('.sidebar-nav')) {
             element.classList.add('active');
         }
     }
@@ -437,8 +467,13 @@
     function showDashboard(event) {
         if (event) event.preventDefault();
 
-        const link = event?.currentTarget || event?.target?.closest('a');
-        setActiveLink(link);
+        // Always highlight the Dashboard sidebar entry, regardless of whether
+        // the call came from the sidebar link or an injected subpage button
+        const dashboardLink = document.querySelector('.sidebar-nav a[onclick*="showDashboard"]');
+        if (dashboardLink) {
+            document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+            dashboardLink.classList.add('active');
+        }
 
         document.getElementById('dashboard-home').style.display = 'block';
         document.getElementById('subpage-content').style.display = 'none';
@@ -466,20 +501,20 @@
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
 
-            // Remove duplicate header if present
-            const header = doc.querySelector('.header');
-            if (header) header.remove();
+            // Strip duplicate navigation elements that subpages render for
+            // their standalone view — the dashboard shell provides these
+            ['.header', 'header', '.navbar', 'nav', '.back-link'].forEach(sel => {
+                doc.querySelectorAll(sel).forEach(el => el.remove());
+            });
 
-            // Inject HTML content
             const container = doc.querySelector('.container');
             contentDiv.innerHTML = container ? container.innerHTML : doc.body.innerHTML;
 
-            // Collect and remove scripts from injected HTML so they don't
-            // auto-execute before the DOM elements they reference exist
+            // Pull out all <script> tags BEFORE they can auto-execute with a
+            // stale/missing DOM
             const scripts = [...contentDiv.querySelectorAll('script')];
             scripts.forEach(s => s.remove());
 
-            // Re-execute each script by appending a fresh element to <body>
             for (const oldScript of scripts) {
                 const newScript = document.createElement('script');
 
@@ -488,7 +523,7 @@
                 }
 
                 if (oldScript.src) {
-                    // External script — wait for it to load before continuing
+                    // External script — wait for it to finish loading
                     await new Promise((resolve, reject) => {
                         newScript.onload = resolve;
                         newScript.onerror = reject;
@@ -496,35 +531,26 @@
                         document.body.appendChild(newScript);
                     });
                 } else {
-                    // Inline script — append and execute
-                    newScript.textContent = oldScript.textContent;
+                    // Inline script — strip the bare self-init call so it
+                    // doesn't fire before the DOM is ready, then execute
+                    // the function definitions
+                    newScript.textContent = stripAutoCall(oldScript.textContent);
                     document.body.appendChild(newScript);
                 }
             }
 
-            // Wait for one animation frame so the browser has rendered the
-            // injected DOM before any init function queries it
+            // Give the browser one frame to paint the injected HTML so that
+            // getElementById / querySelector calls inside init functions work
             await new Promise(r => requestAnimationFrame(r));
 
-            // Auto-detect and call the subpage's init function.
-            // loadUserLicenses is listed first because downloads.html calls it
-            // at the bottom of its script block (would otherwise fire too early).
-            const possibleInits = [
-                'loadUserLicenses',
-                'loadUserData',
-                'initPage',
-                'init',
-                'loadData',
-                'loadPageData'
-            ];
-
-            for (const fn of possibleInits) {
+            // Now call the subpage's init function
+            for (const fn of SUBPAGE_INIT_FNS) {
                 if (typeof window[fn] === 'function') {
                     try {
                         window[fn]();
                         break;
                     } catch (e) {
-                        console.warn(`Init function ${fn} failed:`, e);
+                        console.warn(`Init function "${fn}" failed:`, e);
                     }
                 }
             }
