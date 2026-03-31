@@ -403,7 +403,7 @@
         </div>
     </div>
 
-   <script>
+<script>
     function checkAuth() {
         const userStr = sessionStorage.getItem('user');
         if (!userStr) {
@@ -429,7 +429,6 @@
         document.querySelectorAll('.sidebar-nav a').forEach(link => {
             link.classList.remove('active');
         });
-
         if (element && element.classList) {
             element.classList.add('active');
         }
@@ -467,35 +466,69 @@
             const parser = new DOMParser();
             const doc = parser.parseFromString(html, 'text/html');
 
-            // ✅ CRITICAL FIX: ensure relative paths work
+            // ✅ Fix relative paths
             const base = document.createElement('base');
             base.href = pageName;
             doc.head.prepend(base);
 
-            // Remove subpage header (we already have one)
+            // Remove duplicate header
             const header = doc.querySelector('.header');
             if (header) header.remove();
 
-            // Extract content safely
+            // Extract content
             const container = doc.querySelector('.container');
             contentDiv.innerHTML = container ? container.innerHTML : doc.body.innerHTML;
 
-            // ✅ CRITICAL FIX: re-run scripts properly
-            const scripts = contentDiv.querySelectorAll('script');
+            // 🔥 SCRIPT EXECUTION ENGINE (robust)
+            const scripts = Array.from(contentDiv.querySelectorAll('script'));
 
-            scripts.forEach(oldScript => {
+            // Remove scripts from DOM first
+            scripts.forEach(s => s.remove());
+
+            for (const oldScript of scripts) {
                 const newScript = document.createElement('script');
 
-                // copy attributes (src, etc.)
-                Array.from(oldScript.attributes).forEach(attr => {
+                // Copy attributes (src, type, etc.)
+                for (const attr of oldScript.attributes) {
                     newScript.setAttribute(attr.name, attr.value);
-                });
+                }
 
-                newScript.textContent = oldScript.textContent;
+                if (oldScript.src) {
+                    // External script → wait for load
+                    await new Promise((resolve, reject) => {
+                        newScript.onload = resolve;
+                        newScript.onerror = reject;
+                        newScript.src = oldScript.src;
+                        document.body.appendChild(newScript);
+                    });
+                } else {
+                    // Inline script → execute safely
+                    newScript.textContent = oldScript.textContent;
+                    document.body.appendChild(newScript);
+                }
+            }
 
-                // replace old script
-                oldScript.parentNode.replaceChild(newScript, oldScript);
-            });
+            // 🔥 AUTO-DETECT INIT FUNCTIONS
+            setTimeout(() => {
+                const possibleInits = [
+                    'initPage',
+                    'init',
+                    'loadData',
+                    'loadUserLicenses',
+                    'loadPageData'
+                ];
+
+                for (const fn of possibleInits) {
+                    if (typeof window[fn] === 'function') {
+                        try {
+                            window[fn]();
+                            break;
+                        } catch (e) {
+                            console.warn(`Init function ${fn} failed:`, e);
+                        }
+                    }
+                }
+            }, 0);
 
         } catch (error) {
             contentDiv.innerHTML = `
