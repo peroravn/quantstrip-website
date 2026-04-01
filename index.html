@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quantstrip - Software Distribution & License Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -34,15 +35,15 @@
         }
 
         .reference-text a {
-            color: #00376b;           /* Teal color for links */
-            text-decoration: none;    /* Remove the underline */
-            font-weight: 500;         /* Slightly bolder text */
-            }
+            color: #00376b;
+            text-decoration: none;
+            font-weight: 500;
+        }
 
         .reference-text a:hover {
-            text-decoration: underline; /* Underline on hover for clarity */
-            color: rgb(8, 0, 75);             /* Darker teal on hover */
-            }
+            text-decoration: underline;
+            color: rgb(8, 0, 75);
+        }
 
         .learn-more-link {
             display: inline-block;
@@ -94,6 +95,147 @@
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        /* ── Mega Menu ── */
+        .nav-item-platform {
+            position: static; /* lets mega menu stretch full width */
+        }
+
+        .platform-trigger {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 16px;
+            user-select: none;
+            transition: color 0.3s;
+        }
+
+        .platform-trigger:hover,
+        .platform-trigger.active {
+            color: #00bcd4;
+        }
+
+        .platform-trigger .chevron {
+            font-size: 11px;
+            transition: transform 0.3s ease;
+        }
+
+        .platform-trigger.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .mega-menu {
+            position: fixed;
+            top: 64px; /* nav height */
+            left: 0;
+            right: 0;
+            background: #f7f8f9;
+            border-top: 1px solid #e0e2e6;
+            border-bottom: 3px solid #00bcd4;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+            z-index: 999;
+
+            /* hidden state */
+            opacity: 0;
+            transform: translateY(-8px);
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+
+        .mega-menu.open {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        .mega-menu-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 60px 48px;
+        }
+
+        .mega-menu-heading {
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #9da3ae;
+            margin-bottom: 24px;
+        }
+
+        .mega-menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px 24px;
+        }
+
+        .mega-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 18px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            transition: background 0.2s ease, box-shadow 0.2s ease;
+            color: inherit;
+        }
+
+        .mega-item:hover {
+            background: #ffffff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .mega-item-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0270ff15 0%, #00bcd415 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 17px;
+            color: #0270ff;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .mega-item:hover .mega-item-icon {
+            background: linear-gradient(135deg, #0270ff 0%, #00bcd4 100%);
+            color: #ffffff;
+        }
+
+        .mega-item-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .mega-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a2e;
+            line-height: 1.3;
+        }
+
+        .mega-item-desc {
+            font-size: 12px;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* Backdrop to close menu on outside click */
+        .mega-backdrop {
+            position: fixed;
+            inset: 0;
+            z-index: 998;
+            display: none;
+        }
+
+        .mega-backdrop.visible {
+            display: block;
         }
 
         /* Hero Section */
@@ -165,10 +307,10 @@
         }
 
         .cta-button:hover {
-            background: #013b86;          
+            background: #013b86;
         }
 
-       /* Content Sections */
+        /* Content Sections */
         .content-sections {
             background: #ffffff;
             position: relative;
@@ -242,39 +384,17 @@
                 gap: 40px;
                 padding: 60px 30px;
             }
-            
+
             .section-text {
                 padding-right: 0;
             }
-            
+
             .section-text h2 {
                 font-size: 28px;
             }
-        }
 
-        /* Dashboard Preview in Hero */
-        .dashboard-preview {
-            position: absolute;
-            right: 60px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 2;
-            max-width: 500px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .dashboard-preview img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .dashboard-preview {
-                display: none;
+            .mega-menu-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -300,13 +420,12 @@
                 font-size: 18px;
             }
 
-            .news-section {
-                padding: 60px 30px;
+            .mega-menu-inner {
+                padding: 30px 30px 36px;
             }
 
-            .news-grid {
+            .mega-menu-grid {
                 grid-template-columns: 1fr;
-                gap: 30px;
             }
         }
 
@@ -344,13 +463,25 @@
     </style>
 </head>
 <body>
+
+    <!-- Backdrop (closes mega menu on outside click) -->
+    <div class="mega-backdrop" id="megaBackdrop"></div>
+
     <!-- Navigation -->
     <nav class="nav">
         <a href="/" class="logo img">
             <img src="assets/Logo.png" alt="Quantstrip Logo">
         </a>
         <div class="nav-links">
-            <a href="#platform">Platform</a>
+
+            <!-- Platform with Mega Menu -->
+            <div class="nav-item-platform">
+                <span class="platform-trigger" id="platformTrigger" role="button" aria-haspopup="true" aria-expanded="false">
+                    Platform
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </span>
+            </div>
+
             <a href="#pricing">Pricing</a>
             <a href="#learn">Learn</a>
             <a href="login.html" class="sign-in">
@@ -363,66 +494,170 @@
         </div>
     </nav>
 
+    <!-- Mega Menu (outside nav so it can span full width) -->
+    <div class="mega-menu" id="megaMenu" role="menu">
+        <div class="mega-menu-inner">
+            <p class="mega-menu-heading">Platform capabilities</p>
+            <div class="mega-menu-grid">
+
+                <a href="#strategy-automation" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Strategy Automation</span>
+                        <span class="mega-item-desc">Automate execution of quantitative trading strategies end-to-end.</span>
+                    </div>
+                </a>
+
+                <a href="#common-datamodel" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Common Data Model</span>
+                        <span class="mega-item-desc">Unified schema across brokers, venues, and asset classes.</span>
+                    </div>
+                </a>
+
+                <a href="#post-trade-reporting" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon">
+                        <i class="fa-solid fa-chart-bar"></i>
+                    </div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Post-Trade Reporting</span>
+                        <span class="mega-item-desc">Track P&amp;L, fills, and performance across your entire portfolio.</span>
+                    </div>
+                </a>
+
+                <a href="#api" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Quantstrip API</span>
+                        <span class="mega-item-desc">Integrate directly with our REST &amp; WebSocket API layer.</span>
+                    </div>
+                </a>
+
+                <a href="#resources" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon">
+                        <i class="fa-solid fa-book-open"></i>
+                    </div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Resources</span>
+                        <span class="mega-item-desc">Documentation, tutorials, and strategy guides to get started fast.</span>
+                    </div>
+                </a>
+
+                <a href="#broker-integration" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon">
+                        <i class="fa-solid fa-plug"></i>
+                    </div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Broker Integration</span>
+                        <span class="mega-item-desc">Connect to leading brokers with pre-built, certified adapters.</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </div>
+
     <!-- Hero Section -->
     <section class="hero">
         <img src="assets/HomeBackground.png" alt="Trading Background" class="hero-background">
         <div class="hero-overlay"></div>
-        
+
         <div class="hero-content">
             <h1>Get your trading algorithms off the ground</h1>
             <p>Connect to any broker, automate order execution and manage the complete trade life-cycle</p>
             <a href="register.html" class="cta-button">Register for Free</a>
         </div>
-
-        <!-- <div class="dashboard-preview">
-            <img src="data:image/svg+xml,%3Csvg width='500' height='300' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='500' height='300' fill='%23151b3d'/%3E%3Ctext x='250' y='150' font-family='Arial' font-size='20' fill='%2300bcd4' text-anchor='middle'%3EClient Dashboard%3C/text%3E%3C/svg%3E" alt="Dashboard Preview">
-        </div> -->
-
     </section>
 
     <!-- Content Sections -->
-     <div class="content-sections">
-    <section class="content-section">
-        <div class="section-text">
-            <div class="section-label">AUTOMATED EXECUTION - STRATEGY EXAMPLE</div>
-            <h2>Trading institutional flows at the end of month</h2>
-            <p class="reference-text">This strategy was introduced by Kris Longmore from <a href="https://www.robotwealth.com" target="_blank">Robot Wealth</a> 
-            and the post is available on 
-                <a href="https://krislongmore.substack.com/p/how-wealth-managers-pay-you-to-trade" target="_blank">substack</a>. 
-            The trade is based on the monthly rebalancing flows created when wealth managers and other institutional investors rebalance their portfolios, creating noisily predictable return patterns that can be traded at the end of each month.</p>
-            <p>Compared to buying and holding SPY (the red line), the strategy performs remarkably well for such simple system. Find out how to implement the strategy in Quantstrip to automate order execution and track performance over time. <a href="posts/Trading_Institutional_Flows.html" class="learn-more-link">Read full article →</a>
-            </p>
-        </div>
-        <div>
-            <img src="assets/strategy_performance.jpg" alt="Platform" class="section-image">
-            <!-- Or use placeholder: -->
-            <!-- <div class="section-image-placeholder">Platform Image</div> -->
-        </div>
-    </section>
+    <div class="content-sections">
+        <section class="content-section">
+            <div class="section-text">
+                <div class="section-label">AUTOMATED EXECUTION - STRATEGY EXAMPLE</div>
+                <h2>Trading institutional flows at the end of month</h2>
+                <p class="reference-text">This strategy was introduced by Kris Longmore from <a href="https://www.robotwealth.com" target="_blank">Robot Wealth</a>
+                and the post is available on
+                    <a href="https://krislongmore.substack.com/p/how-wealth-managers-pay-you-to-trade" target="_blank">substack</a>.
+                The trade is based on the monthly rebalancing flows created when wealth managers and other institutional investors rebalance their portfolios, creating noisily predictable return patterns that can be traded at the end of each month.</p>
+                <p>Compared to buying and holding SPY (the red line), the strategy performs remarkably well for such simple system. Find out how to implement the strategy in Quantstrip to automate order execution and track performance over time. <a href="posts/Trading_Institutional_Flows.html" class="learn-more-link">Read full article →</a>
+                </p>
+            </div>
+            <div>
+                <img src="assets/strategy_performance.jpg" alt="Platform" class="section-image">
+            </div>
+        </section>
 
-    <section class="content-section">
-        <div class="section-text">
-            <div class="section-label">AUTOMATED EXECUTION</div>
-            <h2>Execute Trades Automatically</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
-        <div>
-            <div class="section-image-placeholder">Research Image</div>
-        </div>
-    </section>
+        <section class="content-section">
+            <div class="section-text">
+                <div class="section-label">AUTOMATED EXECUTION</div>
+                <h2>Execute Trades Automatically</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div>
+                <div class="section-image-placeholder">Research Image</div>
+            </div>
+        </section>
 
-    <section class="content-section">
-        <div class="section-text">
-            <div class="section-label">POST-TRADE MANAGEMENT/div>
-            <h2>Automate the trade-life cycle processing</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-        </div>
-        <div>
-            <div class="section-image-placeholder">Deployment Image</div>
-        </div>
-    </section>
-</div>
+        <section class="content-section">
+            <div class="section-text">
+                <div class="section-label">POST-TRADE MANAGEMENT</div>
+                <h2>Automate the trade-life cycle processing</h2>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <div>
+                <div class="section-image-placeholder">Deployment Image</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const trigger   = document.getElementById('platformTrigger');
+        const menu      = document.getElementById('megaMenu');
+        const backdrop  = document.getElementById('megaBackdrop');
+
+        function openMenu() {
+            menu.classList.add('open');
+            backdrop.classList.add('visible');
+            trigger.classList.add('active');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeMenu() {
+            menu.classList.remove('open');
+            backdrop.classList.remove('visible');
+            trigger.classList.remove('active');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        function toggleMenu() {
+            menu.classList.contains('open') ? closeMenu() : openMenu();
+        }
+
+        trigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        backdrop.addEventListener('click', closeMenu);
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMenu();
+        });
+
+        // Close if a menu item is clicked
+        menu.querySelectorAll('.mega-item').forEach(item => {
+            item.addEventListener('click', closeMenu);
+        });
+    </script>
 </body>
 </html>
