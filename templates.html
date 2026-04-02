@@ -125,7 +125,7 @@
         }
 
         .templates-table td {
-            padding: 13px 16px;
+            padding: 9px 16px;
             vertical-align: middle;
             font-size: 13px;
             color: #333;
@@ -143,8 +143,8 @@
         }
 
         .name-cell i {
-            font-size: 13px;
-            color: #aaa;
+            font-size: 12px;
+            color: #bbb;
             flex-shrink: 0;
         }
 
@@ -181,55 +181,41 @@
             color: #a05c00;
         }
 
-        /* Action buttons */
         .action-btns {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             justify-content: flex-end;
         }
 
         .btn-action {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 5px 12px;
-            font-size: 12px;
-            font-weight: 500;
-            color: #111;
-            background: #fff;
-            border: 1px solid #d0d0d0;
-            border-radius: 6px;
+            justify-content: center;
+            width: 26px;
+            height: 26px;
+            font-size: 13px;
+            color: #aaa;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background 0.15s, border-color 0.15s;
-            white-space: nowrap;
+            transition: color 0.15s;
+            padding: 0;
             font-family: inherit;
         }
 
         .btn-action:hover {
-            background: #f0f0f0;
-            border-color: #bbb;
-        }
-
-        .btn-action i {
-            font-size: 11px;
-            color: #666;
+            color: #444;
         }
 
         .btn-action.locked-btn {
-            color: #aaa;
-            border-color: #e5e5e5;
-            background: #f9f9f9;
+            color: #ddd;
             cursor: default;
         }
 
         .btn-action.locked-btn:hover {
-            background: #f9f9f9;
-            border-color: #e5e5e5;
-        }
-
-        .btn-action.locked-btn i {
-            color: #ccc;
+            color: #ddd;
         }
 
         /* No license */
@@ -454,7 +440,7 @@
                 tr.innerHTML = `
                     <td>
                         <div class="name-cell">
-                            <i class="fa-regular fa-file-code"></i>
+                            <i class="fa-solid fa-code"></i>
                             <span class="filename">${template.filename}</span>
                         </div>
                     </td>
@@ -466,15 +452,15 @@
                         <div class="action-btns">
                             <button class="btn-action ${isLocked ? 'locked-btn' : ''}"
                                     onclick="previewTemplate('${template.tier}', '${template.filename}')"
+                                    title="Preview"
                                     ${isLocked ? 'disabled' : ''}>
-                                <i class="fa-regular fa-eye"></i> Preview
+                                <i class="fa-regular fa-eye"></i>
                             </button>
                             <button class="btn-action ${isLocked ? 'locked-btn' : ''}"
                                     onclick="downloadTemplate('${template.tier}', '${template.filename}')"
+                                    title="${isLocked ? 'Pro only' : 'Download'}"
                                     ${isLocked ? 'disabled' : ''}>
-                                ${isLocked
-                                    ? '<i class="fa-solid fa-lock"></i> Pro only'
-                                    : '<i class="fa-solid fa-download"></i> Download'}
+                                <i class="${isLocked ? 'fa-solid fa-lock' : 'fa-solid fa-download'}"></i>
                             </button>
                         </div>
                     </td>
