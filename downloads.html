@@ -4,278 +4,317 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Downloads - Quantstrip</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
-        .header {
-            background-color: #ffffff;
-            padding: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .header h1 {
-            color: #333;
-            font-size: 24px;
-        }
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-        .user-name {
-            color: #666;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #fafafa;
+            color: #111;
             font-size: 14px;
         }
-        .logout-btn {
-            background-color: #f44336;
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .logout-btn:hover {
-            background-color: #d32f2f;
-        }
+
         .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 48px 24px 64px;
         }
+
         .page-header {
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
+
         .page-header h2 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
         }
+
         .page-header p {
             color: #666;
-            margin-bottom: 5px;
-        }
-        .doc-note {
-            background-color: #e3f2fd;
-            border-left: 4px solid #2196F3;
-            padding: 15px;
-            border-radius: 4px;
-            color: #1565c0;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        .section {
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .section-title {
-            font-size: 22px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .section-description {
-            color: #666;
-            margin-bottom: 25px;
-            line-height: 1.6;
+            font-size: 13px;
         }
 
-        /* Download table styles */
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #888;
+            margin-bottom: 12px;
+        }
+
+        /* Full-width table */
         .downloads-table {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            overflow: hidden;
         }
-        .download-row {
+
+        .downloads-table thead tr {
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .downloads-table th {
+            text-align: left;
+            padding: 10px 16px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #888;
+            background: #fafafa;
+        }
+
+        .downloads-table th:last-child {
+            text-align: right;
+        }
+
+        .downloads-table tbody tr {
+            border-bottom: 1px solid #e5e5e5;
+            transition: background 0.1s;
+        }
+
+        .downloads-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .downloads-table tbody tr:hover:not(.disabled-row) {
+            background: #f5f5f5;
+        }
+
+        .downloads-table tbody tr.disabled-row {
+            opacity: 0.45;
+        }
+
+        .downloads-table td {
+            padding: 14px 16px;
+            vertical-align: middle;
+        }
+
+        .downloads-table td:last-child {
+            text-align: right;
+        }
+
+        /* OS cell */
+        .os-cell {
             display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 16px 20px;
-            border: 1px solid #e0e0e0;
-            border-radius: 0;
-            background: white;
+            gap: 10px;
         }
-        .download-row:hover {
-            background-color: #f9f9f9;
-        }
-        .download-row.disabled {
-            opacity: 0.55;
-        }
-        .download-row-icon {
-            width: 36px;
-            height: 36px;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .download-row-info {
-            flex: 1;
-        }
-        .download-row-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 3px;
-        }
-        .download-row-desc {
-            font-size: 13px;
-            color: #666;
-        }
-        .download-row-version {
-            width: 90px;
-            flex-shrink: 0;
+
+        .os-icon {
+            width: 20px;
             text-align: center;
-            font-size: 13px;
-            color: #666;
-        }
-        .download-row-size {
-            width: 80px;
             flex-shrink: 0;
-            text-align: center;
-            font-size: 13px;
-            color: #666;
+            font-size: 16px;
+            color: #444;
         }
-        .download-row-btn {
-            flex-shrink: 0;
-            display: flex;
+
+        .os-name {
+            font-weight: 500;
+            font-size: 13px;
+            color: #111;
+        }
+
+        .os-sub {
+            font-size: 12px;
+            color: #888;
+            margin-top: 1px;
+        }
+
+        /* Version & size cells */
+        .version-cell, .size-cell {
+            font-size: 12px;
+            color: #555;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Download button */
+        .btn-download {
+            display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 20px;
-            background-color: #fdfdfd;
-            color: rgb(53, 52, 52);
-            border: 1px solid #555555;
-            border-radius: 3px;
-            font-size: 13px;
-            font-weight: bold;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #111;
+            background: #fff;
+            border: 1px solid #d0d0d0;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .download-row-btn:hover {
-            background-color: #dddddd;
-        }
-        .download-row-btn.coming-soon {
-            background-color: #ccc;
-            cursor: default;
-            color: #888;
-        }
-        .download-row-btn.coming-soon:hover {
-            background-color: #ccc;
+            transition: background 0.15s, border-color 0.15s;
+            white-space: nowrap;
+            font-family: inherit;
         }
 
+        .btn-download:hover {
+            background: #f0f0f0;
+            border-color: #bbb;
+        }
+
+        .btn-download i {
+            font-size: 11px;
+            color: #555;
+        }
+
+        .btn-soon {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #aaa;
+            background: #f5f5f5;
+            border: 1px solid #e5e5e5;
+            border-radius: 6px;
+            cursor: default;
+            font-family: inherit;
+        }
+
+        /* No license */
         .no-license-warning {
-            background-color: #fff3cd;
-            border: 1px solid #ffc107;
-            color: #856404;
-            padding: 20px;
+            background: #fffbea;
+            border: 1px solid #f0d060;
+            color: #7a5c00;
+            padding: 20px 24px;
             border-radius: 8px;
-            margin-bottom: 30px;
-            text-align: center;
+            margin-bottom: 32px;
         }
+
         .no-license-warning h3 {
-            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
         }
+
+        .no-license-warning p {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
         .no-license-warning a {
-            color: #856404;
+            color: #7a5c00;
             text-decoration: underline;
         }
-        .back-link {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .back-link a {
-            color: #2f61eb;
-            text-decoration: none;
-        }
-        .back-link a:hover {
-            text-decoration: underline;
-        }
+
         .loading {
-            text-align: center;
-            padding: 60px;
-            color: #666;
+            padding: 48px 0;
+            color: #888;
+            font-size: 13px;
+        }
+
+        .back-link {
+            margin-top: 32px;
+        }
+
+        .back-link a {
+            font-size: 12.5px;
+            color: #555;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: color 0.15s;
+        }
+
+        .back-link a:hover {
+            color: #111;
+        }
+
+        .back-link i {
+            font-size: 11px;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Downloads</h1>
-        <div class="user-info">
-            <span class="user-name">Welcome, <strong id="userName"></strong></span>
-            <button class="logout-btn" onclick="logout()">Logout</button>
-        </div>
-    </div>
-
     <div class="container">
+
         <div class="page-header">
-            <h2>Download</h2>
+            <h2>Downloads</h2>
             <p>Access your platform installers and plugin templates</p>
         </div>
 
         <div id="loadingDiv" class="loading">
-            Loading your downloads...
+            Loading your downloads…
         </div>
 
         <div id="noLicenseWarning" class="no-license-warning" style="display: none;">
-            <h3>⚠️ No Active License Found</h3>
-            <p>You need an active license to download the platform. <a href="products.html">Purchase a license here</a></p>
+            <h3>⚠ No Active License Found</h3>
+            <p>You need an active license to download the platform. <a href="products.html">Purchase a license here</a>.</p>
         </div>
 
         <div id="downloadsContent" style="display: none;">
             <div class="section">
-                <div class="section-title">Platform Installers</div>
-                <div class="section-description">
-                    Download the Quantstrip algorithmic trading platform installer for your operating system.
-                </div>
-
-                <div class="downloads-table">
-
-                    <div class="download-row">
-                        <div class="download-row-icon">
-                            <img src="assets/windows_download.png" alt="Windows" style="width: 28px; height: 28px;">
-                        </div>
-                        <div class="download-row-info">
-                            <div class="download-row-title">Windows 11</div>
-                            <div class="download-row-desc">Windows installer for 64-bit systems (.exe)</div>
-                        </div>
-                        <div class="download-row-version">v0.95 Beta</div>
-                        <div class="download-row-size">~100 MB</div>
-                        <button class="download-row-btn" onclick="downloadFile('platform', 'windows')">
-                            ↓ Download
-                        </button>
-                    </div>
-
-                    <div class="download-row disabled">
-                        <div class="download-row-icon">
-                            <img src="assets/linux_download.png" alt="Linux" style="width: 28px; height: 28px;">
-                        </div>
-                        <div class="download-row-info">
-                            <div class="download-row-title">Linux</div>
-                            <div class="download-row-desc">Debian/Ubuntu package for 64-bit systems (.deb)</div>
-                        </div>
-                        <div class="download-row-version"></div>
-                        <div class="download-row-size"></div>
-                        <button class="download-row-btn coming-soon" disabled>Coming soon</button>
-                    </div>
-
-                </div>
+                <div class="section-label">Platform Installers</div>
+                <table class="downloads-table">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Version</th>
+                            <th>Size</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="os-cell">
+                                    <span class="os-icon"><i class="fa-brands fa-windows"></i></span>
+                                    <div>
+                                        <div class="os-name">Windows 11</div>
+                                        <div class="os-sub">64-bit installer (.exe)</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="version-cell">v0.95 Beta</td>
+                            <td class="size-cell">~100 MB</td>
+                            <td>
+                                <button class="btn-download" onclick="downloadFile('platform', 'windows')">
+                                    <i class="fa-solid fa-download"></i>
+                                    Download
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="disabled-row">
+                            <td>
+                                <div class="os-cell">
+                                    <span class="os-icon"><i class="fa-brands fa-linux"></i></span>
+                                    <div>
+                                        <div class="os-name">Linux</div>
+                                        <div class="os-sub">Debian/Ubuntu 64-bit (.deb)</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="version-cell">—</td>
+                            <td class="size-cell">—</td>
+                            <td>
+                                <button class="btn-soon" disabled>Coming soon</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
         <div class="back-link">
-            <a href="dashboard.html">← Back to Dashboard</a>
+            <a href="dashboard.html"><i class="fa-solid fa-arrow-left"></i> Back to Dashboard</a>
         </div>
+
     </div>
 
     <script>
@@ -291,31 +330,20 @@
             return JSON.parse(userStr);
         }
 
-        function logout() {
-            sessionStorage.removeItem('user');
-            window.location.href = 'index.html';
-        }
-
         async function loadUserLicenses() {
             const user = checkAuth();
             if (!user) return;
 
-            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
-
             try {
                 const response = await fetch(`https://www.quantstrip.com/api/get-licenses?email=${encodeURIComponent(user.email)}`);
-                
-                if (!response.ok) {
-                    throw new Error(`Server returned ${response.status}`);
-                }
-                
-                const data = await response.json();
+                if (!response.ok) throw new Error(`Server returned ${response.status}`);
 
+                const data = await response.json();
                 document.getElementById('loadingDiv').style.display = 'none';
 
                 if (data.success && data.licenses && data.licenses.length > 0) {
                     userLicenses = data.licenses;
-                    
+
                     const hasActiveLicense = userLicenses.some(license => {
                         const daysRemaining = calculateDaysRemaining(license.expires_at);
                         return license.status === 'active' && daysRemaining > 0;
@@ -328,8 +356,8 @@
 
                     hasProLicense = userLicenses.some(license => {
                         const daysRemaining = calculateDaysRemaining(license.expires_at);
-                        return license.product_name === 'Pro' && 
-                               license.status === 'active' && 
+                        return license.product_name === 'Pro' &&
+                               license.status === 'active' &&
                                daysRemaining > 0;
                     });
 
@@ -342,7 +370,7 @@
                 document.getElementById('loadingDiv').style.display = 'none';
                 document.getElementById('noLicenseWarning').style.display = 'block';
                 document.getElementById('noLicenseWarning').innerHTML = `
-                    <h3>⚠️ Unable to Load Licenses</h3>
+                    <h3>⚠ Unable to Load Licenses</h3>
                     <p>There was an error connecting to the server. Please try refreshing the page or contact support if the problem persists.</p>
                 `;
                 console.error('Error loading licenses:', error);
@@ -352,9 +380,7 @@
         function calculateDaysRemaining(expiryDate) {
             const now = new Date();
             const expiry = new Date(expiryDate);
-            const diffTime = expiry - now;
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            return diffDays;
+            return Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
         }
 
         async function downloadFile(type, platform) {
@@ -364,9 +390,7 @@
             try {
                 const response = await fetch('https://www.quantstrip.com/api/download-file', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         email: user.email,
                         fileType: type,
