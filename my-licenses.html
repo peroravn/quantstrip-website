@@ -110,7 +110,6 @@
         .status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
             padding: 3px 10px;
             border-radius: 20px;
             font-size: 12px;
@@ -127,24 +126,11 @@
             color: #b84040;
         }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
 
-        .status-pill.active .status-dot {
-            background-color: #4caf50;
-        }
-
-        .status-pill.expired .status-dot {
-            background-color: #e57373;
-        }
 
         /* Product name cell */
         .product-cell .product-name {
-            font-weight: 500;
+            font-weight: 400;
             font-size: 14px;
             color: #111;
         }
@@ -177,21 +163,20 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
-            background: #fff;
-            border: 1px solid #d0d0d0;
-            border-radius: 5px;
+            width: 24px;
+            height: 24px;
+            background: transparent;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            color: #666;
-            transition: background 0.15s, border-color 0.15s, color 0.15s;
+            color: #aaa;
+            transition: color 0.15s;
             flex-shrink: 0;
+            padding: 0;
         }
 
         .btn-copy:hover {
-            background: #f0f0f0;
-            border-color: #bbb;
-            color: #111;
+            color: #555;
         }
 
         .btn-copy i {
@@ -199,7 +184,6 @@
         }
 
         .btn-copy.copied {
-            border-color: #4caf50;
             color: #4caf50;
         }
 
@@ -437,7 +421,6 @@
                     </td>
                     <td>
                         <span class="status-pill ${isActive ? 'active' : 'expired'}">
-                            <span class="status-dot"></span>
                             ${isActive ? 'Active' : 'Expired'}
                         </span>
                     </td>
