@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform - Quantstrip</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #ffffff;
+            color: #1a1a2e;
+        }
+
+        /* ── Nav (same as index) ── */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 64px;
+            background: rgba(0,0,0,0.97);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo img {
+            height: 24px;
+            width: auto;
+            margin-left: 160px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: #00bcd4; }
+
+        .nav-links .sign-in {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .platform-trigger {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: #00bcd4;
+            font-size: 16px;
+        }
+
+        /* ── Page hero ── */
+        .page-hero {
+            margin-top: 64px;
+            background: #000;
+            padding: 80px 60px 70px;
+            text-align: center;
+        }
+
+        .page-hero .eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: #00bcd4;
+            margin-bottom: 20px;
+        }
+
+        .page-hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+            max-width: 800px;
+            margin: 0 auto 20px;
+        }
+
+        .page-hero p {
+            font-size: 18px;
+            color: #aaa;
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ── Nav tabs within the page ── */
+        .section-nav {
+            position: sticky;
+            top: 64px;
+            z-index: 100;
+            background: #fff;
+            border-bottom: 1px solid #e8eaed;
+            display: flex;
+            gap: 0;
+            padding: 0 60px;
+            overflow-x: auto;
+        }
+
+        .section-nav a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #5f6368;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .section-nav a:hover {
+            color: #1a1a2e;
+            border-bottom-color: #e0e2e6;
+        }
+
+        .section-nav a i {
+            font-size: 13px;
+            color: #0270ff;
+        }
+
+        /* ── Sections ── */
+        .platform-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 96px 60px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .platform-section:last-child {
+            border-bottom: none;
+        }
+
+        .section-inner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+
+        .section-inner.reverse {
+            direction: rtl;
+        }
+
+        .section-inner.reverse > * {
+            direction: ltr;
+        }
+
+        .section-text .eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #00bcd4;
+            margin-bottom: 14px;
+        }
+
+        .section-text h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1a1a2e;
+            line-height: 1.3;
+            margin-bottom: 18px;
+        }
+
+        .section-text p {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 14px;
+        }
+
+        .section-text p:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .doc-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            margin-top: 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0270ff;
+            text-decoration: none;
+            transition: gap 0.2s;
+        }
+
+        .doc-link:hover {
+            gap: 10px;
+        }
+
+        .doc-link i {
+            font-size: 12px;
+        }
+
+        /* Feature bullets */
+        .feature-list {
+            list-style: none;
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 14px;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .feature-list li i {
+            font-size: 12px;
+            color: #00bcd4;
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        /* Visual panel */
+        .section-visual {
+            background: #f7f8fa;
+            border-radius: 12px;
+            border: 1px solid #e8eaed;
+            overflow: hidden;
+        }
+
+        .visual-header {
+            background: #1a1a2e;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot.red   { background: #ff5f56; }
+        .dot.amber { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        .visual-title {
+            margin-left: 6px;
+            font-size: 12px;
+            color: #888;
+            font-family: monospace;
+        }
+
+        .visual-body {
+            padding: 24px 22px;
+        }
+
+        /* Code block */
+        .code-block {
+            font-family: 'SFMono-Regular', 'Consolas', monospace;
+            font-size: 12.5px;
+            line-height: 1.8;
+            color: #cdd6f4;
+            background: #1e1e2e;
+            border-radius: 8px;
+            padding: 20px 22px;
+            overflow-x: auto;
+        }
+
+        .code-block .kw  { color: #cba6f7; }
+        .code-block .fn  { color: #89b4fa; }
+        .code-block .str { color: #a6e3a1; }
+        .code-block .cm  { color: #585b70; }
+        .code-block .num { color: #fab387; }
+
+        /* Status table */
+        .status-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .status-table th {
+            text-align: left;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #888;
+            padding: 0 12px 10px;
+            border-bottom: 1px solid #e8eaed;
+        }
+
+        .status-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #333;
+            vertical-align: middle;
+        }
+
+        .status-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .status-pill.running {
+            background: #edf7ee;
+            color: #2d7a34;
+        }
+
+        .status-pill.stopped {
+            background: #fdf0f0;
+            color: #b84040;
+        }
+
+        .status-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+        }
+
+        .status-pill.running .status-dot { background: #4caf50; }
+        .status-pill.stopped .status-dot { background: #e57373; }
+
+        /* API module list */
+        .api-modules {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .api-module {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            background: #fff;
+            border: 1px solid #e8eaed;
+            border-radius: 8px;
+        }
+
+        .api-module-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #0270ff18, #00bcd418);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #0270ff;
+            flex-shrink: 0;
+        }
+
+        .api-module-name {
+            font-family: 'SFMono-Regular', monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .api-module-desc {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* Strategy timeline */
+        .timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 17px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: #e8eaed;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+            padding: 12px 0;
+            position: relative;
+        }
+
+        .timeline-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #0270ff;
+            flex-shrink: 0;
+            margin-top: 2px;
+            border: 2px solid #fff;
+            box-shadow: 0 0 0 2px #0270ff;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timeline-dot.muted {
+            background: #e8eaed;
+            box-shadow: 0 0 0 2px #ccc;
+        }
+
+        .timeline-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .timeline-desc {
+            font-size: 12px;
+            color: #777;
+            margin-top: 2px;
+            line-height: 1.5;
+        }
+
+        /* ── CTA ── */
+        .page-cta {
+            background: #000;
+            padding: 80px 60px;
+            text-align: center;
+        }
+
+        .page-cta h2 {
+            font-size: 36px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+
+        .page-cta p {
+            font-size: 16px;
+            color: #aaa;
+            margin-bottom: 32px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 13px 32px;
+            background: #0270ff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .cta-button:hover { background: #013b86; }
+
+        @media (max-width: 900px) {
+            .section-inner { grid-template-columns: 1fr; gap: 40px; }
+            .section-inner.reverse { direction: ltr; }
+            .platform-section { padding: 60px 30px; }
+            .nav { padding: 0 30px; }
+            .logo img { margin-left: 0; }
+            .section-nav { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nav -->
+    <nav class="nav">
+        <a href="index.html" class="logo">
+            <img src="assets/Logo.png" alt="Quantstrip Logo" onerror="this.style.display='none'">
+        </a>
+        <div class="nav-links">
+            <span class="platform-trigger">Platform <i class="fa-solid fa-chevron-down" style="font-size:11px; margin-left:4px;"></i></span>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="index.html#learn">Learn</a>
+            <a href="login.html" class="sign-in">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Sign in
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="page-hero">
+        <div class="eyebrow">The Platform</div>
+        <h1>Everything you need to run algorithms in production</h1>
+        <p>Quantstrip is a local execution platform that manages your trading clients, connects to your broker, and handles the full trade lifecycle — so you can focus on strategy.</p>
+    </div>
+
+    <!-- Sticky section nav -->
+    <nav class="section-nav">
+        <a href="#strategy-automation"><i class="fa-solid fa-robot"></i> Strategy Automation</a>
+        <a href="#dashboard"><i class="fa-solid fa-gauge"></i> Dashboard</a>
+        <a href="#common-datamodel"><i class="fa-solid fa-database"></i> Data Model</a>
+        <a href="#api"><i class="fa-solid fa-code"></i> Python API</a>
+        <a href="#resources"><i class="fa-solid fa-book-open"></i> Resources</a>
+        <a href="#broker-integration"><i class="fa-solid fa-plug"></i> Broker Integration</a>
+    </nav>
+
+    <!-- 1. Strategy Automation -->
+    <section id="strategy-automation" class="platform-section">
+        <div class="section-inner">
+            <div class="section-text">
+                <div class="eyebrow">Strategy Automation</div>
+                <h2>Turn Python logic into a 24/7 trading operation</h2>
+                <p>Quantstrip runs your strategies as long-lived background clients on your local machine. A lightweight background service starts on boot, manages all your clients, and keeps them running — no cloud subscription required.</p>
+                <p>Strategies are just Python classes that inherit from <code>ClientBase</code>. Add a scheduler, connect to your broker, and you have a fully automated strategy in under 50 lines of code.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> Auto-starts on system boot via Windows Service Manager</li>
+                    <li><i class="fa-solid fa-check"></i> Run multiple clients simultaneously — strategies, reporting jobs, anything</li>
+                    <li><i class="fa-solid fa-check"></i> Built-in scheduler for precise timing (e.g. daily at market close)</li>
+                    <li><i class="fa-solid fa-check"></i> Graceful stop/restart without losing state</li>
+                </ul>
+                <a href="docs/getting_started/overview.html" class="doc-link">Read the architecture overview <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="section-visual">
+                <div class="visual-header">
+                    <div class="dot red"></div><div class="dot amber"></div><div class="dot green"></div>
+                    <span class="visual-title">rebalancing_client.py</span>
+                </div>
+                <div class="visual-body">
+                    <div class="code-block"><span class="kw">from</span> quantstrip <span class="kw">import</span> ClientBase, db_handler, settings
+<span class="kw">from</span> IBKR.ib_connect <span class="kw">import</span> IB
+
+ALLOCATION = settings.get_by_path(<span class="str">'Settings/Strategy/allocation'</span>)
+
+<span class="kw">class</span> <span class="fn">Client</span>(ClientBase):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, *args):
+        <span class="fn">super()</span>.__init__()
+        self.display_name = <span class="str">"Rebalancing Flow"</span>
+        self.scheduler.every().day.at(
+            <span class="str">"15:45"</span>, <span class="str">"America/New_York"</span>
+        ).do(self.job)
+
+    <span class="kw">def</span> <span class="fn">job</span>(self):
+        <span class="cm"># Open position on day 16, close on last day</span>
+        <span class="kw">with</span> <span class="fn">IB</span>() <span class="kw">as</span> ib:
+            ib.placeOrder(
+                ib.get_next_order_id(),
+                contract,
+                ib_order(quantity, <span class="str">"Rebalancing"</span>, <span class="str">"MKT"</span>)
+            )</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Dashboard -->
+    <section id="dashboard" class="platform-section">
+        <div class="section-inner reverse">
+            <div class="section-text">
+                <div class="eyebrow">Dashboard</div>
+                <h2>Monitor and control everything from a browser</h2>
+                <p>When the background service starts, it spins up a local web server at <code>127.0.0.1:8051</code>. From there, a suite of dashboard apps lets you monitor running clients, edit code, query your trade database, and manage configuration — all without touching the command line.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> <strong>Client Monitor</strong> — live status of every running client, stop/start individually</li>
+                    <li><i class="fa-solid fa-check"></i> <strong>Python Editor</strong> — edit and reload client code directly in the browser</li>
+                    <li><i class="fa-solid fa-check"></i> <strong>SQL Database</strong> — query your trade and event history interactively</li>
+                    <li><i class="fa-solid fa-check"></i> <strong>Logging</strong> — structured log viewer per client</li>
+                    <li><i class="fa-solid fa-check"></i> <strong>Notifications</strong> — configure email alerts for trade events</li>
+                </ul>
+                <a href="docs/dashboard_apps/client_monitor.html" class="doc-link">Explore dashboard apps <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="section-visual">
+                <div class="visual-header">
+                    <div class="dot red"></div><div class="dot amber"></div><div class="dot green"></div>
+                    <span class="visual-title">Client Monitor</span>
+                </div>
+                <div class="visual-body">
+                    <table class="status-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Status</th>
+                                <th>Last run</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Rebalancing Flow</td>
+                                <td><span class="status-pill running"><span class="status-dot"></span>Running</span></td>
+                                <td style="color:#888; font-size:12px;">15:45 today</td>
+                            </tr>
+                            <tr>
+                                <td>EOD Report</td>
+                                <td><span class="status-pill running"><span class="status-dot"></span>Running</span></td>
+                                <td style="color:#888; font-size:12px;">16:30 today</td>
+                            </tr>
+                            <tr>
+                                <td>Risk Monitor</td>
+                                <td><span class="status-pill stopped"><span class="status-dot"></span>Stopped</span></td>
+                                <td style="color:#888; font-size:12px;">Yesterday</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Data Model -->
+    <section id="common-datamodel" class="platform-section">
+        <div class="section-inner">
+            <div class="section-text">
+                <div class="eyebrow">Data Model</div>
+                <h2>A built-in database for the full trade lifecycle</h2>
+                <p>Quantstrip ships with a structured SQLite database and a <code>db_handler</code> API that abstracts all the common post-trade operations. Record position opens and closes, query your trade history, and build performance reports — all from Python.</p>
+                <p>The data model tracks strategy events end-to-end: from the moment a position is opened on day 16 to the close on the last business day of the month, every state transition is recorded with a timestamp and a full audit trail.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> Strategy event table with open/close lifecycle tracking</li>
+                    <li><i class="fa-solid fa-check"></i> Query directly via the SQL Dashboard app or Python API</li>
+                    <li><i class="fa-solid fa-check"></i> Position state used as safety check before each execution</li>
+                    <li><i class="fa-solid fa-check"></i> Multi-strategy and multi-broker support via IDs</li>
+                </ul>
+                <a href="docs/API/database.html" class="doc-link">See the db_handler API <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="section-visual">
+                <div class="visual-header">
+                    <div class="dot red"></div><div class="dot amber"></div><div class="dot green"></div>
+                    <span class="visual-title">Trade lifecycle</span>
+                </div>
+                <div class="visual-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div>
+                                <div class="timeline-label">Day 1–15 &nbsp;·&nbsp; Observation</div>
+                                <div class="timeline-desc">Strategy running, no position. Monitoring asset performance.</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div>
+                                <div class="timeline-label">Day 16 &nbsp;·&nbsp; Position open</div>
+                                <div class="timeline-desc">Buy underperformer. Event recorded: <code style="font-size:11px;">event_type = "OPEN"</code></div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot muted"></div>
+                            <div>
+                                <div class="timeline-label">Day 17–28 &nbsp;·&nbsp; Hold</div>
+                                <div class="timeline-desc">Position held. State validated each day before any action.</div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot"></div>
+                            <div>
+                                <div class="timeline-label">Last business day &nbsp;·&nbsp; Close</div>
+                                <div class="timeline-desc">Sell position. Event recorded: <code style="font-size:11px;">event_type = "CLOSE"</code></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. API -->
+    <section id="api" class="platform-section">
+        <div class="section-inner reverse">
+            <div class="section-text">
+                <div class="eyebrow">Python API</div>
+                <h2>A clean Python library for everything Quantstrip</h2>
+                <p>The <code>quantstrip</code> Python package is the single import that gives your client access to the full platform. It exposes <code>ClientBase</code> — the base class that registers your strategy with the background service — plus a set of focused utility modules for the most common operational tasks.</p>
+                <p>The API is intentionally minimal. Each module has a single responsibility, making it easy to learn and straightforward to extend.</p>
+                <a href="docs/API/quantstrip.html" class="doc-link">Browse the full API reference <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="section-visual">
+                <div class="visual-header">
+                    <div class="dot red"></div><div class="dot amber"></div><div class="dot green"></div>
+                    <span class="visual-title">quantstrip modules</span>
+                </div>
+                <div class="visual-body">
+                    <div class="api-modules">
+                        <div class="api-module">
+                            <div class="api-module-icon"><i class="fa-solid fa-plug"></i></div>
+                            <div>
+                                <div class="api-module-name">ClientBase</div>
+                                <div class="api-module-desc">Base class for all clients. Handles registration, lifecycle, and scheduling.</div>
+                            </div>
+                        </div>
+                        <div class="api-module">
+                            <div class="api-module-icon"><i class="fa-solid fa-database"></i></div>
+                            <div>
+                                <div class="api-module-name">db_handler</div>
+                                <div class="api-module-desc">Read and write strategy events and trade history to the built-in database.</div>
+                            </div>
+                        </div>
+                        <div class="api-module">
+                            <div class="api-module-icon"><i class="fa-solid fa-envelope"></i></div>
+                            <div>
+                                <div class="api-module-name">email_manager</div>
+                                <div class="api-module-desc">Send email notifications on trade events or errors.</div>
+                            </div>
+                        </div>
+                        <div class="api-module">
+                            <div class="api-module-icon"><i class="fa-solid fa-sliders"></i></div>
+                            <div>
+                                <div class="api-module-name">settings</div>
+                                <div class="api-module-desc">Load configuration from JSON without hardcoding values in your strategy.</div>
+                            </div>
+                        </div>
+                        <div class="api-module">
+                            <div class="api-module-icon"><i class="fa-solid fa-scroll"></i></div>
+                            <div>
+                                <div class="api-module-name">logging</div>
+                                <div class="api-module-desc">Structured per-client logging, viewable live in the Dashboard.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Resources -->
+    <section id="resources" class="platform-section">
+        <div class="section-inner">
+            <div class="section-text">
+                <div class="eyebrow">Resources &amp; Examples</div>
+                <h2>Go from zero to live strategy faster</h2>
+                <p>The fastest path to a running strategy is a working example. Quantstrip ships with a growing library of fully documented client templates — covering broker connections, strategy patterns, and operational utilities.</p>
+                <p>The monthly rebalancing strategy is a complete, production-ready example: it connects to Interactive Brokers, retrieves historical data, sizes positions dynamically, and records every trade in the database — fully annotated and ready to adapt.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> Annotated strategy templates downloadable from your account</li>
+                    <li><i class="fa-solid fa-check"></i> Step-by-step documentation for each template</li>
+                    <li><i class="fa-solid fa-check"></i> Broker integration guides (Interactive Brokers included)</li>
+                    <li><i class="fa-solid fa-check"></i> Architecture and design pattern guidance for building your own clients</li>
+                </ul>
+                <a href="docs/code_examples/templates_general.html" class="doc-link">Browse strategy examples <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="section-visual">
+                <div class="visual-header">
+                    <div class="dot red"></div><div class="dot amber"></div><div class="dot green"></div>
+                    <span class="visual-title">Monthly Rebalancing · Trading Timeline</span>
+                </div>
+                <div class="visual-body">
+                    <div class="code-block"><span class="cm"># Day 16: identify underperformer and open</span>
+rate_perf  = rate_price.iloc[<span class="num">0</span>][<span class="str">"close"</span>] / rate_price.iloc[-<span class="num">1</span>][<span class="str">"close"</span>]
+stock_perf = stock_price.iloc[<span class="num">0</span>][<span class="str">"close"</span>] / stock_price.iloc[-<span class="num">1</span>][<span class="str">"close"</span>]
+
+<span class="kw">if</span> rate_perf > stock_perf:
+    contract, qty = stock_contract, int(stock_qty)
+<span class="kw">else</span>:
+    contract, qty = rate_contract, int(rate_qty)
+
+<span class="cm"># Always buy the underperformer</span>
+ib.placeOrder(ib.get_next_order_id(), contract,
+              ib_order(qty, <span class="str">"Rebalancing"</span>, <span class="str">"MKT"</span>))</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Broker Integration -->
+    <section id="broker-integration" class="platform-section">
+        <div class="section-inner reverse">
+            <div class="section-text">
+                <div class="eyebrow">Broker Integration</div>
+                <h2>Connect to your broker with pre-built adapters</h2>
+                <p>Quantstrip provides a broker connectivity layer that abstracts the low-level details of broker APIs behind a clean Python interface. The Interactive Brokers adapter is included and production-tested, covering order placement, historical data retrieval, and position management.</p>
+                <p>The connection is managed via a context manager, so connections are opened and closed cleanly around each trading job — no lingering sessions, no resource leaks.</p>
+                <ul class="feature-list">
+                    <li><i class="fa-solid fa-check"></i> Interactive Brokers (IBKR) adapter included</li>
+                    <li><i class="fa-solid fa-check"></i> Market and limit order support via <code>ib_order</code></li>
+                    <li><i class="fa-solid fa-check"></i> Historical OHLC data retrieval per contract</li>
+                    <li><i class="fa-solid fa-check"></i> Context manager pattern for safe connection handling</li>
+                </ul>
+                <a href="docs/code_examples/IBKR_template.html" class="doc-link">See the IBKR integration guide <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+            <div class="section-visual">
+                <div class="visual-header">
+                    <div class="dot red"></div><div class="dot amber"></div><div class="dot green"></div>
+                    <span class="visual-title">IBKR connection pattern</span>
+                </div>
+                <div class="visual-body">
+                    <div class="code-block"><span class="kw">from</span> IBKR.ib_connect <span class="kw">import</span> IB
+<span class="kw">from</span> IBKR.ib_objects <span class="kw">import</span> ib_order, ib_contract
+
+<span class="cm"># Context manager handles connect / disconnect</span>
+<span class="kw">with</span> <span class="fn">IB</span>() <span class="kw">as</span> ib:
+
+    <span class="cm"># Retrieve 16 days of daily closes</span>
+    prices = ib.get_historical_data(
+        ib_contract(<span class="str">"SPY"</span>), <span class="str">""</span>, <span class="str">"16 D"</span>, <span class="str">"1 day"</span>
+    )
+
+    <span class="cm"># Place a market order</span>
+    ib.placeOrder(
+        ib.get_next_order_id(),
+        ib_contract(<span class="str">"SPY"</span>),
+        ib_order(<span class="num">22</span>, <span class="str">"Rebalancing"</span>, <span class="str">"MKT"</span>)
+    )</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <div class="page-cta">
+        <h2>Ready to automate your first strategy?</h2>
+        <p>Register for free and download the platform installer from your dashboard.</p>
+        <a href="register.html" class="cta-button">Get started for free</a>
+    </div>
+
+</body>
+</html>
