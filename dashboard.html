@@ -128,6 +128,12 @@
             text-align: center;
         }
 
+        .sidebar-divider {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #e0e0e0;
+        }
+
         .main-content {
             margin-left: 220px;
             margin-top: 60px;
@@ -267,9 +273,9 @@
                 </a>
             </li>
             <li>
-                <a href="#" onclick="loadPage(event, 'products.html')">
-                    <i class="fas fa-box"></i>
-                    <span>Products</span>
+                <a href="#" onclick="loadPage(event, 'templates.html')">
+                    <i class="fas fa-code"></i>
+                    <span>Resources</span>
                 </a>
             </li>
             <li>
@@ -279,27 +285,24 @@
                 </a>
             </li>
             <li>
-                <a href="#" onclick="loadPage(event, 'templates.html')">
-                    <i class="fas fa-plug"></i>
-                    <span>Templates & Utilities</span>
-                </a>
-            </li>
-            <li>
                 <a href="#" onclick="loadPage(event, 'downloads.html')">
                     <i class="fas fa-download"></i>
                     <span>Downloads</span>
                 </a>
             </li>
-            <li style="margin-top: 30px; border-top: 1px solid #e0e0e0; padding-top: 20px;">
+            <li>
+                <a href="#" onclick="loadPage(event, 'products.html')">
+                    <i class="fas fa-user"></i>
+                    <span>Account</span>
+                </a>
+            </li>
+            <li style="margin-top: 20px; padding-top: 0;">
+                <hr class="sidebar-divider">
+            </li>
+            <li>
                 <a href="docs/index.html">
                     <i class="fas fa-book"></i>
                     <span>Documentation</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <i class="fas fa-life-ring"></i>
-                    <span>Support</span>
                 </a>
             </li>
             <li>
@@ -319,11 +322,11 @@
                 <p>Manage your software licenses, downloads, and account settings from here.</p>
             </div>
             <div class="dashboard-grid">
-                <div class="card" onclick="loadPage(event, 'products.html')">
-                    <h3><i class="fas fa-box card-icon"></i> Products</h3>
-                    <p>Browse and purchase software products and licenses.</p>
-                    <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'products.html')">
-                        Browse Products <i class="fas fa-arrow-right"></i>
+                <div class="card" onclick="loadPage(event, 'templates.html')">
+                    <h3><i class="fas fa-code card-icon"></i> Resources</h3>
+                    <p>Browse and download client templates and utility modules.</p>
+                    <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'templates.html')">
+                        Browse Resources <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
                 <div class="card" onclick="loadPage(event, 'my-licenses.html')">
@@ -333,13 +336,6 @@
                         View Licenses <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
-                <div class="card" onclick="loadPage(event, 'templates.html')">
-                    <h3><i class="fas fa-plug card-icon"></i> Templates & Utilities</h3>
-                    <p>Browse and download client templates and utility modules.</p>
-                    <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'templates.html')">
-                        Browse Templates <i class="fas fa-arrow-right"></i>
-                    </a>
-                </div>
                 <div class="card" onclick="loadPage(event, 'downloads.html')">
                     <h3><i class="fas fa-download card-icon"></i> Downloads</h3>
                     <p>Download platform installers and plugin templates.</p>
@@ -347,14 +343,16 @@
                         Browse Downloads <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
+                <div class="card" onclick="loadPage(event, 'products.html')">
+                    <h3><i class="fas fa-user card-icon"></i> Account</h3>
+                    <p>Manage your account and purchase software licenses.</p>
+                    <a href="#" class="card-action" onclick="event.stopPropagation(); loadPage(event, 'products.html')">
+                        View Account <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
 
-        <!--
-            The iframe loads each subpage as a normal, fully independent page.
-            Scripts, styles, and layout all work exactly as they do standalone.
-            sessionStorage is shared across same-origin frames so auth just works.
-        -->
         <iframe id="subpage-frame" title="Subpage"></iframe>
 
     </div>
