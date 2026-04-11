@@ -379,7 +379,7 @@
                 </span>
             </div>
             <a href="#pricing">Pricing</a>
-            <a href="#learn">Learn</a>
+            <a href="learn.html">Learn</a>
             <a href="login.html" class="sign-in">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
@@ -461,17 +461,14 @@
     <!-- ═══════════════════════════════════════════════════ CONTENT SECTIONS -->
     <div class="content-sections">
 
-        <!-- 1 · STRATEGY EXAMPLE (original, untouched) -->
+        <!-- 1 · LEARN TEASER -->
         <div class="section-wrapper">
             <section class="content-section">
                 <div class="section-text">
-                    <div class="section-label">AUTOMATED EXECUTION - STRATEGY EXAMPLE</div>
-                    <h2>Trading institutional flows at the end of month</h2>
-                    <p class="reference-text">This strategy was introduced by Kris Longmore from <a href="https://www.robotwealth.com" target="_blank">Robot Wealth</a>
-                    and the post is available on
-                        <a href="https://krislongmore.substack.com/p/how-wealth-managers-pay-you-to-trade" target="_blank">substack</a>.
-                    The trade is based on the monthly rebalancing flows created when wealth managers and other institutional investors rebalance their portfolios, creating noisily predictable return patterns that can be traded at the end of each month.</p>
-                    <p>Compared to buying and holding SPY (the red line), the strategy performs remarkably well for such simple system. Find out how to implement the strategy in Quantstrip to automate order execution and track performance over time. <a href="posts/Trading_Institutional_Flows.html" class="learn-more-link">Read full article →</a></p>
+                    <div class="section-label">STRATEGY EXAMPLES</div>
+                    <h2>End-to-end implementation guides</h2>
+                    <p>The Learn section provides detailed, fully worked examples of trading strategies implemented on the Quantstrip platform — covering signal generation, order execution, position management, and post-trade reconciliation.</p>
+                    <p>Each guide documents both the underlying strategy rationale and the specific platform integration, providing a reference implementation that can be adapted to other strategies and instruments. <a href="learn.html" class="learn-more-link">Browse examples →</a></p>
                 </div>
                 <div>
                     <img src="assets/strategy_performance.jpg" alt="Strategy Performance" class="section-image">
@@ -484,9 +481,9 @@
             <section class="content-section">
                 <div class="section-text">
                     <div class="section-label">STRATEGY AUTOMATION</div>
-                    <h2>Your strategies run 24/7, even when you don't</h2>
-                    <p>Quantstrip wraps your Python strategy in a persistent background service that starts automatically when your machine boots and keeps running until you say stop. Each strategy runs as an isolated <em>client</em> with its own schedule, log stream, and database connection — no shared state, no interference.</p>
-                    <p>The built-in Client Monitor lets you see at a glance which clients are running, whether they are healthy, and when they were last started — all from a browser tab on your local machine. Start or stop any client with a single click, without touching the terminal.</p>
+                    <h2>Continuous execution via persistent background services</h2>
+                    <p>Each strategy is deployed as an isolated process — referred to as a <em>client</em> — registered with a system-level background service that initialises on startup and maintains execution across sessions. Clients are fully isolated: each has its own schedule, log stream, and database connection with no shared state between processes.</p>
+                    <p>The Client Monitor provides a consolidated operational view: active clients, health status, start timestamps, and runtime error reporting — accessible via a locally hosted browser interface. Client lifecycle operations require no terminal access.</p>
                 </div>
                 <div>
                     <img src="assets/client_monitor.png" alt="Client Monitor showing running strategies" class="section-image">
@@ -499,9 +496,9 @@
             <section class="content-section section-reverse">
                 <div class="section-text">
                     <div class="section-label">DASHBOARD APPS</div>
-                    <h2>Everything you need, in one browser tab</h2>
-                    <p>The Quantstrip dashboard is a locally hosted web application that ships with a suite of purpose-built apps: a Python IDE for editing and deploying strategy code, a SQL editor for querying your trade database, a reporting view for portfolio performance, a notification centre, and a settings manager.</p>
-                    <p>Every app is tightly integrated with the same underlying data model, so the chart you see in Reporting is always in sync with the raw rows you can inspect in the SQL editor — no exports, no copy-paste, no discrepancies.</p>
+                    <h2>Integrated operational interface</h2>
+                    <p>The Quantstrip dashboard is a locally hosted web application providing a suite of purpose-built tooling: a Python IDE for authoring and deploying client code, a SQL editor for direct database access, a portfolio reporting module, a notification centre, and a settings manager.</p>
+                    <p>All applications read from and write to the same underlying data model. Query results in the SQL editor reflect the same records rendered in the reporting module — there is no data transformation layer or synchronisation step between views.</p>
                 </div>
                 <div>
                     <img src="assets/python_ide.png" alt="Quantstrip Python IDE" class="section-image">
@@ -514,8 +511,8 @@
             <div class="section-full">
                 <div class="section-text">
                     <div class="section-label">DATA MODEL</div>
-                    <h2>A structured trade lifecycle, baked in from day one</h2>
-                    <p style="max-width:680px;">Every order, execution, commission, and position event your strategy generates is captured in a SQLite database that ships with the platform. The schema is designed around the full trade lifecycle — from the moment an order is submitted through to final commission reconciliation — so your data is always consistent and query-ready. You never need to design your own schema or worry about where to put things.</p>
+                    <h2>Canonical trade lifecycle schema</h2>
+                    <p style="max-width:680px;">Orders, executions, commissions, and position events are persisted to a structured SQLite database that is bundled with the platform. The schema is normalised around the complete trade lifecycle — from order submission through execution confirmation to commission settlement — providing a consistent, audit-ready record without requiring user-defined table structures.</p>
                 </div>
                 <img src="assets/db_schema.png" alt="Quantstrip database schema" class="section-image">
             </div>
@@ -526,8 +523,8 @@
             <section style="max-width:1200px; margin:0 auto; padding:100px 60px;">
                 <div class="section-text" style="margin-bottom:52px; padding-right:0;">
                     <div class="section-label">PYTHON API</div>
-                    <h2>One import. Everything you need.</h2>
-                    <p style="max-width:640px;">The Quantstrip Python library is deliberately small and focused. Instead of a sprawling framework you'll spend weeks learning, you get five well-defined modules that cover every operational concern — and nothing else. Write your strategy logic; let the platform handle the rest.</p>
+                    <h2>A focused library with a narrow, well-defined scope</h2>
+                    <p style="max-width:640px;">The Quantstrip Python library exposes five modules covering all platform integration points. The interface is intentionally narrow: rather than a general-purpose framework, it provides structured access to scheduling, database operations, notifications, configuration, and logging — the operational concerns common to all production strategies.</p>
                 </div>
 
                 <div class="api-grid">
@@ -603,9 +600,9 @@
             <section class="content-section">
                 <div class="section-text">
                     <div class="section-label">RESOURCES & EXAMPLES</div>
-                    <h2>From zero to a live strategy, fast</h2>
-                    <p>Quantstrip ships with a library of fully annotated example strategies covering everything from basic order submission to multi-leg execution flows and end-of-day reporting. Each example is written to be read as documentation, not just as code to copy.</p>
-                    <p>The SQL editor includes a set of pre-built queries — PnL by trade, commission analysis, position reconciliation — that double as starting points for your own reporting. Everything runs against your real data the moment you open it.</p>
+                    <h2>Reference implementations and worked examples</h2>
+                    <p>Quantstrip includes a library of annotated example clients covering order submission, multi-leg execution flows, position reconciliation, and end-of-day reporting. Examples are structured as reference implementations — fully documented to support adaptation rather than direct reuse.</p>
+                    <p>The SQL editor ships with a set of pre-built analytical queries covering trade-level PnL attribution, commission analysis, and position reconciliation. Queries execute directly against the local database and serve as a foundation for bespoke reporting requirements.</p>
                 </div>
                 <div>
                     <img src="assets/sql_editor.png" alt="SQL Editor with trade data" class="section-image">
@@ -618,9 +615,9 @@
             <section class="content-section section-reverse">
                 <div class="section-text">
                     <div class="section-label">BROKER INTEGRATION</div>
-                    <h2>Connect to Interactive Brokers in minutes</h2>
-                    <p>Quantstrip includes a pre-built adapter for Interactive Brokers built on top of the official IB API. The adapter handles connection management, reconnection on disconnect, and maps IB's native events — order status, executions, commissions, position updates — directly into the Quantstrip data model.</p>
-                    <p>A growing library of example scripts covers the most common IB workflows so you spend your time on strategy logic, not plumbing.</p>
+                    <h2>Interactive Brokers integration</h2>
+                    <p>Quantstrip includes a pre-built adapter for Interactive Brokers, implemented against the official IB API. The adapter manages connection state and reconnection, and maps IB native events — order status changes, execution reports, commission notifications, and position updates — directly to the Quantstrip canonical data model.</p>
+                    <p>A reference library of IB-specific example clients covers the most common execution workflows, providing a structured starting point for integration with existing strategies.</p>
 
                     <div class="broker-card" style="margin-top:32px;">
                         <div class="broker-badge">
@@ -647,9 +644,9 @@
             <section class="content-section">
                 <div class="section-text">
                     <div class="section-label">POST-TRADE REPORTING</div>
-                    <h2>Performance analytics that update themselves</h2>
-                    <p>The built-in Reporting app aggregates PnL across all your strategies and renders cumulative equity curves, drawdown charts, and return distributions with no manual data preparation required. Switch between time windows — 3M, 1Y, all-time — and drill into per-strategy Sharpe ratios, win rates, and trade counts.</p>
-                    <p>Because reporting reads directly from the same SQLite database that your strategies write to, the numbers are always current. No spreadsheets to update, no exports to run.</p>
+                    <h2>Portfolio performance reporting</h2>
+                    <p>The Reporting module aggregates PnL across all registered strategies and produces cumulative equity curves, drawdown analysis, and return distribution histograms over configurable time horizons. Per-strategy statistics include annualised Sharpe ratio, maximum drawdown, trade count, and win rate.</p>
+                    <p>All reporting data is derived directly from the platform database. There is no intermediate data preparation step — reported figures are consistent with the raw execution records accessible via the SQL editor.</p>
                 </div>
                 <div>
                     <img src="assets/report.png" alt="Portfolio report showing cumulative PnL and drawdown" class="section-image">

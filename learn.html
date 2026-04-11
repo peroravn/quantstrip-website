@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn – Quantstrip</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #1a1a1a;
+        }
+
+        /* ── NAV (identical to rest of site) ── */
+        .nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 60px;
+            background: rgba(0,0,0,0.97);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #ffffff;
+            text-decoration: none;
+        }
+        .logo img { height: 24px; width: auto; margin-left: 160px; }
+        .nav-links { display: flex; gap: 40px; align-items: center; }
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: #00bcd4; }
+        .nav-links a.active { color: #00bcd4; }
+        .nav-links .sign-in { display: flex; align-items: center; gap: 8px; }
+
+        .nav-item-platform { position: static; }
+        .platform-trigger {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 16px;
+            user-select: none;
+            transition: color 0.3s;
+        }
+        .platform-trigger:hover, .platform-trigger.active { color: #00bcd4; }
+        .platform-trigger .chevron { font-size: 11px; transition: transform 0.3s ease; }
+        .platform-trigger.active .chevron { transform: rotate(180deg); }
+
+        /* ── MEGA MENU ── */
+        .mega-menu {
+            position: fixed;
+            top: 64px; left: 0; right: 0;
+            background: #f7f8f9;
+            border-top: 1px solid #e0e2e6;
+            border-bottom: 3px solid #00bcd4;
+            box-shadow: 0 16px 48px rgba(0,0,0,0.18);
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(-8px);
+            pointer-events: none;
+            transition: opacity 0.25s ease, transform 0.25s ease;
+        }
+        .mega-menu.open { opacity: 1; transform: translateY(0); pointer-events: all; }
+        .mega-menu-inner { max-width: 1200px; margin: 0 auto; padding: 40px 60px 48px; }
+        .mega-menu-heading {
+            font-size: 10px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: #9da3ae; margin-bottom: 24px;
+        }
+        .mega-menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 24px; }
+        .mega-item {
+            display: flex; align-items: flex-start; gap: 16px;
+            padding: 18px 20px; border-radius: 10px;
+            text-decoration: none; transition: background 0.2s ease, box-shadow 0.2s ease;
+            color: inherit;
+        }
+        .mega-item:hover { background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .mega-item-icon {
+            width: 40px; height: 40px; border-radius: 10px;
+            background: linear-gradient(135deg, #0270ff15 0%, #00bcd415 100%);
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; font-size: 17px; color: #0270ff;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .mega-item:hover .mega-item-icon {
+            background: linear-gradient(135deg, #0270ff 0%, #00bcd4 100%);
+            color: #ffffff;
+        }
+        .mega-item-text { display: flex; flex-direction: column; gap: 4px; }
+        .mega-item-title { font-size: 14px; font-weight: 600; color: #1a1a2e; line-height: 1.3; }
+        .mega-item-desc { font-size: 12px; color: #6b7280; line-height: 1.5; }
+        .mega-backdrop { position: fixed; inset: 0; z-index: 998; display: none; }
+        .mega-backdrop.visible { display: block; }
+
+        /* ── PAGE HEADER ── */
+        .page-header {
+            margin-top: 64px;
+            padding: 72px 60px 56px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .page-header-inner { max-width: 860px; margin: 0 auto; }
+        .page-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #00bcd4;
+            margin-bottom: 16px;
+        }
+        .page-header h1 {
+            font-size: 42px;
+            font-weight: 700;
+            color: #0a0a0a;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+        .page-header p {
+            font-size: 17px;
+            line-height: 1.75;
+            color: #555;
+            max-width: 680px;
+        }
+
+        /* ── ARTICLE LIST ── */
+        .article-list {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 64px 60px 120px;
+        }
+
+        .article-card {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 48px;
+            align-items: start;
+            padding: 48px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .article-card:first-child { padding-top: 0; }
+
+        .article-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .article-tag {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #0270ff;
+            background: #eff6ff;
+            border-radius: 4px;
+            padding: 4px 10px;
+        }
+        .article-date { font-size: 13px; color: #9da3ae; }
+
+        .article-card h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #0a0a0a;
+            line-height: 1.3;
+            margin-bottom: 14px;
+        }
+        .article-card p {
+            font-size: 15px;
+            line-height: 1.75;
+            color: #555;
+            margin-bottom: 24px;
+        }
+        .article-card p.reference-text { margin-bottom: 14px; }
+        .reference-text a { color: #0270ff; text-decoration: none; font-weight: 500; }
+        .reference-text a:hover { text-decoration: underline; }
+
+        .read-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #0270ff;
+            text-decoration: none;
+            transition: gap 0.2s;
+        }
+        .read-link:hover { gap: 10px; }
+
+        .article-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+            margin-top: 6px;
+        }
+
+        /* ── PLACEHOLDER CARD ── */
+        .article-placeholder {
+            padding: 48px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .placeholder-inner {
+            background: #f8f9fa;
+            border: 1.5px dashed #d1d5db;
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+        }
+        .placeholder-inner p {
+            font-size: 14px;
+            color: #9da3ae;
+            line-height: 1.6;
+        }
+        .placeholder-inner strong { color: #6b7280; }
+
+        @media (max-width: 768px) {
+            .nav { padding: 20px 30px; }
+            .nav-links { gap: 20px; }
+            .page-header { padding: 60px 30px 48px; }
+            .article-list { padding: 48px 30px 80px; }
+            .article-card { grid-template-columns: 1fr; gap: 24px; }
+            .mega-menu-inner { padding: 30px; }
+            .mega-menu-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mega-backdrop" id="megaBackdrop"></div>
+
+    <nav class="nav">
+        <a href="/" class="logo">
+            <img src="assets/Logo.png" alt="Quantstrip Logo">
+        </a>
+        <div class="nav-links">
+            <div class="nav-item-platform">
+                <span class="platform-trigger" id="platformTrigger" role="button" aria-haspopup="true" aria-expanded="false">
+                    Platform
+                    <i class="fa-solid fa-chevron-down chevron"></i>
+                </span>
+            </div>
+            <a href="index.html#pricing">Pricing</a>
+            <a href="learn.html" class="active">Learn</a>
+            <a href="login.html" class="sign-in">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Sign in
+            </a>
+        </div>
+    </nav>
+
+    <div class="mega-menu" id="megaMenu" role="menu">
+        <div class="mega-menu-inner">
+            <p class="mega-menu-heading">Platform capabilities</p>
+            <div class="mega-menu-grid">
+                <a href="index.html#strategy-automation" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon"><i class="fa-solid fa-robot"></i></div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Strategy Automation</span>
+                        <span class="mega-item-desc">Run trading strategies as persistent background clients on your local machine, managed by a 24/7 background service.</span>
+                    </div>
+                </a>
+                <a href="index.html#dashboard" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon"><i class="fa-solid fa-gauge"></i></div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Dashboard Apps</span>
+                        <span class="mega-item-desc">A browser-based dashboard with apps for monitoring clients, editing code, querying trades, and managing configuration.</span>
+                    </div>
+                </a>
+                <a href="index.html#common-datamodel" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon"><i class="fa-solid fa-database"></i></div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Data Model</span>
+                        <span class="mega-item-desc">Built-in SQLite database with a structured trade lifecycle schema — record position opens, closes, and query your full history.</span>
+                    </div>
+                </a>
+                <a href="index.html#api" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon"><i class="fa-solid fa-code"></i></div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Python API</span>
+                        <span class="mega-item-desc">A focused Python library — ClientBase, db_handler, email_manager, settings, and logging — covering all operational needs from a single import.</span>
+                    </div>
+                </a>
+                <a href="index.html#resources" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon"><i class="fa-solid fa-book-open"></i></div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Resources &amp; Examples</span>
+                        <span class="mega-item-desc">Fully annotated strategy templates and broker integration guides to get you from zero to a live, automated strategy fast.</span>
+                    </div>
+                </a>
+                <a href="index.html#broker-integration" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon"><i class="fa-solid fa-plug"></i></div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Broker Integration</span>
+                        <span class="mega-item-desc">Connect to Interactive Brokers with a pre-built adapter for order placement, historical data retrieval, and position management.</span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ PAGE HEADER -->
+    <div class="page-header">
+        <div class="page-header-inner">
+            <div class="page-label">Learn</div>
+            <h1>Strategy implementation guides</h1>
+            <p>End-to-end documentation of trading strategies implemented on the Quantstrip platform. Each guide covers the underlying strategy rationale, the Quantstrip integration, and the full execution and post-trade workflow.</p>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════ ARTICLE LIST -->
+    <div class="article-list">
+
+        <!-- Article 1: Monthly Rebalancing -->
+        <div class="article-card">
+            <div>
+                <div class="article-meta">
+                    <span class="article-tag">Execution</span>
+                    <span class="article-date">Interactive Brokers · SPY · Monthly</span>
+                </div>
+                <h2>Trading institutional flows at the end of month</h2>
+                <p class="reference-text">This strategy was introduced by Kris Longmore from <a href="https://www.robotwealth.com" target="_blank">Robot Wealth</a> and is documented on <a href="https://krislongmore.substack.com/p/how-wealth-managers-pay-you-to-trade" target="_blank">Substack</a>. The trade exploits the monthly rebalancing flows generated when wealth managers and institutional investors rebalance multi-asset portfolios, producing noisily predictable return patterns at the end of each calendar month.</p>
+                <p>The guide covers signal construction, order scheduling via <code>ClientBase</code>, execution through the Interactive Brokers adapter, and performance tracking using the Quantstrip reporting module. Benchmark comparison against a buy-and-hold SPY position is included.</p>
+                <a href="posts/Trading_Institutional_Flows.html" class="read-link">
+                    Read full article <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+            <div>
+                <img src="assets/strategy_performance.jpg" alt="Cumulative PnL vs SPY benchmark" class="article-image">
+            </div>
+        </div>
+
+        <!-- Placeholder for future articles -->
+        <div class="article-placeholder">
+            <div class="placeholder-inner">
+                <p><strong>More guides in preparation.</strong><br>
+                Additional strategy implementation guides covering equity statistical arbitrage, VIX basis trading, and risk premia harvesting will be published here.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const trigger  = document.getElementById('platformTrigger');
+        const menu     = document.getElementById('megaMenu');
+        const backdrop = document.getElementById('megaBackdrop');
+
+        function openMenu() {
+            menu.classList.add('open');
+            backdrop.classList.add('visible');
+            trigger.classList.add('active');
+            trigger.setAttribute('aria-expanded', 'true');
+        }
+        function closeMenu() {
+            menu.classList.remove('open');
+            backdrop.classList.remove('visible');
+            trigger.classList.remove('active');
+            trigger.setAttribute('aria-expanded', 'false');
+        }
+        function toggleMenu() {
+            menu.classList.contains('open') ? closeMenu() : openMenu();
+        }
+
+        trigger.addEventListener('click', (e) => { e.stopPropagation(); toggleMenu(); });
+        backdrop.addEventListener('click', closeMenu);
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
+        menu.querySelectorAll('.mega-item').forEach(item => item.addEventListener('click', closeMenu));
+    </script>
+</body>
+</html>
