@@ -238,14 +238,9 @@
             padding: 10px 16px;
             display: flex;
             align-items: center;
-            gap: 8px;
             border-bottom: 1px solid #d0d7de;
         }
-        .api-code-header .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .dot-red    { background: #ff5f57; }
-        .dot-yellow { background: #febc2e; }
-        .dot-green  { background: #28c840; }
-        .api-code-filename { margin-left: 8px; font-size: 12px; color: #57606a; font-family: inherit; }
+        .api-code-filename { font-size: 12px; color: #57606a; font-family: inherit; }
         .api-code-body { padding: 20px 24px; font-size: 13px; line-height: 1.75; background: #ffffff; }
         /* GitHub Light syntax */
         .code-comment  { color: #6e7781; font-style: italic; }
@@ -256,24 +251,25 @@
         .code-string   { color: #0a3069; }
         .code-plain    { color: #24292f; }
 
-        .api-modules { display: flex; flex-direction: column; gap: 14px; }
+        .api-modules { display: flex; flex-direction: column; gap: 0; }
         .api-module-card {
-            background: #f8f9fa;
-            border: 1px solid #e5e7eb;
-            border-left: 4px solid #0270ff;
-            border-radius: 8px;
-            padding: 16px 20px;
-            transition: box-shadow 0.2s;
+            background: #ffffff;
+            border: 1px solid #d8d8d8;
+            border-left: 3px solid #888888;
+            border-radius: 0;
+            padding: 14px 18px;
+            transition: background 0.15s;
+            margin-bottom: 1px;
         }
-        .api-module-card:hover { box-shadow: 0 4px 16px rgba(2,112,255,0.1); }
+        .api-module-card:hover { background: #f5f5f5; }
         .api-module-name {
             font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 700;
-            color: #0270ff;
-            margin-bottom: 4px;
+            color: #333333;
+            margin-bottom: 3px;
         }
-        .api-module-desc { font-size: 13.5px; color: #555; line-height: 1.5; }
+        .api-module-desc { font-size: 13px; color: #666; line-height: 1.5; }
 
         /* ── REPORTING ── */
         .reporting-sub-grid {
@@ -601,14 +597,11 @@
                     <!-- GitHub Light code block -->
                     <div class="api-code-block">
                         <div class="api-code-header">
-                            <span class="dot dot-red"></span>
-                            <span class="dot dot-yellow"></span>
-                            <span class="dot dot-green"></span>
                             <span class="api-code-filename">my_strategy.py</span>
                         </div>
                         <div class="api-code-body">
-<pre><span class="code-keyword">from</span> <span class="code-module">quantstrip</span> <span class="code-keyword">import</span> <span class="code-import">ClientBase</span><span class="code-plain">,</span> <span class="code-import">db_handler</span>
-<span class="code-keyword">from</span> <span class="code-module">quantstrip</span> <span class="code-keyword">import</span> <span class="code-import">email_manager</span><span class="code-plain">,</span> <span class="code-import">settings</span>
+<pre><span class="code-keyword">from</span> <span class="code-module">quantstrip</span> <span class="code-keyword">import</span> <span class="code-plain">(</span><span class="code-import">ClientBase</span><span class="code-plain">,</span> <span class="code-import">db_handler</span><span class="code-plain">,</span>
+                         <span class="code-import">email_manager</span><span class="code-plain">,</span> <span class="code-import">settings</span><span class="code-plain">)</span>
 <span class="code-keyword">import</span> <span class="code-module">logging</span>
 
 <span class="code-comment"># All strategies extend ClientBase.
@@ -669,20 +662,9 @@
                     <div class="section-label">REPORTING</div>
                     <h2>Portfolio performance reporting and data access</h2>
                     <p>The Reporting module aggregates realised PnL across all registered strategies and produces cumulative equity curves, drawdown analysis, and return distribution histograms over configurable time horizons. Per-strategy statistics include annualised Sharpe ratio, maximum drawdown, trade count, and win rate.</p>
-                    <p>All figures are derived directly from the platform database with no intermediate transformation step. For custom analysis, the database is accessible via the dashboard SQL editor, or through a pre-configured ODBC connection for direct integration with Microsoft Excel.</p>
-
-                    <div class="reporting-sub-grid">
-                        <div class="reporting-card">
-                            <div class="reporting-card-icon"><i class="fa-solid fa-chart-area"></i></div>
-                            <h4>Standard Portfolio Report</h4>
-                            <p>Built-in equity curve, drawdown, and return distribution charts. Configurable time horizons and per-strategy breakdown.</p>
-                        </div>
-                        <div class="reporting-card">
-                            <div class="reporting-card-icon"><i class="fa-brands fa-microsoft"></i></div>
-                            <h4>Excel via ODBC</h4>
-                            <p>Pre-defined database views are exposed via ODBC, enabling direct import into Excel for bespoke PnL attribution and risk analysis.</p>
-                        </div>
-                    </div>
+                    <p>All figures are derived directly from the platform database with no intermediate transformation step. Reported metrics are always consistent with the raw execution records accessible via the SQL editor — there is no reconciliation step between the two views.</p>
+                    <p>For custom analysis beyond the standard report, the database is accessible via the dashboard SQL editor using the pre-built analytical queries included with the platform. These cover trade-level PnL attribution, commission analysis, return on invested capital, and position history. Queries can be extended or replaced with user-defined SQL without modifying any platform components.</p>
+                    <p>For integration with external tools, the database is also accessible via a pre-configured ODBC connection. Pre-defined views covering common reporting requirements are available directly in Microsoft Excel, enabling bespoke PnL attribution, risk analysis, and portfolio reporting without any intermediate data export.</p>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:24px;">
                     <img src="assets/sql_editor.png" alt="SQL editor and pre-built analytical queries" class="section-image">
