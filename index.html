@@ -220,10 +220,11 @@
         .api-intro { margin-bottom: 40px; }
         .api-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 48px;
+            grid-template-columns: 65fr 35fr;
+            gap: 40px;
             align-items: start;
         }
+        .api-modules-wrapper { padding: 0 12px; }
         /* GitHub Light theme */
         .api-code-block {
             background: #ffffff;
@@ -629,7 +630,8 @@
                     </div>
 
                     <!-- Module cards -->
-                    <div class="api-modules">
+                    <div class="api-modules-wrapper">
+                        <div class="api-modules">
                         <div class="api-module-card">
                             <div class="api-module-name">ClientBase</div>
                             <div class="api-module-desc">Base class for all connected clients. Provides built-in scheduling, lifecycle hooks, error handling, and registration with the background service.</div>
@@ -650,21 +652,20 @@
                             <div class="api-module-name">logger</div>
                             <div class="api-module-desc">Central rotating log system with per-client streams, a 30-day retention window, and module-level formatting. Visible live in the dashboard logging view.</div>
                         </div>
-                    </div>
+                        </div>
+                    </div><!-- /api-modules-wrapper -->
                 </div>
             </div>
         </div>
-
-        <!-- 5 · REPORTING -->
         <div class="section-wrapper alt" id="reporting">
             <section class="content-section half-half section-reverse">
                 <div class="section-text">
                     <div class="section-label">REPORTING</div>
                     <h2>Portfolio performance reporting and data access</h2>
                     <p>The Reporting module aggregates realised PnL across all registered strategies and produces cumulative equity curves, drawdown analysis, and return distribution histograms over configurable time horizons. Per-strategy statistics include annualised Sharpe ratio, maximum drawdown, trade count, and win rate.</p>
-                    <p>All figures are derived directly from the platform database with no intermediate transformation step. Reported metrics are always consistent with the raw execution records accessible via the SQL editor — there is no reconciliation step between the two views.</p>
-                    <p>For custom analysis beyond the standard report, the database is accessible via the dashboard SQL editor using the pre-built analytical queries included with the platform. These cover trade-level PnL attribution, commission analysis, return on invested capital, and position history. Queries can be extended or replaced with user-defined SQL without modifying any platform components.</p>
-                    <p>For integration with external tools, the database is also accessible via a pre-configured ODBC connection. Pre-defined views covering common reporting requirements are available directly in Microsoft Excel, enabling bespoke PnL attribution, risk analysis, and portfolio reporting without any intermediate data export.</p>
+                    <p>All figures are derived directly from the platform database with no intermediate transformation step. Reported metrics are consistent with the raw execution records in the SQL editor — there is no reconciliation step between the two views.</p>
+                    <p>For custom analysis, the database is accessible via the dashboard SQL editor using pre-built analytical queries covering trade-level PnL attribution, commission analysis, return on invested capital, and position history. Queries can be extended or replaced with user-defined SQL without modifying any platform components.</p>
+                    <p>The database is also accessible via a pre-configured ODBC connection. Pre-defined views are available directly in Microsoft Excel, enabling bespoke PnL attribution, risk analysis, and portfolio reporting without any intermediate data export.</p>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:24px;">
                     <img src="assets/sql_editor.png" alt="SQL editor and pre-built analytical queries" class="section-image">
