@@ -169,21 +169,18 @@
         .section-wrapper     { background: #ffffff; }
         .section-wrapper.alt { background: #f8f9fa; }
 
-        /* Default: 1fr 2fr — text 1/3, image 2/3 */
+        /* All sections: true 50/50, tighter gap */
         .content-section {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 100px 60px;
+            padding: 70px 60px;
             display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 80px;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
             align-items: center;
         }
-        /* Dashboard: 60% text, 40% image */
-        .content-section.dashboard-layout {
-            grid-template-columns: 3fr 2fr;
-        }
-        /* True 50/50 */
+        /* Remove layout variants — everything is 50/50 now */
+        .content-section.dashboard-layout,
         .content-section.half-half {
             grid-template-columns: 1fr 1fr;
         }
@@ -218,13 +215,13 @@
         .api-outer {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 100px 60px;
+            padding: 70px 60px;
         }
-        .api-intro { margin-bottom: 52px; }
+        .api-intro { margin-bottom: 40px; }
         .api-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
+            gap: 48px;
             align-items: start;
         }
         /* GitHub Light theme */
@@ -299,14 +296,14 @@
         .broker-outer {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 100px 60px;
+            padding: 70px 60px;
         }
         .broker-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 72px;
+            gap: 48px;
             align-items: start;
-            margin-top: 52px;
+            margin-top: 40px;
         }
         .broker-card {
             background: #f8f9fa;
@@ -391,12 +388,12 @@
         @media (max-width: 968px) {
             .content-section,
             .content-section.dashboard-layout,
-            .content-section.half-half { grid-template-columns: 1fr; gap: 40px; padding: 60px 30px; }
+            .content-section.half-half { grid-template-columns: 1fr; gap: 32px; padding: 48px 30px; }
             .section-reverse { direction: ltr; }
             .section-text { padding-right: 0; }
             .section-text h2 { font-size: 28px; }
             .api-grid, .broker-grid, .reporting-sub-grid, .ops-grid { grid-template-columns: 1fr; }
-            .api-outer, .broker-outer { padding: 60px 30px; }
+            .api-outer, .broker-outer { padding: 48px 30px; }
         }
         @media (max-width: 768px) {
             .nav { padding: 20px 30px; }
@@ -748,7 +745,7 @@
 
         <!-- 8 · OPERATIONAL SERVICES -->
         <div class="section-wrapper" id="operational-services">
-            <section style="max-width:1200px;margin:0 auto;padding:100px 60px;">
+            <section style="max-width:1200px;margin:0 auto;padding:70px 60px;">
                 <div class="section-label">OPERATIONAL SERVICES</div>
                 <h2 style="font-size:36px;color:#1a1a1a;margin-bottom:20px;line-height:1.3;font-weight:700;">Centralised infrastructure services for all clients</h2>
                 <p style="max-width:700px;color:#555555;font-size:16px;line-height:1.8;">Logging, configuration management, and email notification are provided as platform-level services, available to every client through the Python API. This eliminates the need to implement these concerns independently per strategy and ensures consistent behaviour across the deployment.</p>
