@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantstrip - Software Distribution & License Management</title>
+    <title>Quantstrip - Algorithmic Trading Infrastructure</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -27,7 +27,6 @@
             z-index: 1000;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-
         .logo {
             display: flex;
             align-items: center;
@@ -38,7 +37,6 @@
             text-decoration: none;
         }
         .logo img { height: 24px; width: auto; margin-left: 160px; }
-
         .nav-links { display: flex; gap: 40px; align-items: center; }
         .nav-links a {
             color: #ffffff;
@@ -48,7 +46,6 @@
         }
         .nav-links a:hover { color: #00bcd4; }
         .nav-links .sign-in { display: flex; align-items: center; gap: 8px; }
-
         .nav-item-platform { position: static; }
         .platform-trigger {
             display: flex;
@@ -67,8 +64,7 @@
         /* ── MEGA MENU ── */
         .mega-menu {
             position: fixed;
-            top: 64px;
-            left: 0; right: 0;
+            top: 64px; left: 0; right: 0;
             background: #f7f8f9;
             border-top: 1px solid #e0e2e6;
             border-bottom: 3px solid #00bcd4;
@@ -80,7 +76,6 @@
             transition: opacity 0.25s ease, transform 0.25s ease;
         }
         .mega-menu.open { opacity: 1; transform: translateY(0); pointer-events: all; }
-
         .mega-menu-inner {
             max-width: 1200px;
             margin: 0 auto;
@@ -94,16 +89,17 @@
             color: #9da3ae;
             margin-bottom: 24px;
         }
+        /* 4-column grid — 8 items, 2 rows of 4 */
         .mega-menu-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px 24px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px 16px;
         }
         .mega-item {
             display: flex;
             align-items: flex-start;
-            gap: 16px;
-            padding: 18px 20px;
+            gap: 14px;
+            padding: 16px 18px;
             border-radius: 10px;
             text-decoration: none;
             transition: background 0.2s ease, box-shadow 0.2s ease;
@@ -114,14 +110,14 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         .mega-item-icon {
-            width: 40px; height: 40px;
-            border-radius: 10px;
+            width: 38px; height: 38px;
+            border-radius: 9px;
             background: linear-gradient(135deg, #0270ff15 0%, #00bcd415 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            font-size: 17px;
+            font-size: 16px;
             color: #0270ff;
             transition: background 0.2s ease, color 0.2s ease;
         }
@@ -129,14 +125,11 @@
             background: linear-gradient(135deg, #0270ff 0%, #00bcd4 100%);
             color: #ffffff;
         }
-        .mega-item-text { display: flex; flex-direction: column; gap: 4px; }
-        .mega-item-title { font-size: 14px; font-weight: 600; color: #1a1a2e; line-height: 1.3; }
-        .mega-item-desc { font-size: 12px; color: #6b7280; line-height: 1.5; }
+        .mega-item-text { display: flex; flex-direction: column; gap: 3px; }
+        .mega-item-title { font-size: 13px; font-weight: 600; color: #1a1a2e; line-height: 1.3; }
+        .mega-item-desc { font-size: 11px; color: #6b7280; line-height: 1.45; }
 
-        .mega-backdrop {
-            position: fixed; inset: 0;
-            z-index: 998; display: none;
-        }
+        .mega-backdrop { position: fixed; inset: 0; z-index: 998; display: none; }
         .mega-backdrop.visible { display: block; }
 
         /* ── HERO ── */
@@ -173,20 +166,30 @@
 
         /* ── SHARED SECTION STYLES ── */
         .content-sections { background: #ffffff; position: relative; z-index: 10; }
+        .section-wrapper     { background: #ffffff; }
+        .section-wrapper.alt { background: #f8f9fa; }
 
+        /* Default: 1fr 2fr — text 1/3, image 2/3 */
         .content-section {
             max-width: 1200px;
             margin: 0 auto;
             padding: 100px 60px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 2fr;
             gap: 80px;
             align-items: center;
         }
-
-        /* Alternating backgrounds applied to wrappers */
-        .section-wrapper { background: #ffffff; }
-        .section-wrapper.alt { background: #f8f9fa; }
+        /* Dashboard: 60% text, 40% image */
+        .content-section.dashboard-layout {
+            grid-template-columns: 3fr 2fr;
+        }
+        /* True 50/50 */
+        .content-section.half-half {
+            grid-template-columns: 1fr 1fr;
+        }
+        /* Flip column order */
+        .section-reverse { direction: rtl; }
+        .section-reverse > * { direction: ltr; }
 
         .section-text { padding-right: 20px; }
         .section-label {
@@ -199,7 +202,6 @@
         }
         .section-text h2 { font-size: 36px; color: #1a1a1a; margin-bottom: 24px; line-height: 1.3; font-weight: 700; }
         .section-text p { font-size: 16px; line-height: 1.8; color: #555555; margin-bottom: 16px; }
-
         .section-image {
             width: 100%;
             height: auto;
@@ -207,102 +209,120 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.12);
             display: block;
         }
-
-        /* reference links (kept from original) */
         .reference-text a { color: #00376b; text-decoration: none; font-weight: 500; }
         .reference-text a:hover { text-decoration: underline; color: rgb(8,0,75); }
         .learn-more-link { display: inline-block; margin-top: 8px; color: #00376b; text-decoration: none; font-weight: 500; }
         .learn-more-link:hover { text-decoration: underline; color: rgb(8,0,75); }
 
-        /* ── STRATEGY AUTOMATION section ── */
-        /* image on right → default grid order */
-
-        /* ── DASHBOARD section ── */
-        /* text on right, image on left → reverse grid */
-        .section-reverse { direction: rtl; }
-        .section-reverse > * { direction: ltr; }
-
-        /* ── DATA MODEL – full-width image ── */
-        .section-full {
+        /* ── PYTHON API ── */
+        .api-outer {
             max-width: 1200px;
             margin: 0 auto;
             padding: 100px 60px;
         }
-        .section-full .section-text { padding-right: 0; margin-bottom: 48px; }
-        .section-full .section-image { border-radius: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.12); }
-
-        /* ── PYTHON API ── */
+        .api-intro { margin-bottom: 52px; }
         .api-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 60px;
             align-items: start;
         }
+        /* GitHub Light theme */
         .api-code-block {
-            background: #0d1117;
-            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid #d0d7de;
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
         }
         .api-code-header {
-            background: #161b22;
-            padding: 12px 20px;
+            background: #f6f8fa;
+            padding: 10px 16px;
             display: flex;
             align-items: center;
             gap: 8px;
-            border-bottom: 1px solid #30363d;
+            border-bottom: 1px solid #d0d7de;
         }
         .api-code-header .dot { width: 12px; height: 12px; border-radius: 50%; }
-        .dot-red { background: #ff5f57; }
+        .dot-red    { background: #ff5f57; }
         .dot-yellow { background: #febc2e; }
-        .dot-green { background: #28c840; }
-        .api-code-filename { margin-left: 8px; font-size: 12px; color: #8b949e; font-family: inherit; }
-        .api-code-body { padding: 24px; font-size: 13px; line-height: 1.7; }
-        .code-comment { color: #6e7681; }
-        .code-keyword { color: #ff7b72; }
-        .code-import { color: #d2a8ff; }
-        .code-module { color: #79c0ff; }
-        .code-class { color: #ffa657; }
-        .code-string { color: #a5d6ff; }
-        .code-plain { color: #c9d1d9; }
+        .dot-green  { background: #28c840; }
+        .api-code-filename { margin-left: 8px; font-size: 12px; color: #57606a; font-family: inherit; }
+        .api-code-body { padding: 20px 24px; font-size: 13px; line-height: 1.75; background: #ffffff; }
+        /* GitHub Light syntax */
+        .code-comment  { color: #6e7781; font-style: italic; }
+        .code-keyword  { color: #cf222e; }
+        .code-import   { color: #8250df; }
+        .code-module   { color: #0550ae; }
+        .code-class    { color: #953800; }
+        .code-string   { color: #0a3069; }
+        .code-plain    { color: #24292f; }
 
-        .api-modules { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+        .api-modules { display: flex; flex-direction: column; gap: 14px; }
         .api-module-card {
             background: #f8f9fa;
             border: 1px solid #e5e7eb;
             border-left: 4px solid #0270ff;
             border-radius: 8px;
-            padding: 18px 20px;
+            padding: 16px 20px;
             transition: box-shadow 0.2s;
         }
         .api-module-card:hover { box-shadow: 0 4px 16px rgba(2,112,255,0.1); }
         .api-module-name {
-            font-family: 'JetBrains Mono', 'Fira Code', monospace;
-            font-size: 14px;
+            font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+            font-size: 13.5px;
             font-weight: 700;
             color: #0270ff;
             margin-bottom: 4px;
         }
-        .api-module-desc { font-size: 14px; color: #555; line-height: 1.5; }
+        .api-module-desc { font-size: 13.5px; color: #555; line-height: 1.5; }
 
-        /* ── RESOURCES section ── */
-        .resources-grid {
+        /* ── REPORTING ── */
+        .reporting-sub-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 60px;
-            align-items: center;
+            gap: 20px;
+            margin-top: 32px;
         }
+        .reporting-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 22px;
+        }
+        .reporting-card-icon { font-size: 20px; color: #0270ff; margin-bottom: 10px; }
+        .reporting-card h4 { font-size: 14px; color: #1a1a1a; margin-bottom: 6px; font-weight: 600; }
+        .reporting-card p  { font-size: 13px; color: #555; line-height: 1.6; }
 
         /* ── BROKER INTEGRATION ── */
+        .broker-outer {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 100px 60px;
+        }
+        .broker-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 72px;
+            align-items: start;
+            margin-top: 52px;
+        }
         .broker-card {
             background: #f8f9fa;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
-            padding: 32px;
+            padding: 26px 30px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 14px;
+        }
+        .broker-card-label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #9da3ae;
         }
         .broker-badge {
             display: inline-flex;
@@ -323,24 +343,60 @@
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            font-size: 15px;
+            font-size: 14px;
             color: #444;
             line-height: 1.5;
         }
         .broker-feature-list li i { color: #00bcd4; margin-top: 3px; flex-shrink: 0; }
 
-        /* ── SCROLL OFFSET for anchors ── */
+        /* ── OPERATIONAL SERVICES ── */
+        .ops-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-top: 48px;
+        }
+        .ops-card {
+            background: #f8f9fa;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 28px;
+        }
+        .ops-card-icon {
+            width: 42px; height: 42px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #0270ff12 0%, #00bcd412 100%);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: #0270ff;
+            margin-bottom: 16px;
+        }
+        .ops-card h4 { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+        .ops-card p  { font-size: 14px; color: #555; line-height: 1.65; }
+        .ops-card code {
+            font-family: ui-monospace, monospace;
+            font-size: 12.5px;
+            background: #eef0f3;
+            padding: 1px 5px;
+            border-radius: 4px;
+            color: #0550ae;
+        }
+
+        /* ── SCROLL OFFSET ── */
         [id] { scroll-margin-top: 80px; }
 
         /* ── RESPONSIVE ── */
+        @media (max-width: 1100px) {
+            .mega-menu-grid { grid-template-columns: repeat(2, 1fr); }
+        }
         @media (max-width: 968px) {
-            .content-section { grid-template-columns: 1fr; gap: 40px; padding: 60px 30px; }
-            .api-grid, .resources-grid { grid-template-columns: 1fr; gap: 40px; }
+            .content-section,
+            .content-section.dashboard-layout,
+            .content-section.half-half { grid-template-columns: 1fr; gap: 40px; padding: 60px 30px; }
             .section-reverse { direction: ltr; }
             .section-text { padding-right: 0; }
             .section-text h2 { font-size: 28px; }
-            .mega-menu-grid { grid-template-columns: repeat(2, 1fr); }
-            .section-full { padding: 60px 30px; }
+            .api-grid, .broker-grid, .reporting-sub-grid, .ops-grid { grid-template-columns: 1fr; }
+            .api-outer, .broker-outer { padding: 60px 30px; }
         }
         @media (max-width: 768px) {
             .nav { padding: 20px 30px; }
@@ -348,17 +404,14 @@
             .hero { padding: 0 30px; height: 70vh; }
             .hero-content { margin-left: 0; }
             .hero-content h1 { font-size: 36px; }
-            .hero-content p { font-size: 18px; }
-            .mega-menu-inner { padding: 30px 30px 36px; }
-            .mega-menu-grid { grid-template-columns: 1fr; }
+            .hero-content p  { font-size: 18px; }
+            .mega-menu-inner { padding: 30px; }
+            .mega-menu-grid  { grid-template-columns: 1fr; }
         }
         @media (max-width: 480px) {
             .nav { padding: 15px 20px; }
-            .nav-links { gap: 15px; font-size: 14px; }
-            .logo { font-size: 20px; }
-            .logo img { height: 24px; }
             .hero-content h1 { font-size: 28px; }
-            .hero-content p { font-size: 16px; }
+            .hero-content p  { font-size: 16px; }
             .cta-button { padding: 14px 32px; font-size: 16px; }
         }
     </style>
@@ -390,6 +443,7 @@
         </div>
     </nav>
 
+    <!-- ══════════════════════════════════════════════════════ MEGA MENU -->
     <div class="mega-menu" id="megaMenu" role="menu">
         <div class="mega-menu-inner">
             <p class="mega-menu-heading">Platform capabilities</p>
@@ -399,15 +453,15 @@
                     <div class="mega-item-icon"><i class="fa-solid fa-robot"></i></div>
                     <div class="mega-item-text">
                         <span class="mega-item-title">Strategy Automation</span>
-                        <span class="mega-item-desc">Run trading strategies as persistent background clients on your local machine, managed by a 24/7 background service.</span>
+                        <span class="mega-item-desc">Deploy strategies as isolated background processes managed by a persistent system service.</span>
                     </div>
                 </a>
 
                 <a href="#dashboard" class="mega-item" role="menuitem">
                     <div class="mega-item-icon"><i class="fa-solid fa-gauge"></i></div>
                     <div class="mega-item-text">
-                        <span class="mega-item-title">Dashboard Apps</span>
-                        <span class="mega-item-desc">A browser-based dashboard with apps for monitoring clients, editing code, querying trades, and managing configuration.</span>
+                        <span class="mega-item-title">Integrated Dashboard</span>
+                        <span class="mega-item-desc">Locally hosted interface covering client monitoring, code editing, SQL access, and configuration.</span>
                     </div>
                 </a>
 
@@ -415,7 +469,7 @@
                     <div class="mega-item-icon"><i class="fa-solid fa-database"></i></div>
                     <div class="mega-item-text">
                         <span class="mega-item-title">Data Model</span>
-                        <span class="mega-item-desc">Built-in SQLite database with a structured trade lifecycle schema — record position opens, closes, and query your full history.</span>
+                        <span class="mega-item-desc">Structured SQLite schema covering the full trade lifecycle — orders, executions, commissions, and positions.</span>
                     </div>
                 </a>
 
@@ -423,15 +477,15 @@
                     <div class="mega-item-icon"><i class="fa-solid fa-code"></i></div>
                     <div class="mega-item-text">
                         <span class="mega-item-title">Python API</span>
-                        <span class="mega-item-desc">A focused Python library — ClientBase, db_handler, email_manager, settings, and logging — covering all operational needs from a single import.</span>
+                        <span class="mega-item-desc">A focused library providing access to scheduling, database, notifications, configuration, and logging from client code.</span>
                     </div>
                 </a>
 
-                <a href="#resources" class="mega-item" role="menuitem">
-                    <div class="mega-item-icon"><i class="fa-solid fa-book-open"></i></div>
+                <a href="#reporting" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon"><i class="fa-solid fa-chart-line"></i></div>
                     <div class="mega-item-text">
-                        <span class="mega-item-title">Resources &amp; Examples</span>
-                        <span class="mega-item-desc">Fully annotated strategy templates and broker integration guides to get you from zero to a live, automated strategy fast.</span>
+                        <span class="mega-item-title">Reporting</span>
+                        <span class="mega-item-desc">Built-in portfolio reports with SQL-based analytics and Excel ODBC integration for custom analysis.</span>
                     </div>
                 </a>
 
@@ -439,7 +493,23 @@
                     <div class="mega-item-icon"><i class="fa-solid fa-plug"></i></div>
                     <div class="mega-item-text">
                         <span class="mega-item-title">Broker Integration</span>
-                        <span class="mega-item-desc">Connect to Interactive Brokers with a pre-built adapter for order placement, historical data retrieval, and position management.</span>
+                        <span class="mega-item-desc">Connect to any broker with a Python SDK or REST API. Pre-built examples for Interactive Brokers included.</span>
+                    </div>
+                </a>
+
+                <a href="#resources" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon"><i class="fa-solid fa-book-open"></i></div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Resources &amp; Examples</span>
+                        <span class="mega-item-desc">Annotated reference implementations covering common execution workflows and integration patterns.</span>
+                    </div>
+                </a>
+
+                <a href="#operational-services" class="mega-item" role="menuitem">
+                    <div class="mega-item-icon"><i class="fa-solid fa-sliders"></i></div>
+                    <div class="mega-item-text">
+                        <span class="mega-item-title">Operational Services</span>
+                        <span class="mega-item-desc">Centralised logging, structured settings management, and email notification — available to all clients.</span>
                     </div>
                 </a>
 
@@ -458,12 +528,12 @@
         </div>
     </section>
 
-    <!-- ═══════════════════════════════════════════════════ CONTENT SECTIONS -->
+    <!-- ═══════════════════════════════════════════════ CONTENT SECTIONS -->
     <div class="content-sections">
 
-        <!-- 1 · LEARN TEASER -->
+        <!-- 0 · LEARN TEASER -->
         <div class="section-wrapper">
-            <section class="content-section">
+            <section class="content-section half-half">
                 <div class="section-text">
                     <div class="section-label">STRATEGY EXAMPLES</div>
                     <h2>End-to-end implementation guides</h2>
@@ -476,7 +546,7 @@
             </section>
         </div>
 
-        <!-- 2 · STRATEGY AUTOMATION -->
+        <!-- 1 · STRATEGY AUTOMATION -->
         <div class="section-wrapper alt" id="strategy-automation">
             <section class="content-section">
                 <div class="section-text">
@@ -491,44 +561,47 @@
             </section>
         </div>
 
-        <!-- 3 · DASHBOARD -->
+        <!-- 2 · INTEGRATED DASHBOARD -->
         <div class="section-wrapper" id="dashboard">
-            <section class="content-section section-reverse">
+            <section class="content-section dashboard-layout section-reverse">
                 <div class="section-text">
-                    <div class="section-label">DASHBOARD APPS</div>
-                    <h2>Integrated operational interface</h2>
+                    <div class="section-label">DASHBOARD</div>
+                    <h2>Integrated Dashboard</h2>
                     <p>The Quantstrip dashboard is a locally hosted web application providing a suite of purpose-built tooling: a Python IDE for authoring and deploying client code, a SQL editor for direct database access, a portfolio reporting module, a notification centre, and a settings manager.</p>
                     <p>All applications read from and write to the same underlying data model. Query results in the SQL editor reflect the same records rendered in the reporting module — there is no data transformation layer or synchronisation step between views.</p>
                 </div>
                 <div>
-                    <img src="assets/python_ide.png" alt="Quantstrip Python IDE" class="section-image">
+                    <img src="assets/dashboard.png" alt="Quantstrip integrated dashboard" class="section-image">
                 </div>
             </section>
         </div>
 
-        <!-- 4 · DATA MODEL (full-width schema image) -->
+        <!-- 3 · DATA MODEL -->
         <div class="section-wrapper alt" id="common-datamodel">
-            <div class="section-full">
+            <section class="content-section half-half">
                 <div class="section-text">
                     <div class="section-label">DATA MODEL</div>
                     <h2>Canonical trade lifecycle schema</h2>
-                    <p style="max-width:680px;">Orders, executions, commissions, and position events are persisted to a structured SQLite database that is bundled with the platform. The schema is normalised around the complete trade lifecycle — from order submission through execution confirmation to commission settlement — providing a consistent, audit-ready record without requiring user-defined table structures.</p>
+                    <p>Orders, executions, commissions, and position events are persisted to a structured SQLite database bundled with the platform. The schema is normalised around the complete trade lifecycle — from order submission through execution confirmation to commission settlement — providing a consistent, audit-ready record without requiring user-defined table structures.</p>
+                    <p>Direct SQL access is available via the dashboard SQL editor, and all tables are exposed through the <code style="font-family:ui-monospace,monospace;font-size:14px;background:#eef0f3;padding:1px 5px;border-radius:4px;color:#0550ae;">db_handler</code> API for programmatic access from client code.</p>
                 </div>
-                <img src="assets/db_schema.png" alt="Quantstrip database schema" class="section-image">
-            </div>
+                <div>
+                    <img src="assets/db_schema.png" alt="Quantstrip database schema" class="section-image">
+                </div>
+            </section>
         </div>
 
-        <!-- 5 · PYTHON API -->
+        <!-- 4 · PYTHON API -->
         <div class="section-wrapper" id="api">
-            <section style="max-width:1200px; margin:0 auto; padding:100px 60px;">
-                <div class="section-text" style="margin-bottom:52px; padding-right:0;">
+            <div class="api-outer">
+                <div class="api-intro">
                     <div class="section-label">PYTHON API</div>
-                    <h2>A focused library with a narrow, well-defined scope</h2>
-                    <p style="max-width:640px;">The Quantstrip Python library exposes five modules covering all platform integration points. The interface is intentionally narrow: rather than a general-purpose framework, it provides structured access to scheduling, database operations, notifications, configuration, and logging — the operational concerns common to all production strategies.</p>
+                    <h2 style="font-size:36px;color:#1a1a1a;margin-bottom:20px;line-height:1.3;font-weight:700;">Platform resources accessible directly from client code</h2>
+                    <p style="max-width:700px;color:#555555;font-size:16px;line-height:1.8;">The Quantstrip Python library provides structured access to all platform integration points through five focused modules. The interface is intentionally narrow: rather than a general-purpose framework, it covers the operational concerns common to all production strategies — scheduling, persistence, notifications, configuration, and logging.</p>
                 </div>
 
                 <div class="api-grid">
-                    <!-- Code block -->
+                    <!-- GitHub Light code block -->
                     <div class="api-code-block">
                         <div class="api-code-header">
                             <span class="dot dot-red"></span>
@@ -541,9 +614,9 @@
 <span class="code-keyword">from</span> <span class="code-module">quantstrip</span> <span class="code-keyword">import</span> <span class="code-import">email_manager</span><span class="code-plain">,</span> <span class="code-import">settings</span>
 <span class="code-keyword">import</span> <span class="code-module">logging</span>
 
-<span class="code-comment"># Every strategy is a class that extends ClientBase.
-# The base class wires up scheduling, logging,
-# database access, and graceful shutdown for you.</span>
+<span class="code-comment"># All strategies extend ClientBase.
+# Scheduling, persistence, and lifecycle
+# management are provided by the base class.</span>
 
 <span class="code-keyword">class</span> <span class="code-class">MyStrategy</span><span class="code-plain">(</span><span class="code-class">ClientBase</span><span class="code-plain">):</span>
 
@@ -551,105 +624,150 @@
         <span class="code-plain">super().__init__()</span>
         <span class="code-plain">self.display_name = </span><span class="code-string">"My Strategy"</span>
         <span class="code-plain">self.db = db_handler</span>
-        <span class="code-plain">self.scheduler.every(</span><span class="code-string">1</span><span class="code-plain">).day.at(</span><span class="code-string">"16:00"</span><span class="code-plain">).do(self.job)</span>
+        <span class="code-plain">self.scheduler.every().day.at(</span><span class="code-string">"16:00"</span><span class="code-plain">).do(self.job)</span>
 
     <span class="code-keyword">def</span> <span class="code-class">job</span><span class="code-plain">(self):</span>
-        <span class="code-comment">        # Your strategy logic here</span>
-        <span class="code-plain">        signal = self.compute_signal()</span>
-        <span class="code-plain">        self.db.insert_strategy_event(</span>
+        <span class="code-plain">signal = self.compute_signal()</span>
+        <span class="code-plain">self.db.insert_strategy_event(</span>
             <span class="code-plain">strategy_id=</span><span class="code-string">"my_strat"</span><span class="code-plain">,</span>
             <span class="code-plain">symbol=</span><span class="code-string">"SPY"</span><span class="code-plain">,</span>
             <span class="code-plain">event_type=signal</span>
-        <span class="code-plain">        )</span>
-        <span class="code-plain">        email_manager.send_summary(signal)</span></pre>
+        <span class="code-plain">)</span>
+        <span class="code-plain">alloc = settings.get(</span><span class="code-string">"my_strat.allocation"</span><span class="code-plain">)</span>
+        <span class="code-plain">email_manager.send_summary(signal)</span></pre>
                         </div>
                     </div>
 
                     <!-- Module cards -->
-                    <div>
-                        <p style="font-size:16px;color:#555;line-height:1.7;margin-bottom:8px;">Five modules. Everything handled.</p>
-                        <div class="api-modules">
-                            <div class="api-module-card">
-                                <div class="api-module-name">ClientBase</div>
-                                <div class="api-module-desc">Base class for all connected clients. Provides built-in scheduling, lifecycle hooks, error handling, and integration with the background service.</div>
-                            </div>
-                            <div class="api-module-card">
-                                <div class="api-module-name">db_handler</div>
-                                <div class="api-module-desc">CRUD methods for every table in the canonical data model — orders, executions, positions, strategy events, commissions, and more.</div>
-                            </div>
-                            <div class="api-module-card">
-                                <div class="api-module-name">email_manager</div>
-                                <div class="api-module-desc">Compose and send structured email summaries and alerts. Supports multiple SMTP accounts and configurable recipients per strategy.</div>
-                            </div>
-                            <div class="api-module-card">
-                                <div class="api-module-name">settings</div>
-                                <div class="api-module-desc">Read and write from the platform settings tree at runtime — credentials, parameters, flags — without touching config files directly.</div>
-                            </div>
-                            <div class="api-module-card" style="border-left-color: #00bcd4;">
-                                <div class="api-module-name" style="color:#00bcd4;">logger</div>
-                                <div class="api-module-desc">Central rotating log system. Every client writes to its own log stream, visible live in the dashboard and preserved for post-trade review.</div>
-                            </div>
+                    <div class="api-modules">
+                        <div class="api-module-card">
+                            <div class="api-module-name">ClientBase</div>
+                            <div class="api-module-desc">Base class for all connected clients. Provides built-in scheduling, lifecycle hooks, error handling, and registration with the background service.</div>
+                        </div>
+                        <div class="api-module-card">
+                            <div class="api-module-name">db_handler</div>
+                            <div class="api-module-desc">CRUD methods for every table in the canonical data model — orders, executions, positions, strategy events, commissions, and more.</div>
+                        </div>
+                        <div class="api-module-card">
+                            <div class="api-module-name">email_manager</div>
+                            <div class="api-module-desc">Compose and dispatch structured email notifications and end-of-day summaries. Supports multiple SMTP accounts and configurable recipients per client.</div>
+                        </div>
+                        <div class="api-module-card">
+                            <div class="api-module-name">settings</div>
+                            <div class="api-module-desc">Typed, runtime access to the platform settings tree — strategy parameters, connectivity credentials, allocation targets, and flags. Secrets stored encrypted.</div>
+                        </div>
+                        <div class="api-module-card">
+                            <div class="api-module-name">logger</div>
+                            <div class="api-module-desc">Central rotating log system with per-client streams, a 30-day retention window, and module-level formatting. Visible live in the dashboard logging view.</div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5 · REPORTING -->
+        <div class="section-wrapper alt" id="reporting">
+            <section class="content-section half-half section-reverse">
+                <div class="section-text">
+                    <div class="section-label">REPORTING</div>
+                    <h2>Portfolio performance reporting and data access</h2>
+                    <p>The Reporting module aggregates realised PnL across all registered strategies and produces cumulative equity curves, drawdown analysis, and return distribution histograms over configurable time horizons. Per-strategy statistics include annualised Sharpe ratio, maximum drawdown, trade count, and win rate.</p>
+                    <p>All figures are derived directly from the platform database with no intermediate transformation step. For custom analysis, the database is accessible via the dashboard SQL editor, or through a pre-configured ODBC connection for direct integration with Microsoft Excel.</p>
+
+                    <div class="reporting-sub-grid">
+                        <div class="reporting-card">
+                            <div class="reporting-card-icon"><i class="fa-solid fa-chart-area"></i></div>
+                            <h4>Standard Portfolio Report</h4>
+                            <p>Built-in equity curve, drawdown, and return distribution charts. Configurable time horizons and per-strategy breakdown.</p>
+                        </div>
+                        <div class="reporting-card">
+                            <div class="reporting-card-icon"><i class="fa-brands fa-microsoft"></i></div>
+                            <h4>Excel via ODBC</h4>
+                            <p>Pre-defined database views are exposed via ODBC, enabling direct import into Excel for bespoke PnL attribution and risk analysis.</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:24px;">
+                    <img src="assets/sql_editor.png" alt="SQL editor and pre-built analytical queries" class="section-image">
+                    <img src="assets/report.png" alt="Portfolio performance report — cumulative PnL and drawdown" class="section-image">
                 </div>
             </section>
         </div>
 
-        <!-- 6 · RESOURCES & EXAMPLES -->
+        <!-- 6 · BROKER INTEGRATION -->
+        <div class="section-wrapper" id="broker-integration">
+            <div class="broker-outer">
+                <div class="section-text" style="padding-right:0;">
+                    <div class="section-label">BROKER INTEGRATION</div>
+                    <h2>Compatible with any broker offering a Python SDK or REST API</h2>
+                    <p style="max-width:760px;color:#555555;font-size:16px;line-height:1.8;margin-bottom:0;">Quantstrip does not impose a proprietary connectivity layer. Any broker that provides a Python SDK or REST API can be integrated directly within a client. Broker-specific event handling — order status updates, execution reports, commission notifications — is mapped to the canonical Quantstrip data model by the client implementation, keeping integration code isolated and maintainable.</p>
+                </div>
+
+                <div class="broker-grid">
+                    <div>
+                        <img src="assets/trade_life_cycle.png" alt="Trade lifecycle: order, execution and commission flow" class="section-image">
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:24px;">
+                        <div class="broker-card">
+                            <div class="broker-card-label">Pre-built integration</div>
+                            <div class="broker-badge">
+                                <i class="fa-solid fa-plug"></i>
+                                Interactive Brokers
+                            </div>
+                            <ul class="broker-feature-list">
+                                <li><i class="fa-solid fa-check"></i> Order submission — market, limit, and bracket orders</li>
+                                <li><i class="fa-solid fa-check"></i> Real-time execution and commission event capture</li>
+                                <li><i class="fa-solid fa-check"></i> Historical OHLCV data retrieval</li>
+                                <li><i class="fa-solid fa-check"></i> Position and account reconciliation via Flex Web API</li>
+                                <li><i class="fa-solid fa-check"></i> OAuth authentication support via ibind</li>
+                            </ul>
+                        </div>
+                        <div class="broker-card">
+                            <div class="broker-card-label">Custom integration</div>
+                            <p style="font-size:14px;color:#555;line-height:1.65;">Brokers offering a Python SDK — such as Alpaca, Tradier, or Interactive Brokers via third-party wrappers — or any REST API can be integrated using the standard client pattern. The IB implementation serves as a structural reference. Once normalised to the Quantstrip data model, execution events are handled identically regardless of the originating broker.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7 · RESOURCES & EXAMPLES -->
         <div class="section-wrapper alt" id="resources">
-            <section class="content-section">
+            <section class="content-section half-half section-reverse">
                 <div class="section-text">
                     <div class="section-label">RESOURCES & EXAMPLES</div>
                     <h2>Reference implementations and worked examples</h2>
-                    <p>Quantstrip includes a library of annotated example clients covering order submission, multi-leg execution flows, position reconciliation, and end-of-day reporting. Examples are structured as reference implementations — fully documented to support adaptation rather than direct reuse.</p>
-                    <p>The SQL editor ships with a set of pre-built analytical queries covering trade-level PnL attribution, commission analysis, and position reconciliation. Queries execute directly against the local database and serve as a foundation for bespoke reporting requirements.</p>
+                    <p>Quantstrip includes a library of annotated example clients covering order submission, multi-leg execution flows, position reconciliation, and end-of-day reporting. Examples are structured as reference implementations — documented to support adaptation rather than direct reuse.</p>
+                    <p>The platform ships with a bundled Python 3.11 installation and a PyPI package manager accessible from the dashboard. The Python IDE supports client development, simulation, and deployment to the production environment without requiring an external development toolchain.</p>
                 </div>
                 <div>
-                    <img src="assets/sql_editor.png" alt="SQL Editor with trade data" class="section-image">
+                    <img src="assets/python_ide.png" alt="Quantstrip Python IDE with example clients" class="section-image">
                 </div>
             </section>
         </div>
 
-        <!-- 7 · BROKER INTEGRATION -->
-        <div class="section-wrapper" id="broker-integration">
-            <section class="content-section section-reverse">
-                <div class="section-text">
-                    <div class="section-label">BROKER INTEGRATION</div>
-                    <h2>Interactive Brokers integration</h2>
-                    <p>Quantstrip includes a pre-built adapter for Interactive Brokers, implemented against the official IB API. The adapter manages connection state and reconnection, and maps IB native events — order status changes, execution reports, commission notifications, and position updates — directly to the Quantstrip canonical data model.</p>
-                    <p>A reference library of IB-specific example clients covers the most common execution workflows, providing a structured starting point for integration with existing strategies.</p>
-
-                    <div class="broker-card" style="margin-top:32px;">
-                        <div class="broker-badge">
-                            <i class="fa-solid fa-plug"></i>
-                            Interactive Brokers
-                        </div>
-                        <ul class="broker-feature-list">
-                            <li><i class="fa-solid fa-check"></i> Order placement — market, limit, bracket</li>
-                            <li><i class="fa-solid fa-check"></i> Real-time execution and commission events</li>
-                            <li><i class="fa-solid fa-check"></i> Historical OHLCV data retrieval</li>
-                            <li><i class="fa-solid fa-check"></i> Position and account reconciliation</li>
-                            <li><i class="fa-solid fa-check"></i> Automatic reconnect on disconnect</li>
-                        </ul>
+        <!-- 8 · OPERATIONAL SERVICES -->
+        <div class="section-wrapper" id="operational-services">
+            <section style="max-width:1200px;margin:0 auto;padding:100px 60px;">
+                <div class="section-label">OPERATIONAL SERVICES</div>
+                <h2 style="font-size:36px;color:#1a1a1a;margin-bottom:20px;line-height:1.3;font-weight:700;">Centralised infrastructure services for all clients</h2>
+                <p style="max-width:700px;color:#555555;font-size:16px;line-height:1.8;">Logging, configuration management, and email notification are provided as platform-level services, available to every client through the Python API. This eliminates the need to implement these concerns independently per strategy and ensures consistent behaviour across the deployment.</p>
+                <div class="ops-grid">
+                    <div class="ops-card">
+                        <div class="ops-card-icon"><i class="fa-solid fa-file-lines"></i></div>
+                        <h4>Logging</h4>
+                        <p>A central rotating log system with per-client log streams, module-level formatting, and a 30-day retention window. All output is visible in the dashboard Logging view and written to disk for offline review.</p>
                     </div>
-                </div>
-                <div>
-                    <img src="assets/trade_life_cycle.png" alt="Trade lifecycle diagram showing order, execution and commission flow" class="section-image">
-                </div>
-            </section>
-        </div>
-
-        <!-- 8 · REPORTING (bonus — ties into mega menu Dashboard) -->
-        <div class="section-wrapper alt">
-            <section class="content-section">
-                <div class="section-text">
-                    <div class="section-label">POST-TRADE REPORTING</div>
-                    <h2>Portfolio performance reporting</h2>
-                    <p>The Reporting module aggregates PnL across all registered strategies and produces cumulative equity curves, drawdown analysis, and return distribution histograms over configurable time horizons. Per-strategy statistics include annualised Sharpe ratio, maximum drawdown, trade count, and win rate.</p>
-                    <p>All reporting data is derived directly from the platform database. There is no intermediate data preparation step — reported figures are consistent with the raw execution records accessible via the SQL editor.</p>
-                </div>
-                <div>
-                    <img src="assets/report.png" alt="Portfolio report showing cumulative PnL and drawdown" class="section-image">
+                    <div class="ops-card">
+                        <div class="ops-card-icon"><i class="fa-solid fa-sliders"></i></div>
+                        <h4>Settings</h4>
+                        <p>Strategy parameters, connectivity credentials, asset lists, and allocation targets are defined in a typed settings tree, separate from client code. Secrets are stored encrypted. Values are accessible at runtime via the <code>settings</code> module without file I/O.</p>
+                    </div>
+                    <div class="ops-card">
+                        <div class="ops-card-icon"><i class="fa-solid fa-envelope"></i></div>
+                        <h4>Notifications</h4>
+                        <p>Outbound email is managed through a central account configuration supporting multiple SMTP accounts, message batching, and per-client recipient lists. End-of-day summaries and runtime error alerts are dispatched automatically.</p>
+                    </div>
                 </div>
             </section>
         </div>
@@ -667,14 +785,12 @@
             trigger.classList.add('active');
             trigger.setAttribute('aria-expanded', 'true');
         }
-
         function closeMenu() {
             menu.classList.remove('open');
             backdrop.classList.remove('visible');
             trigger.classList.remove('active');
             trigger.setAttribute('aria-expanded', 'false');
         }
-
         function toggleMenu() {
             menu.classList.contains('open') ? closeMenu() : openMenu();
         }
